@@ -1,7 +1,6 @@
 const firebase = require("firebase/app");
 require('firebase/firestore');
 
-//TODO .env pour apiKey, etc ??
 //Initialize firebase
 let connect = () => {
     var config = {
