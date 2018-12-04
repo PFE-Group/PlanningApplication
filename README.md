@@ -8,7 +8,7 @@ Des notes de cours ordonnées, un endroit calme pour étudier ainsi que le banni
 
 L’application fonctionnera de la manière suivante : l’utilisateur devra s’inscrire/se connecter afin de pouvoir créer un planning d’étude ou accéder à un planning existant. Pour créer son planning, l’étudiant indiquera ses dates d’examens dans l’application ainsi que les dates des jours dont il dispose pour étudier. Il introduira ensuite ses examens, un niveau de difficulté et le nombre d’heures/jours dont il a besoin pour étudier chacun d’eux. L’application s’occupera de comparer les jours dont l’utilisateur dispose avec les jours dont il a besoin et s’il lui manque des jours, l’application réduira de manière proportionnelle l’attribution des jours pour chaque examen en prenant en compte le niveau de difficulté établi. Il pourra ensuite choisir entre 2 méthodes d’étude : étudier par « bloc de cours », qui organisera chaque cours en bloc dans le planning ou alors « libre », qui laissera l’utilisateur placer ses cours librement. Le planning d’étude créé pourra toujours être modifié afin que l’utilisateur puisse adapter son planning en fonction des jours qu’il lui reste pour étudier. 
 
-Ce projet consistera en une application web responsive afin d’être consultable sur tous les écrans.Saut de page 
+Ce projet consistera en une application web responsive afin d’être consultable sur tous les écrans.
 
 ## Technologies choisies 
 
@@ -22,7 +22,7 @@ Ce projet consistera en une application web responsive afin d’être consultabl
 
 **Express** : nous nous servirons des utilitaires HTTP mis à disposition par Express pour créer une API Rest. Express simplifie la manière d’appréhender les chemins menant au serveur et permet de fournir un traitement spécifique à chacun de ces chemins. 
 
-**Firebase** : permet de stocker des données (en NoSQL) et d’y accéder facilement. Cet outil nous permettra aussi de gérer l’authentification.Saut de page 
+**Firebase** : permet de stocker des données (en NoSQL) et d’y accéder facilement. Cet outil nous permettra aussi de gérer l’authentification.
 
 ## Diagramme d’architecture  
  <put an image here>
