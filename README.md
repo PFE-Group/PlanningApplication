@@ -1,8 +1,6 @@
 # PlanningApplication
 
-# PlanningApplication
-
-##Description du sujet 
+## Description du sujet 
 
 La session des examens approche petit à petit pour beaucoup d’étudiants, mais avant celle-ci un événement terrible arrive à grand pas. Il s’agit d’une période très attendue des étudiants belges universitaires et en supérieur, une période appelé « vacances de Noël » dans le calendrier académique de Vinci, mais qui ne sont guère des vacances. Une période où les étudiants croulent sous les syllabus, slides, notes, résumés et travaux. Celui-Dont-On-Ne-Doit-Pas-Prononcer-Le-Nom, et il ne s’agit bien évidemment pas de Voldemort mais du BLOCUS. La simple prononciation de son nom provoque des frissons à l’étudiant qui l’entend, cette période, qui rime parfois avec désespoir et nuits blanches, nécessite une bonne organisation afin de réussir sa session d’examen et de ne pas avoir à rechercher à la veille d’un examen un résumé de 10 pages, le plus complet possible, d’un syllabus de 400 pages poussiéreux. 
 
@@ -12,26 +10,24 @@ L’application fonctionnera de la manière suivante : l’utilisateur devra s�
 
 Ce projet consistera en une application web responsive afin d’être consultable sur tous les écrans.Saut de page 
 
-##Technologies choisies 
+## Technologies choisies 
 
-###Frontend (Client) 
+### Frontend (Client) 
 
-Angular 7 : framework JavaScript qui permet de poser les fondations du frontend. Le développement est encadré par les règles d’usage de ce framework. 
+**Angular 7** : framework JavaScript qui permet de poser les fondations du frontend. Le développement est encadré par les règles d’usage de ce framework. 
 
- 
+### Backend (Serveur) 
 
-###Backend (Serveur) 
+**Node.js** : crée un environnement qui permet l’exécution de code JavaScript côté serveur. 
 
-Node.js : crée un environnement qui permet l’exécution de code JavaScript côté serveur. 
+**Express** : nous nous servirons des utilitaires HTTP mis à disposition par Express pour créer une API Rest. Express simplifie la manière d’appréhender les chemins menant au serveur et permet de fournir un traitement spécifique à chacun de ces chemins. 
 
-Express : nous nous servirons des utilitaires HTTP mis à disposition par Express pour créer une API Rest. Express simplifie la manière d’appréhender les chemins menant au serveur et permet de fournir un traitement spécifique à chacun de ces chemins. 
+**Firebase** : permet de stocker des données (en NoSQL) et d’y accéder facilement. Cet outil nous permettra aussi de gérer l’authentification.Saut de page 
 
-Firebase : permet de stocker des données (en NoSQL) et d’y accéder facilement. Cet outil nous permettra aussi de gérer l’authentification.Saut de page 
-
-##Diagramme d’architecture  
+## Diagramme d’architecture  
  <put an image here>
 
-##Outils utilisés  
+## Outils utilisés  
 
 Le service d’hébergement du projet sera GitHub, un outil connu par les 5 développeurs, et énormément utilisé en milieu professionnel. Chaque développeur développera sur l’éditeur de texte de son choix (Sublime Text, Visual studio, Atom, …) ainsi que sur son système d’exploitation (Windows, mac Os, Linux). 
 
