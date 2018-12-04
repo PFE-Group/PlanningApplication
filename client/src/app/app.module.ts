@@ -2,19 +2,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { MainComponent } from './main/main.component';
+import { ScheduleModule } from './components/schedule/schedule.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AuthenticationComponent,
-    MainComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ScheduleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
