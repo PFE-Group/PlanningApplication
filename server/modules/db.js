@@ -1,18 +1,12 @@
-const firebase = require("firebase/app");
+const firebase = require("firebase-admin");
 require('firebase/firestore');
+var serviceAccount = require('firebase-access.json')
 
 //Initialize firebase
 let connect = () => {
-    var config = {
-        apiKey: "AIzaSyAllrr8fQmSbiL0QOBa9w0cey_060AHfhQ",
-        authDomain: "pfe01-6c98e.firebaseapp.com",
-        databaseURL: "https://pfe01-6c98e.firebaseio.com",
-        projectId: "pfe01-6c98e",
-        storageBucket: "pfe01-6c98e.appspot.com",
-        messagingSenderId: "521992410400"
-    };
-    
-    firebase.initializeApp(config);
+    firebase.initializeApp({
+        credential: firebase.credential.cert(serviceAccount)
+    });
 }
 
 //Initialize Cloud Firestore through Firebase

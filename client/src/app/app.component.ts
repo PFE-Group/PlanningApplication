@@ -14,7 +14,7 @@ const httpOptions = {
 export class AppComponent {
 	title = 'client';
 	ajaxCall=function(){
-		this.http.get('http://localhost:3030/users/current').subscribe(data => {
+		this.http.get('http://localhost:3030/users/admin').subscribe(data => {
       console.log(data);
     });
 	}
