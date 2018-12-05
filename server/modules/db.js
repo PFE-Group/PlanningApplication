@@ -1,6 +1,5 @@
 const firebase = require("firebase-admin");
-require('firebase/firestore');
-var serviceAccount = require('firebase-access.json')
+var serviceAccount = require('../firebase-access.json')
 
 //Initialize firebase
 let connect = () => {
