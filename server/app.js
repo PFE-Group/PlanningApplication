@@ -5,7 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const sassMiddleware = require('node-sass-middleware');
 const usersRouter = require('./routes/users');
-const indexRouter = require('./routes/index.js')
+const indexRouter = require('./routes/index.js');
+const planningsRouter = require('./routes/plannings');
 const app = express();
 
 const db = require('./modules/db.js');
@@ -39,6 +40,7 @@ app.use(function(req, res, next) {
 });
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/plannings', planningsRouter);
 // error handler
 app.use((err, req, res, next) => {
     // set locals, only providing error in development
