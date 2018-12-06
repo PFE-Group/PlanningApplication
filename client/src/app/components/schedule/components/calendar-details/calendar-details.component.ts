@@ -8,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 export class CalendarDetailsComponent implements OnInit {
 
 
+  currentState : string;
   constructor() { }
 
   ngOnInit() {
+    this.currentState = 'Events';
   }
 
+  setState(value : string) {
+    this.currentState = value;
+  }
 }

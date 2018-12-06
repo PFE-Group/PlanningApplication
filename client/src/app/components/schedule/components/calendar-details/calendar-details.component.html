@@ -1,3 +1,11 @@
-<p>
-  calendar-details works!
-</p>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button (click)="setState('Events')" type="button" class="btn btn-secondary">Events</button>
+          <button (click)="setState('Stats')" type="button" class="btn btn-secondary">Stats</button>
+        </div>
+        <div *ngIf="currentState === 'Events'" >
+            <app-calendar-events></app-calendar-events>
+        </div>
+        <div *ngIf="currentState === 'Stats'" >
+            <app-calendar-stats></app-calendar-stats>
+        </div>

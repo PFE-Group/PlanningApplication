@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../../../shared/models/user';
 
 @Component({
@@ -8,14 +8,14 @@ import { User } from '../../../../shared/models/user';
 })
 
 export class UserInformationComponent implements OnInit {
-  user = new User("Thomas","Ronsmans","T.R","../../../../../assets/default_image_profile.png");
+  
   logOutLogo : string;
-
+  @Input() user : User;
   constructor() { }
 
   ngOnInit() {
 
-    this.logOutLogo = "../../../../../assets/log_out_logo.png";
+    this.logOutLogo = "http://cdn.onlinewebfonts.com/svg/img_235476.png";
 
   }
 

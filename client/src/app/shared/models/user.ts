@@ -1,18 +1,23 @@
 import { Planning } from "./planning";
 
-export class User {
+export interface User {
     firstName: string;
     lastName: string;
     login: string;
     profilePicture: string;
     plannings: Array<Planning>;
+}
 
-    constructor(private fn: string, private ln: string, private lg: string, private pp: string){
-        this.firstName = fn;
-        this.lastName = ln;
-        this.login = lg;
-        this.profilePicture = pp;
-    }
-
+export const createUser = (partialUser: Partial<User>):User =>{
+    return Object.assign({}, fullUser(), partialUser);
 }
   
+export const fullUser = ():User =>{
+    return{
+        firstName:'',
+        lastName:'',
+        login:'',
+        profilePicture:'',
+        plannings:Array<Planning>()
+    } as User
+}
