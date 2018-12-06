@@ -43,4 +43,4 @@ testem.log
 Thumbs.db
 
 .env
-firebase-access.json
+server/firebase-access.json

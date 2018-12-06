@@ -1,3 +1,4 @@
+https://travis-ci.org/PFE-Group/PlanningApplication.svg?branch=oneserver
 # Client
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.1.
