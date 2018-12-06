@@ -13,7 +13,8 @@
     "e2e": "ng e2e",
     "clean": "rm -rf dist",
     "server": "npm run build && nodemon server/bin/www",
-    "dev": "npm run server"
+    "dev": "npm run server",
+    "ci-test": "npm run server && ng test"
   },
   "dependencies": {
     "@angular/animations": "~7.1.0",
