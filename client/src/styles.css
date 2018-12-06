@@ -1,7 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+.background{
+    background:#6c757d;
+}
 .elem{
-    background: #d4d4d4;
-    padding: 10px;
-    border: 1px solid black;
+    margin:5px;
+    background:#dfe3e6;
+    padding:10px;
+}
+
+.center{
+    text-align: center;
+}
+
+.left{
+    text-align: left;
+}
+
+.right{
+    text-align: right;
 }

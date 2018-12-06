@@ -3,20 +3,28 @@
     <div class="col-3">
       <div class="row">
         <div class="col">
-          Blocus
+          <input class="form-control" type="text" placeholder="Blocus" [class.disabled]="">
         </div>
         <div class="col">
-          <img src="http://cdn.onlinewebfonts.com/svg/img_263621.png" width="20" height="20">
+          <img (click)="modifyName" src="http://cdn.onlinewebfonts.com/svg/img_263621.png" width="20" height="20">
         </div>
       </div>
     </div>
     <div class="col">
       <div class="row">
         <div class="col">
-          Date de début :
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="De" >
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
         </div>
         <div class="col">
-          Date de fin :
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker2" placeholder="à" >
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
         </div>
       </div>
     </div>
