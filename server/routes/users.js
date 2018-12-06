@@ -4,6 +4,7 @@ const db = require('../modules/db.js');
 
 // GET : USER COURANT
 router.get('/current', function(req, res, next) {
+    console.log("users/current");
     var obj = {}
     db.dbFirestore.collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
         if (doc && doc.exists){
@@ -19,7 +20,7 @@ router.get('/current', function(req, res, next) {
                 temp["role"] = i.role
                 obj["plannings"].push(temp)
             })
-
+            console.log(obj);
             res.json(obj)
         }else{
             console.log("No such document !")

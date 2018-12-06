@@ -1,8 +1,9 @@
+const path = require('path');
 var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res){
-    res.send('Hello it\'s the server');
+    res.sendFile(path.join(__dirname,'../../dist/client/index.html'));
 });
 
 module.exports = router;
