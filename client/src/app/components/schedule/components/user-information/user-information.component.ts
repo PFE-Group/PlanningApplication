@@ -8,17 +8,13 @@ import { User } from '../../../../shared/models/user';
 })
 
 export class UserInformationComponent implements OnInit {
-  public user = new User();
+  user = new User("Thomas","Ronsmans","T.R","../../../../../assets/default_image_profile.png");
   logOutLogo : string;
 
   constructor() { }
 
   ngOnInit() {
 
-    user.firstName = "Ronsmans";
-    user.lastName = "Thomas";
-    user.login = "T.R";
-    user.profilePicture = "../../../../../assets/default_image_profile.png";
     this.logOutLogo = "../../../../../assets/log_out_logo.png";
 
   }
