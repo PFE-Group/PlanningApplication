@@ -19,6 +19,8 @@
     "postinstall": "ng build --prod"
   },
   "dependencies": {
+    "@angular/cli": "1.4.9",
+    "@angular/compiler-cli": "^4.4.6",
     "@angular/animations": "~7.1.0",
     "@angular/common": "~7.1.0",
     "@angular/compiler": "~7.1.0",
