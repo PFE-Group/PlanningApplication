@@ -1,3 +1,22 @@
 .profilepic img{
     bottom:0;
 }
+
+.profile-picture {
+  margin-right: 10px;
+}
+
+.user-detail {
+  margin-right: 10px;
+  margin-top: 4%;
+  color:white;
+}
+
+.logout-button {
+  margin-top: 4%;
+}
+
+.profile-picture-container {
+  border-right: solid 5px black;
+  margin-right: 20px;
+}
