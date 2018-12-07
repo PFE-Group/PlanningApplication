@@ -1,6 +1,7 @@
 import { Planning } from "./planning";
 
 export interface User {
+    userId: string;
     firstName: string;
     lastName: string;
     login: string;

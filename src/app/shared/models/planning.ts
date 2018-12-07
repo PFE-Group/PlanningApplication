@@ -3,6 +3,7 @@ import { PlanningEvent } from "./planning-event";
 import { TimeSlot } from "./time-slot";
 
 export interface Planning {
+    planningId: string;
     name: string;
     startDate: Date;
     endDate: Date;

@@ -1,7 +1,7 @@
 <div class="center ">
     <span class="planning-title">Mes plannings</span>
     <ul class="list-group">
-      <li class="list-group-item container lielem" *ngFor="let planning of plannings">
+      <li class="list-group-item container lielem" *ngFor="let planning of (plannings | async)">
         <div class="container">
           <div class="row">
             <div for="role" class="col-8 left">
@@ -14,5 +14,8 @@
         </div>
         <p for="role" class="col-8 left"></p>
       </li>
+      <!--<p>-->
+        <!--{{ plannings | async | json }}-->
+      <!--</p>-->
     </ul>
   </div>

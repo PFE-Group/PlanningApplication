@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Planning} from '../../../../shared/models/planning';
+import {Observable} from 'rxjs/index';
 
 @Component({
   selector: 'app-calendar-list',
@@ -8,7 +9,8 @@ import {Planning} from '../../../../shared/models/planning';
 })
 export class CalendarListComponent implements OnInit {
 
-  @Input() plannings: Array<Planning>;
+  @Input() plannings: Observable<Array<Planning>>;
+  @Output() deletePlanningEmitter = new EventEmitter<Planning>();
 
   constructor() { }
 
@@ -16,7 +18,7 @@ export class CalendarListComponent implements OnInit {
   }
 
   deletePlanning(planning: Planning) {
-    this.plannings.splice(this.plannings.indexOf(planning), 1);;
+    this.deletePlanningEmitter.emit(planning);
   }
 
 }

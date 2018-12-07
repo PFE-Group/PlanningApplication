@@ -4,7 +4,7 @@
       <button (click)="setState(CalendarDetailsEnum.Stats)" type="button" class="btn btn-secondary" [class.active]="currentState === CalendarDetailsEnum.Stats">Stats</button>
     </div>
     <div *ngIf="currentState === CalendarDetailsEnum.Events" >
-        <app-calendar-events></app-calendar-events>
+        <app-calendar-events [planningEvent]="planningEvent" [timeSlot]="timeSlot"></app-calendar-events>
     </div>
     <div *ngIf="currentState === CalendarDetailsEnum.Stats" >
         <app-calendar-stats></app-calendar-stats>

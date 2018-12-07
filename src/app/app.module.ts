@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
 import { ScheduleModule } from './components/schedule/schedule.module';
 
@@ -13,7 +13,8 @@ import { ScheduleModule } from './components/schedule/schedule.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ScheduleModule
+    ScheduleModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

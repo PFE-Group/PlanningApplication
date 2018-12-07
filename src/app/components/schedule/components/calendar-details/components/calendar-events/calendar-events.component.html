@@ -1,3 +1,63 @@
-<p>
-  calendar-events works!
-</p>
+
+<h3>
+  Edit events
+  <button
+    class="btn btn-primary pull-right"
+    (click)="addEvent()">
+    Add new
+  </button>
+  <div class="clearfix"></div>
+</h3>
+
+<table class="table table-bordered">
+
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Color</th>
+      <th>Starts at</th>
+      <th>Ends at</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let ts of timeSlot; let index = index">
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="ts.event.name">
+      </td>
+      <td>
+        <input
+          type="color"
+          [(ngModel)]="ts.event.color">
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="ts.start"
+          placeholder="Not set">
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="ts.end"
+          placeholder="Not set">
+      </td>
+      <td>
+        <button
+          class="btn btn-danger"
+          (click)="events.splice(index, 1);">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+
+</table>

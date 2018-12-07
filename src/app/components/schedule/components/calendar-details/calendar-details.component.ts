@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {CalendarDetailsEnum} from './models/calendar-details.enum';
+import { PlanningEvent } from 'src/app/shared/models/planning-event';
+import { TimeSlot } from 'src/app/shared/models/time-slot';
 
 @Component({
   selector: 'app-calendar-details',
@@ -10,6 +12,9 @@ export class CalendarDetailsComponent implements OnInit {
 
   CalendarDetailsEnum = CalendarDetailsEnum;
   currentState: CalendarDetailsEnum;
+
+  @Input() planningEvent : PlanningEvent;
+  @Input() timeSlot : Array<TimeSlot>;
 
   constructor() { }
 
