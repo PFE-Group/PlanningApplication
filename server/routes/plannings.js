@@ -82,4 +82,11 @@ router.get('/:id', function(req, res, next){
     })
 })
 
+
+router.put("/:id/members", (req, res, next) => {
+    console.log(req.params)
+    console.log(req.body)
+    res.send("HELLO FROM SERVER")
+});
+
 module.exports = router;
