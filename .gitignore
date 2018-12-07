@@ -43,5 +43,4 @@ testem.log
 Thumbs.db
 
 .env
-server/firebase-access.json
 cypress/videos
