@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {CalendarDetailsEnum} from './models/calendar-details.enum';
 
 @Component({
   selector: 'app-calendar-details',
@@ -7,15 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendarDetailsComponent implements OnInit {
 
+  CalendarDetailsEnum = CalendarDetailsEnum;
+  currentState: CalendarDetailsEnum;
 
-  currentState : string;
   constructor() { }
 
   ngOnInit() {
-    this.currentState = 'Events';
+    this.currentState = CalendarDetailsEnum.Events;
   }
 
-  setState(value : string) {
+  setState(value: CalendarDetailsEnum) {
     this.currentState = value;
   }
 }
