@@ -22,3 +22,7 @@
 .right{
     text-align: right;
 }
+
+body{
+    background-image: url("assets/back.jpg")
+}
