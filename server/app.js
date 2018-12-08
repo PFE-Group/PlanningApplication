@@ -15,6 +15,9 @@ const db = require('./modules/db.js');
 db.connect();
 
 app.use(express.static(path.join(__dirname, '../dist/client')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/client/index.html'));
+  });
 
 app.use(logger('dev'));
 app.use(express.json());
