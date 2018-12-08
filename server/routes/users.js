@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const firebase = require('firebase-admin')
+const db = require('../modules/db.js');
 
 // GET : USER COURANT
 router.get('/current', function(req, res, next) {
-    firebase.firestore().collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
+    db.db.collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
         if (doc && doc.exists){
             res.json(doc.data())
         }else{
@@ -18,7 +18,7 @@ router.get('/current', function(req, res, next) {
 //GET : TOUS LES USERS
 router.get('/', function(req, res, next) {
     var objjson = {}
-    firebase.firestore().collection("users").get().then( (snap) => {
+    db.db.collection("users").get().then( (snap) => {
         var j = 0;
         snap.forEach( (doc) => {
             var data = doc.data()
@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
 
 //GET : USER AVEC LE LOGIN DEMANDE
 router.get('/:login', function(req, res, next) {
-    firebase.firestore().collection("users")
+    db.db.collection("users")
     .where("login", "==", req.params.login)
     .get().then( (snap) => {
         snap.forEach( (doc) => {

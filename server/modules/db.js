@@ -9,14 +9,23 @@ serviceAccount.project_id = process.env.FIREBASE_PROJECT_ID;
 
 //Initialize Firebase and Cloud Firestore
 exports.connect = () => {
-    firebase.initializeApp({
-        credential: firebase.credential.cert(serviceAccount)
-    });
+    new Promise( (resolve, reject) => {
+        firebase.initializeApp({
+            credential: firebase.credential.cert(serviceAccount)
+        });
+        
+        var db = firebase.firestore();
+    
+        //Disable deprecated features
+        db.settings({
+            timestampsInSnapshots: true
+        });
 
-    var db = firebase.firestore();
-
-    //Disable deprecated features
-    db.settings({
-        timestampsInSnapshots: true
+        exports.db = db;
+        resolve(exports.db);
+        
+        console.log("Connected to Firestore!");
     })
 }
+
+exports.db = null;

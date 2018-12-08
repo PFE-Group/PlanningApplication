@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt')
-
-const firebase = require('firebase-admin')
+const db = require('../modules/db.js');
 
 router.post('/login', function (req, res, next) {
     let user = {
@@ -11,7 +10,7 @@ router.post('/login', function (req, res, next) {
         password: req.body.password
     }
 
-    firebase.firestore().collection('users')
+    db.db.collection('users')
         .where("email", "==", user.email)
         .get()
         .then((snap) => {
@@ -61,7 +60,7 @@ router.post('/register', function (req, res, next) {
             }
             firebase.auth().createUser(user)
                 .then((result) => {
-                    firebase.firestore().collection('users').doc(result.uid).set(user)
+                    db.db.collection('users').doc(result.uid).set(user)
                         .then((userFound) => {
                             res.json(userFound)
                         }).catch((err) => {

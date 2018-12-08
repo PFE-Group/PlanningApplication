@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const firebase = require('firebase-admin')
+const db = require('../modules/db.js');
 
 //GET : TOUS LES PLANNINGS
 router.get('/', function(req, res, next){
     var objjson = {}
-   firebase.firestore().collection('plannings').get().then( (snap) => {
+    db.db.collection('plannings').get().then( (snap) => {
         var j = 0
         snap.forEach( (doc) => {
             objjson["planning " + j++] = doc.data()
@@ -18,7 +18,7 @@ router.get('/', function(req, res, next){
 
 //GET : PLANNING AVEC L'ID DEMANDE
 router.get('/:id', function(req, res, next){
-   firebase.firestore().collection('plannings').doc(req.params.id).get().then((doc) => {
+   db.db.collection('plannings').doc(req.params.id).get().then((doc) => {
         if (doc && doc.exists){
             res.json(doc.data())
         }else{
@@ -29,14 +29,21 @@ router.get('/:id', function(req, res, next){
     })
 })
 
+// CREATE A PLANNING FOR THE CONNECTED USER
+router.post("/planning", (req, res, next) => {
+    var planningDocRef;
+    var userDocRef;
+});
 
+// ADD A USER TO THE PLANNING WITH ID EQUAL TO REQ.PARAMS.ID
 router.put("/:id/member", (req, res, next) => {
+    // TODO : once authentication done; check whether the connected user is member of the document with a status different from "guest"
     const login = req.body.login;
     const role = req.body.role;
     const id = req.params.id;
-    var planningDocRef = db.dbFirestore.collection("plannings").doc(id);
-    var userDocRef = db.dbFirestore.collection("users").where("login", "==", login);
-    db.dbFirestore.runTransaction( (transaction) => {
+    var planningDocRef = db.db.collection("plannings").doc(id);
+    var userDocRef = db.db.collection("users").where("login", "==", login);
+    db.db.runTransaction( (transaction) => {
         return transaction.get(planningDocRef).then( (planningDoc) => {
             if(!planningDoc.exists) {
                 throw "No planning with id: [" + req.params.id + "]";
@@ -52,7 +59,6 @@ router.put("/:id/member", (req, res, next) => {
                 }
                 snap.forEach( (doc) => {
                     var {firstName, lastName, plannings} = doc.data();
-                    console.log(plannings)
                     users[login] = {
                         "lastName": lastName,
                         "firstName": firstName,
@@ -72,9 +78,9 @@ router.put("/:id/member", (req, res, next) => {
             })
         })
     }).then( () => {
-        res.send("HELLO FROM SERVER")
+        res.send("User successfully added");
     }).catch( (error) => {
-        res.send("[Transaction failed]"+ error);
+        res.status(403).send("[Transaction failed]"+ error);
     })
 });
 
