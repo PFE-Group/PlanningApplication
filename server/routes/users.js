@@ -45,4 +45,13 @@ router.get('/:login', function(req, res, next) {
     } )
 });
 
+/**
+ * GET AllUsersMainInformation
+ * Return a JSON of all users with their first name, last name, email and login
+ */
+//router.get('/all', function(req, res, next){
+    //db.dbFirestore.collection('users')
+
+//});
+
 module.exports = router;
