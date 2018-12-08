@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit,Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { User } from 'src/app/shared/models/user';
 
 /**
  * @title Highlight the first autocomplete option
@@ -13,20 +14,20 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class AutocompleteComponent implements OnInit {
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
-
-  ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+  filteredOptions: Observable<String[]>;
+  @Input() users:Array<User>;
+  ngOnInit(){
+    console.log(this.users);
+    if(this.users!==undefined){
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    } 
   }
-
-  private _filter(value: string): string[] {
+  private _filter(value: string): String[] {
     const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.users.map(user=>user.login).filter(login =>login.toLowerCase().indexOf(filterValue) === 0);
   }
 }
 

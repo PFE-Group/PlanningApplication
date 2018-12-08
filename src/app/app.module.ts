@@ -5,17 +5,19 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { ScheduleModule } from './components/schedule/schedule.module';
-import { InviteUserModule} from './components/invite-user/invite-user.module';
+import { ManagementModule } from './components/management/management.module';
 
+const MODULE=[
+  BrowserModule,
+  AppRoutingModule,
+  ScheduleModule,ManagementModule
+]
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ScheduleModule,
-    InviteUserModule
+    ... MODULE
   ],
   providers: [],
   bootstrap: [AppComponent]
