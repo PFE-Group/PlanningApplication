@@ -13,9 +13,6 @@ const app = express();
 const db = require('./modules/db.js');
 
 db.connect();
-db.connectFirestore().then( (db) => {
-    console.log("Connected to firestore !")
-})
 
 app.use(express.static(path.join(__dirname, '../dist/client')));
 

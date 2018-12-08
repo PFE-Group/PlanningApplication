@@ -1,43 +1,85 @@
 <div class="jumbotron">
-  <div class="container">
-      <div class="row">
-          <div class="offset-md-3 col-sm-6">
-                <div [ngClass]="{'alert' : true,
-                                'alert alert-danger' : !good,
-                                'alert alert-success' : good
-                              }" role="alert">
-                    {{messageToShow}}
-                </div>
-          </div>
+  <div class="container login-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div [ngClass]="{'alert' : true,
+                        'alert alert-danger' : !good,
+                        'alert alert-success' : good
+                      }"
+            role="alert">
+            {{messageToShow}}
+            </div>
         </div>
-
-    <div class="row">
-      <div class="offset-md-3 col-sm-6">
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" [(ngModel)]="userEmail" placeholder="Adresse email" 
-        required autofocus>
-      </div>
     </div>
 
-
-    <div class="row">
+    <div class="row login-form-1">
+      <!-- CONNEXION -->
       <div class="offset-md-3 col-sm-6">
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" [(ngModel)]="userPassword" placeholder="Mot de passe" 
-        required >
+        <label for="login-inputEmail" class="sr-only">Adresse email</label>
+        <input type="email" id="login-inputEmail" class="form-control" [(ngModel)]="loginUserEmail" placeholder="Adresse email"
+          required autofocus>
       </div>
-    </div>
 
+      <div class="offset-md-3 col-sm-6">
+        <label for="login-inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" id="login-inputPassword" class="form-control" [(ngModel)]="loginUserPassword" placeholder="Mot de passe"
+          required>
+      </div>
 
-    <div class="row">
-      <div class="offset-md-3 col-sm-3">
+      <div class="offset-md-3 col-sm-6">
         <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="logIn()">Connexion</button>
       </div>
-      <div class="col-sm-3">
+    </div>
+
+    <!-- --------------------------------------------------------------------------------------------------------- -->
+    <div class="row login-form-2">
+      <!-- INSCRIPTION -->
+      <div class="offset-md-3 col-sm-6">
+        <label for="register-inputLastName" class="sr-only">Nom</label>
+        <input type="text" id="register-inputLastName" class="form-control" [(ngModel)]="registerUserLastname" placeholder="Nom"
+          required autofocus>
+      </div>
+
+      <div class="offset-md-3 col-sm-6">
+        <label for="register-inputFirstName" class="sr-only">Prénom</label>
+        <input type="text" id="register-inputFirstName" class="form-control" [(ngModel)]="registerUserFirstname" placeholder="Prenom"
+          required autofocus>
+      </div>
+
+      <div class="offset-md-3 col-sm-6">
+        <label for="register-inputLogin" class="sr-only">Pseudo</label>
+        <input type="text" id="register-inputLogin" class="form-control" [(ngModel)]="registerUserLogin" placeholder="Pseudo"
+          required autofocus>
+      </div>
+
+      <div class="offset-md-3 col-sm-6">
+        <label for="register-inputEmail" class="sr-only">Email</label>
+        <input type="email" id="register-inputEmail" class="form-control" [(ngModel)]="registerUserEmail" placeholder="Email"
+          required autofocus>
+      </div>
+
+      <div class="offset-md-3 col-sm-6">
+        <label for="register-inputPassword" class="sr-only">Password</label>
+        <input type="password" id="register-inputPassword" class="form-control" [(ngModel)]="registerUserPassword" placeholder="Mot de passe"
+          required>
+      </div>
+
+      <!-- TODO 
+      <div class="offset-md-3 col-sm-6">
+        <label class="image-upload-container btn btn-bwm">
+          <span style="color:white"> Photo de profil : </span>
+          <input
+                 type="file"
+                 accept="image/*">
+        </label>
+      </div>-->
+
+
+      <div class="offset-md-3 col-sm-6">
         <button class="btn btn-lg btn-light btn-block" type="submit" (click)="signIn()">Inscription</button>
       </div>
     </div>
-
 
   </div>
 </div>
