@@ -1,27 +1,22 @@
-
-
-<div class="container">
-    <div class="row">
-        <div class="elem col-2">
-          <app-user-information [user]="user"></app-user-information>
-        </div>
-        <div class="elem col-7">
-          <app-calendar-information></app-calendar-information>
-        </div>
-        <div class="elem col">
-          <app-member-list></app-member-list>
-        </div>
-    </div>
-    <div class="row">
+<div class=" background">
+  <nav class="navbar navbar-dark">
+    <span class="navbar-brand app-name">Scheduly</span>
+    <app-user-information [user]="user"></app-user-information>
+  </nav>
+  <div class="container">
+      <div class="row bottom-part">
       <div class="elem col-2">
-        <app-calendar-list></app-calendar-list>
+        <app-calendar-list [plannings]="plannings"></app-calendar-list>
       </div>
-      <div class="elem col-7">
-        <app-calendar></app-calendar>
-      </div>
-      <div class="elem col">
-        <app-calendar-details></app-calendar-details>
+      <div class="elem col app-calendar">
+        <div class="calendar-container">
+          <app-calendar></app-calendar>
+        </div>
+        <div class="calendar-detail-container">
+          <app-calendar-details></app-calendar-details>
+        </div>
       </div>
     </div>
+  </div>
 </div>
 
