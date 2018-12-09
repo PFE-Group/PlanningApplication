@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppStateService} from '../../../../shared/services/app-state.service';
-import {convertTimeSlotsToCalendarEvent, TimeSlot} from '../../../../shared/models/time-slot';
+import {convertTimeSlotsToCalendarEvent} from '../../../../shared/models/time-slot';
 import {Planning} from '../../../../shared/models/planning';
 import {filter} from 'rxjs/internal/operators';
 import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
@@ -42,15 +42,18 @@ export class CalendarComponent implements OnInit {
                     }: CalendarEventTimesChangedEvent): void {
     const index = this.timeSlots.indexOf(event);
     if (index >= 0) {
-      this.planningService.savePlanningTimeSlot({})
-        .then((data: any) => {
-          this.timeSlots[index].start = newStart;
-          this.timeSlots[index].end = newEnd;
-          this.refreshCalendar();
-        }, (error: any) => {
-          console.error('error updating planning');
-
-        });
+      // this.planningService.savePlanningTimeSlot({})
+      //   .then((data: any) => {
+      //     this.timeSlots[index].start = newStart;
+      //     this.timeSlots[index].end = newEnd;
+      //     this.refreshCalendar();
+      //   }, (error: any) => {
+      //     console.error('error updating planning');
+      //
+      //   });
+      this.timeSlots[index].start = newStart;
+      this.timeSlots[index].end = newEnd;
+      this.refreshCalendar();
     } else {
       console.warn('element not found');
     }
