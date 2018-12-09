@@ -1,8 +1,8 @@
 
 <h3>
-  Edit events
+  <span>Event management</span>
   <button
-    class="btn btn-primary pull-right"
+    class="btn btn-outline-primary floatright"
     (click)="addEvent()">
     Add new
   </button>
@@ -22,7 +22,7 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let ts of timeSlot; let index = index">
+    <tr *ngFor="let ts of timeSlots; let index = index">
       <td>
         <input
           type="text"
@@ -53,7 +53,7 @@
       <td>
         <button
           class="btn btn-danger"
-          (click)="events.splice(index, 1);">
+          (click)="timeSlots.splice(index, 1);">
           Delete
         </button>
       </td>

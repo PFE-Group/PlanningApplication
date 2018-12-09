@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpMethod} from '../../../../../shared/models/webapi';
 import {WebApiService} from '../../../../../shared/services/webapi';
-import {Planning} from '../../../../../shared/models/planning';
+import {createPlannings, Planning} from '../../../../../shared/models/planning';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ICalendarListService} from './calendar-list.interface';
 
@@ -13,13 +13,17 @@ export class CalendarListService implements ICalendarListService {
 
   constructor(private webApiService: WebApiService) { }
 
-  fetchPlannings(): void {
-    this.webApiService.getResponse('http://127.0.0.1:8440/plannings/idmec', HttpMethod.GET)
+  fetchPlannings(userid: string): void {
+    //this.webApiService.getResponse(`http://127.0.0.1:8440/plannings/id2`, HttpMethod.GET) //${userid}
+    this.webApiService.getResponse(`https://pfe-scheduly-dev.herokuapp.com/`, HttpMethod.GET) //${userid}
       .then(
-        (data: Array<any>) => {
+        (data: any[]) => {
           // parse data
           console.info('plannings info', data);
-          this.planningsSubject.next(data.plannings);
+          // @ts-ignore
+          const plannings = createPlannings(data.plannings);
+          console.info('plannings parsed', plannings);
+          this.planningsSubject.next(plannings);
         }, (error: any) => {
           console.error('error get plannings', error);
         });

@@ -1,3 +1,3 @@
 export interface ICalendarListService {
-  fetchPlannings();
+  fetchPlannings(userid: string);
 }

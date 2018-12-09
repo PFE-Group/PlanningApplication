@@ -16,42 +16,42 @@ export class ScheduleComponent implements OnInit {
 
   user: User;
   plannings: Observable<Array<Planning>>;
-  planningSelected: Planning;
   planningEvent: PlanningEvent;
   timeSlot = Array<TimeSlot>();
   today = new Date();
   @Input() hasBackdrop: string;
   @Input() mode: string;
 
+  displaySideBar = true;
 
   constructor(private calendarListService: CalendarListService) { }
 
   ngOnInit() {
-    this.calendarListService.fetchPlannings();
+    this.calendarListService.fetchPlannings('111');
     this.calendarListService.getPlannings();
     this.plannings = this.calendarListService.getPlannings();
-    this.planningEvent = createPlanningEvent({
-      name: 'Math',
-      expectedHours: 15,
-      doneHours: 8,
-      color: '#181800'
-
-    }as Partial<PlanningEvent>);
-
-    this.timeSlot.push(createTimeSlot({
-      start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()),
-      end : new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()+7),
-      event : this.planningEvent,
-      done : false
-    }as Partial<TimeSlot>));
-
-    this.timeSlot.push(createTimeSlot({
-      start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()+1, this.today.getHours()),
-      end : new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()+1, this.today.getHours()+12),
-      event : this.planningEvent,
-      done : false
-    }as Partial<TimeSlot>));
-
+    // this.planningEvent = createPlanningEvent({
+    //   name: 'Math',
+    //   expectedHours: 15,
+    //   doneHours: 8,
+    //   color: '#181800'
+    //
+    // }as Partial<PlanningEvent>);
+    //
+    // this.timeSlot.push(createTimeSlot({
+    //   start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()),
+    //   end : new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()+7),
+    //   event : this.planningEvent,
+    //   done : false
+    // }as Partial<TimeSlot>));
+    //
+    // this.timeSlot.push(createTimeSlot({
+    //   start: new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()+1, this.today.getHours()),
+    //   end : new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()+1, this.today.getHours()+12),
+    //   event : this.planningEvent,
+    //   done : false
+    // }as Partial<TimeSlot>));
+    //
     this.user = createUser({
       firstName: 'Thomas',
       lastName: 'Ronsmans',
@@ -92,6 +92,10 @@ export class ScheduleComponent implements OnInit {
 
   deletePlanning(planning: Planning) {
     this.calendarListService.deletePlanning(planning);
+  }
+
+  toggleSideBar(){
+    this.displaySideBar = !this.displaySideBar;
   }
 
 }

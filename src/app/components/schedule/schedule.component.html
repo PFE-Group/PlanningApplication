@@ -1,8 +1,9 @@
-<div class=" background">
+<!-- <div class=" background">
   <nav class="navbar navbar-dark">
     <span class="navbar-brand app-name">Scheduly</span>
     <app-user-information [user]="user"></app-user-information>
   </nav>
+
   <div class="container">
       <div class="row bottom-part">
       <div class="elem col-2">
@@ -15,10 +16,46 @@
           <app-calendar></app-calendar>
         </div>
         <div class="calendar-detail-container">
-          <app-calendar-details [planningEvent]="planningEvent" [timeSlot]="timeSlot"></app-calendar-details>
+          <app-calendar-details></app-calendar-details>
         </div>
       </div>
     </div>
   </div>
+</div> -->
+<div class=" background">
+
+  <nav class="navbar navbar-dark navbarTop">
+    <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="toggleSideBar()">
+      <span>Toggle plannings</span>
+    </button>
+    <span class="navbar-brand app-name">Scheduly</span>
+    <app-user-information [user]="user"></app-user-information>
+  </nav>
+  <div class="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar" [class.active]="displaySideBar">
+      <div class="elem sidebar-elem">
+        <app-calendar-list
+          [plannings]="plannings"
+          (deletePlanningEmitter)="deletePlanning($event)"></app-calendar-list>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div di="content" class="container">
+      <div class="row bottom-part">
+        <div class="elem col-7 app-calendar">
+            <app-calendar></app-calendar>
+        </div>
+        <div class="elem col app-calendar">
+            <app-calendar-details></app-calendar-details>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+
 

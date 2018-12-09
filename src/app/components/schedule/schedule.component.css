@@ -7,7 +7,7 @@
   vertical-align: top;
 }
 
-.navbar{
+.navbarTop{
   background-color: rgba(0, 0, 0, 0.20);
   padding-top: 5px;
   padding-bottom: 5px;
@@ -23,11 +23,21 @@
   height: 92vh;
 }
 
-.calendar-container {
-  height: 64vh;
-  overflow: auto;
+.wrapper {
+  display: flex;
+  align-items: stretch;
 }
 
-.calendar-detail-container {
-  height: 25vh;
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  min-height: 92vh;
+}
+
+.sidebar-elem{
+  min-height: 90.5vh;
+}
+
+#sidebar.active {
+  margin-left: -250px;
 }

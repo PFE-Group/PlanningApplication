@@ -1,12 +1,14 @@
 <button class="btn btn-primary" (click)="gotoLastWeek()"><span> < </span></button>
 <button class="navigation-next btn btn-primary" (click)="goToNextWeek()"><span> > </span></button>
 
-<mwl-calendar-week-view
-  [viewDate]="date"
-  [weekStartsOn]="1"
-  [hourSegments]="1"
-  [hourSegmentHeight]="45"
-  [dayStartHour]="8"
-  [dayEndHour]="22"
-  [events]="timeslots">
+<mwl-calendar-week-view class="calendar-comp"
+                        [viewDate]="date"
+                        [weekStartsOn]="1"
+                        [hourSegments]="1"
+                        [hourSegmentHeight]="45"
+                        [dayStartHour]="8"
+                        [dayEndHour]="22"
+                        [events]="timeSlots"
+                        [refresh]="refresh"
+                        (eventTimesChanged)="eventTimesChanged($event)">
 </mwl-calendar-week-view>

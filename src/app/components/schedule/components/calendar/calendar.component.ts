@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { TimeSlot } from 'src/app/shared/models/time-slot';
+import {Component, OnInit} from '@angular/core';
+import {AppStateService} from '../../../../shared/services/app-state.service';
+import {convertTimeSlotsToCalendarEvent, TimeSlot} from '../../../../shared/models/time-slot';
+import {Planning} from '../../../../shared/models/planning';
+import {filter} from 'rxjs/internal/operators';
+import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {Subject} from 'rxjs';
+import {PlanningService} from '../../../../shared/services/planning';
 
 @Component({
   selector: 'app-calendar',
@@ -9,21 +15,56 @@ import { TimeSlot } from 'src/app/shared/models/time-slot';
 export class CalendarComponent implements OnInit {
 
   date = new Date();
-  timeslots = Array<TimeSlot>();
+  timeSlots = Array<CalendarEvent>();
+  refresh = new Subject<void>();
 
-  constructor() { }
+  constructor(private appStateService: AppStateService,
+              private planningService: PlanningService) { }
 
   ngOnInit() {
+    this.listenToCurrentPlanning();
   }
 
-  gotoLastWeek() {
+  gotoLastWeek(): void {
     const today = this.date;
     this.date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
   }
 
-  goToNextWeek() {
+  goToNextWeek(): void {
     const today = this.date;
     this.date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
   }
 
+  eventTimesChanged({
+                      event,
+                      newStart,
+                      newEnd
+                    }: CalendarEventTimesChangedEvent): void {
+    const index = this.timeSlots.indexOf(event);
+    if (index >= 0) {
+      this.planningService.savePlanningTimeSlot({})
+        .then((data: any) => {
+          this.timeSlots[index].start = newStart;
+          this.timeSlots[index].end = newEnd;
+          this.refreshCalendar();
+        }, (error: any) => {
+          console.error('error updating planning');
+
+        });
+    } else {
+      console.warn('element not found');
+    }
+  }
+
+  private listenToCurrentPlanning() {
+    this.appStateService.getCurrentPlanning().pipe(
+      filter((planning: Planning) => !!planning)
+    ).subscribe((planning: Planning) =>  {
+      this.timeSlots = convertTimeSlotsToCalendarEvent(planning.timeSlots);
+    });
+  }
+
+  private refreshCalendar(): void {
+    this.refresh.next();
+  }
 }
