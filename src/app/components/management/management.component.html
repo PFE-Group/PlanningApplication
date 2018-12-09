@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="/management">
     Gestion
   </a>
@@ -54,4 +54,25 @@
   </mat-card>
 
 
+</div> -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="/management">
+    Gestion
+  </a>
+  <app-user-information [user]="user"></app-user-information>
+</nav>
+<div class="container ">
+  <mat-card>
+    <div class="row bottom-part ">
+      <div class="col-2">
+        <app-calendar-list [plannings]="plannings"></app-calendar-list>
+      </div>
+      <div class="col-8"> <!-- MAIN-->
+        <app-main></app-main>
+      </div>
+      <div class="col-2">
+        <app-member-list></app-member-list>
+      </div>
+    </div>
+  </mat-card>
 </div>

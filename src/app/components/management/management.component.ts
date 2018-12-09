@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {ManagementEnum} from './models/management.enum';
 import { User ,createUser} from 'src/app/shared/models/user';
 import {Planning,createPlanning} from 'src/app/shared/models/planning';
 import { PlanningEvent } from 'src/app/shared/models/planning-event';
@@ -18,12 +17,7 @@ export class ManagementComponent implements OnInit {
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
   }
-  //show the good screen 
-  ManagementEnum = ManagementEnum; 
-  currentState : ManagementEnum;
-  constructor() { 
-    this.currentState=ManagementEnum.plannings;
-  }
+
 
   ngOnInit() {
     this.user = createUser({
@@ -59,8 +53,6 @@ export class ManagementComponent implements OnInit {
     console.log(this.user);
     console.log(this.plannings);
   }
-  setState(value: ManagementEnum) {
-    this.currentState = value;
-  }
+  
   
 }
