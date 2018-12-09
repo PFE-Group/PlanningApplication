@@ -1,3 +1,63 @@
-.row{
-    margin-bottom: 1%;
+input {
+    margin-bottom: 1%
+}
+
+.login-form{
+    margin-top: 5%
+}
+
+.login-form-1{
+    padding: 4%;
+    background:#ba8247;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+}
+
+.login-form-2{
+    padding: 4%;
+    background: #203f41;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+}
+
+.login-logo{
+    position: relative;
+    margin-left: -25%;
+}
+.login-logo img{
+    position: absolute;
+    width: 25%;
+    margin-top: 10%;
+    border-radius: 4.5rem;
+    padding: 5%;
+}
+
+@font-face{
+    font-family: moonflower;
+    src: url("../../../assets/MoonFlower.ttf")
+}
+.page-title{
+    text-align: center;
+    font-family: moonflower;
+    font-size: 100px;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 768px) {
+    .page-title{
+        text-align: center;
+        font-family: moonflower;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .login-logo{
+        position: relative;
+        margin-left: 30%;
+    }
+    .login-logo img{
+        position: absolute;
+        width: 50%;
+        margin-top: 115%;
+        border-radius: 4.5rem;
+        padding: 5%;
+    }
 }

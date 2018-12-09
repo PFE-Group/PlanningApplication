@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../modules/db.js');
+const firebase = require('firebase-admin')
 
 // GET : USER COURANT
 router.get('/current', function(req, res, next) {
-    db.dbFirestore.collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
+    firebase.firestore().collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
         if (doc && doc.exists){
             res.json(doc.data())
         }else{
@@ -20,6 +20,7 @@ router.get('/current', function(req, res, next) {
  * Return an array as a JSON of all users with their first name, last name, email and login
  */
 router.get('/', function(req, res, next) {
+<<<<<<< HEAD
     var arr = [];
     var i = 0;
     db.dbFirestore.collection("users").get().then((snap) => {
@@ -31,6 +32,14 @@ router.get('/', function(req, res, next) {
                 email: data.email,
                 login: data.login
             };
+=======
+    var objjson = {}
+    firebase.firestore().collection("users").get().then( (snap) => {
+        var j = 0;
+        snap.forEach( (doc) => {
+            var data = doc.data()
+            objjson["user " + j++] = data
+>>>>>>> api-routes
         })
         res.json(arr);
     }).catch((err) => {
@@ -40,7 +49,7 @@ router.get('/', function(req, res, next) {
 
 //GET : USER AVEC LE LOGIN DEMANDE
 router.get('/:login', function(req, res, next) {
-    db.dbFirestore.collection("users")
+    firebase.firestore().collection("users")
     .where("login", "==", req.params.login)
     .get().then( (snap) => {
         snap.forEach( (doc) => {

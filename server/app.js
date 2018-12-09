@@ -13,11 +13,6 @@ const app = express();
 const db = require('./modules/db.js');
 
 db.connect();
-db.connectFirestore().then( (db) => {
-    console.log("Connected to firestore !")
-})
-
-app.use(express.static(path.join(__dirname, '../dist/client')));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -32,6 +27,7 @@ app.use(cookieParser());
 //       sourceMap: true
 //     })
 // );
+app.use(express.static(path.join(__dirname, '../dist/client')));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -41,6 +37,10 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/plannings', planningsRouter);
 app.use('/api/login', loginRouter);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/client/index.html'));
+  });
 // error handler
 /*app.use((err, req, res, next) => {
     // set locals, only providing error in development

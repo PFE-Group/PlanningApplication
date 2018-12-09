@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../modules/db.js');
+const firebase = require('firebase-admin')
 
 //GET : TOUS LES PLANNINGS
 router.get('/', function(req, res, next){
     var objjson = {}
-    db.dbFirestore.collection('plannings').get().then( (snap) => {
+   firebase.firestore().collection('plannings').get().then( (snap) => {
         var j = 0
         snap.forEach( (doc) => {
             objjson["planning " + j++] = doc.data()
@@ -18,7 +18,7 @@ router.get('/', function(req, res, next){
 
 //GET : PLANNING AVEC L'ID DEMANDE
 router.get('/:id', function(req, res, next){
-    db.dbFirestore.collection('plannings').doc(req.params.id).get().then((doc) => {
+   firebase.firestore().collection('plannings').doc(req.params.id).get().then((doc) => {
         if (doc && doc.exists){
             res.json(doc.data())
         }else{

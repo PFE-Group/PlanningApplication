@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,62 +10,72 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
 
-  userEmail: string;
-  userPassword: string;
-  messageToShow:string;
+  loginUserEmail: string;
+  loginUserPassword: string;
+
+  registerUserLastname: string;
+  registerUserFirstname: string;
+  registerUserLogin: string;
+  registerUserEmail: string;
+  registerUserPassword: string;
+
+  authStatus: boolean;
+
+  messageToShow: string;
   good: boolean = false;
 
-  constructor(private httpClient: HttpClient) { }
-  
-  storeToken(token){
-    const serialized = JSON.stringify(token);
-    localStorage.setItem("token", serialized);
-  }
+  constructor(private httpClient: HttpClient, private authService: AuthService, private route: Router) { }
 
-  retrieveToken(){
-    const serialized = localStorage.getItem("token");
-    return JSON.parse(serialized);
-  }
-
-  clearToken(){
-    localStorage.removeItem("token");
-  }
-
-  logIn(){
+  logIn() {
     this.httpClient
-      .post('http://localhost:3030/api/login/login',{
-        email : this.userEmail,
-        password : this.userPassword
+      .post('http://localhost:3030/api/login/login', {
+        email: this.loginUserEmail,
+        password: this.loginUserPassword
       })
-      .subscribe( (data) => {
-        this.storeToken(data)
+      .subscribe((data) => {
+        this.authService.logIn(data)
         this.good = true;
         this.messageToShow = "Success !"
+        this.route.navigate(['schedule'])
       },
-      (err) => {
-        this.good = false;
-        this.messageToShow = err.error.message
-      })
+        (err) => {
+          this.good = false;
+          this.messageToShow = err.error.message
+        })
   }
 
-  signIn(){
+  signIn() {
     this.httpClient
       .post('http://localhost:3030/api/login/register', {
-        email : this.userEmail,
-        password : this.userPassword
+        email: this.registerUserEmail,
+        password: this.registerUserPassword,
+        lastName: this.registerUserLastname,
+        firstName: this.registerUserFirstname,
+        login: this.registerUserLogin
       })
-      .subscribe( () => {
+      .subscribe(() => {
+        this.loginUserEmail = this.registerUserEmail;
+        this.loginUserPassword = this.registerUserPassword;
         this.logIn()
         this.good = true;
         this.messageToShow = "Success !"
       },
-      (err) => {
-        this.good = false;
-        this.messageToShow = err.error.message
-      })
+        (err) => {
+          this.good = false;
+          this.messageToShow = err.error.message
+        })
+  }
+
+  signOut() {
+    this.authService.logOut()
   }
 
   ngOnInit() {
+    this.authStatus = this.authService.checkIfAuth()
+    if (this.authStatus) {
+      this.route.navigate(['schedule'])
+    }
+
   }
 
 }
