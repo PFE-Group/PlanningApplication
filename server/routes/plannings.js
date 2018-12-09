@@ -78,4 +78,19 @@ router.put("/:id/member", (req, res, next) => {
     })
 });
 
+/**
+ * GET /users/:idPlanning
+ * Return a JSON of all users of a planning
+ */
+router.get('/users/:idPlanning', function(req, res, next){
+    console.log(req.params.idPlanning);
+    db.dbFirestore.collection('plannings')
+    .doc(req.params.idPlanning)
+    .get().then((doc) => {
+        res.json(doc.data().users);
+    }).catch((err) => {
+        console.log("Error getting document:", err)
+    });
+});
+
 module.exports = router;

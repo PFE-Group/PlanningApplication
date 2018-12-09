@@ -15,20 +15,27 @@ router.get('/current', function(req, res, next) {
     } )
 });
 
-//GET : TOUS LES USERS
+/**
+ * GET /
+ * Return an array as a JSON of all users with their first name, last name, email and login
+ */
 router.get('/', function(req, res, next) {
-    var objjson = {}
-    db.dbFirestore.collection("users").get().then( (snap) => {
-        var j = 0;
-        snap.forEach( (doc) => {
-            var data = doc.data()
-            objjson["user " + j++] = data
+    var arr = [];
+    var i = 0;
+    db.dbFirestore.collection("users").get().then((snap) => {
+        snap.forEach((doc) => {
+            var data = doc.data();
+            arr[i++] = { 
+                firstName: data.firstName, 
+                lastName: data.lastName,
+                email: data.email,
+                login: data.login
+            };
         })
-        
-        res.json(objjson)
-    }).catch( (err) => {
+        res.json(arr);
+    }).catch((err) => {
         console.log("Error getting document:", err);
-    } )
+    });
 });
 
 //GET : USER AVEC LE LOGIN DEMANDE
@@ -39,19 +46,10 @@ router.get('/:login', function(req, res, next) {
         snap.forEach( (doc) => {
             res.json(doc.data())
         })
-
+        console.log(snap.size);
     }).catch( (err) => {
         console.log("Error getting document:", err);
     } )
 });
-
-/**
- * GET AllUsersMainInformation
- * Return a JSON of all users with their first name, last name, email and login
- */
-//router.get('/all', function(req, res, next){
-    //db.dbFirestore.collection('users')
-
-//});
 
 module.exports = router;
