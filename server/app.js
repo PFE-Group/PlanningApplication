@@ -7,7 +7,9 @@ const sassMiddleware = require('node-sass-middleware');
 const usersRouter = require('./routes/users');
 const indexRouter = require('./routes/index.js');
 const planningsRouter = require('./routes/plannings');
+const cors = require('cors')
 const app = express();
+app.use(cors());
 
 const db = require('./modules/db.js');
 
