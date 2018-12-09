@@ -31,8 +31,59 @@ router.get('/:id', function(req, res, next){
 
 // CREATE A PLANNING FOR THE CONNECTED USER
 router.post("/planning", (req, res, next) => {
-    var planningDocRef;
-    var userDocRef;
+    var planning = {
+        "name": "",
+        "startDate": "",
+        "endDate": "",
+        "users": {},
+        "tasks": {},
+        "timeSlot": []
+    }
+    var {name, startDate, endDate} = req.body;
+    var message = {
+        "invalidFields": []
+    };
+
+    // validation of inputs
+    if(!startDate) {
+        message.invalidFields.push("Require non empty [startDate]");
+    } else {
+        startDate = new Date(startDate);
+        if(isNaN(startDate.getTime())) {
+            message.invalidFields.push("Require valid date format for [startDate");
+        }
+    }
+    if(!endDate) {
+        message.invalidFields.push("Require non empty [endDate]");
+    } else {
+        endDate = new Date(endDate);
+        if(isNaN(endDate.getTime())) {
+            message.invalidFields.push("Require valid date format for [endDate");
+        }
+    }
+    if(!name){
+        message.invalidFields.push("Require non empty [name]");
+    }
+    if(message.invalidFields.length > 0) {
+        res.status("403").json(message);
+        return;
+    }
+
+    planning.endDate = endDate.getTime();
+    planning.name = name;
+    planning.startDate = startDate.getTime();
+
+    // insertion
+    db.db.collection("plannings").add(planning)
+    .then((docRef)  => {
+        planning["id"] = docRef.id;
+        res.json(planning)
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error) => {
+        res.status(500).send("Unknown error. Sorry...");
+        console.log(error);
+    });
 });
 
 // ADD A USER TO THE PLANNING WITH ID EQUAL TO REQ.PARAMS.ID

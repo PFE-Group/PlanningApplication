@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt')
 const db = require('../modules/db.js');
+const firebase = require("firebase-admin");
 
 router.post('/login', function (req, res, next) {
     let user = {
