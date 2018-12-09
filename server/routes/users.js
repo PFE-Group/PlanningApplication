@@ -20,7 +20,6 @@ router.get('/current', function(req, res, next) {
  * Return an array as a JSON of all users with their first name, last name, email and login
  */
 router.get('/', function(req, res, next) {
-<<<<<<< HEAD
     var arr = [];
     var i = 0;
     db.dbFirestore.collection("users").get().then((snap) => {
@@ -32,14 +31,6 @@ router.get('/', function(req, res, next) {
                 email: data.email,
                 login: data.login
             };
-=======
-    var objjson = {}
-    firebase.firestore().collection("users").get().then( (snap) => {
-        var j = 0;
-        snap.forEach( (doc) => {
-            var data = doc.data()
-            objjson["user " + j++] = data
->>>>>>> api-routes
         })
         res.json(arr);
     }).catch((err) => {
