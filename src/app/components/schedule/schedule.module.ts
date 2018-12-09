@@ -17,10 +17,9 @@ import { MemberListComponent } from './components/member-list';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {WebApiService} from "../../shared/services/webapi";
-import {CalendarListService} from './components/calendar-list/services';
-import {AppStateService} from '../../shared/services/app-state.service/app-state.service';
-import {PlanningService} from '../../shared/services/planning';
+import { WebApiService } from '../../shared/services/webapi';
+import { AppStateService } from '../../shared/services/app-state.service/app-state.service';
+import { PlanningService } from '../../shared/services/planning';
 
 const COMPONENTS = [
     ScheduleComponent,
@@ -51,7 +50,6 @@ const MODULES = [
 ];
 
 const PROVIDERS = [
-  CalendarListService,
   WebApiService,
   AppStateService,
   PlanningService

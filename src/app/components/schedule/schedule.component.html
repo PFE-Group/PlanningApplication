@@ -1,27 +1,3 @@
-<!-- <div class=" background">
-  <nav class="navbar navbar-dark">
-    <span class="navbar-brand app-name">Scheduly</span>
-    <app-user-information [user]="user"></app-user-information>
-  </nav>
-
-  <div class="container">
-      <div class="row bottom-part">
-      <div class="elem col-2">
-        <app-calendar-list
-          [plannings]="plannings"
-          (deletePlanningEmitter)="deletePlanning($event)"></app-calendar-list>
-      </div>
-      <div class="elem col app-calendar">
-        <div class="calendar-container">
-          <app-calendar></app-calendar>
-        </div>
-        <div class="calendar-detail-container">
-          <app-calendar-details></app-calendar-details>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 <div class=" background">
 
   <nav class="navbar navbar-dark navbarTop">
@@ -42,18 +18,31 @@
       </div>
     </nav>
 
-    <!-- Page Content -->
-    <div di="content" class="container">
+    <!-- Page Content if Planning Selected -->
+    <div di="content" class="container" *ngIf="planningName != null">
       <div class="row bottom-part">
-        <div class="elem col-7 app-calendar">
+        <div class="elem col-7 app-calendar overflowscroll">
             <app-calendar></app-calendar>
         </div>
-        <div class="elem col app-calendar">
+        <div class="col overflowscroll">
             <app-calendar-details></app-calendar-details>
         </div>
       </div>
     </div>
 
+    <!-- Page Content if Planning Not Selected -->
+    <div di="content" class="container" *ngIf="planningName == null">
+      <div class="row bottom-part">
+        <div class="col">
+          <p class="waiting">Choose one of your calendar to see the details</p>
+        </div>
+      </div>
+      <div class="row bottom-part">
+        <div class="col">
+          <p class="waiting">Choose one of your calendar to see the details</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

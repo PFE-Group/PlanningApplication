@@ -16,7 +16,6 @@
 
 .app-calendar {
   padding: 5px;
-  overflow: auto;
 }
 
 .bottom-part {
@@ -40,4 +39,14 @@
 
 #sidebar.active {
   margin-left: -250px;
+}
+
+.overflowscroll{
+  overflow: auto;
+}
+
+.waiting{
+  margin-top:50px;
+  text-align: center;
+  color: white;
 }

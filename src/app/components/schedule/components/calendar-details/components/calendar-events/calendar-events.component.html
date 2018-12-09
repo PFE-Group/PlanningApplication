@@ -1,29 +1,23 @@
 
-<h3>
-  <span>Event management</span>
-  <button
-    class="btn btn-outline-primary floatright"
-    (click)="addEvent()">
-    Add new
-  </button>
-  <div class="clearfix"></div>
+<h3 class="tableTitle">
+  {{ planningName }} management
 </h3>
+<div class="table-responsive">
+<table class="table table-hover">
 
-<table class="table table-bordered">
-
-  <thead>
+  <thead class="thead-dark">
     <tr>
-      <th>Title</th>
-      <th>Color</th>
-      <th>Starts at</th>
-      <th>Ends at</th>
-      <th>Remove</th>
+      <th scope="col">Title</th>
+      <th scope="col">Color</th>
+      <th scope="col">Starts at</th>
+      <th scope="col">Ends at</th>
+      <th scope="col">Remove</th>
     </tr>
   </thead>
 
   <tbody>
     <tr *ngFor="let ts of timeSlots; let index = index">
-      <td>
+      <td scope="row">
         <input
           type="text"
           class="form-control"
@@ -58,6 +52,16 @@
         </button>
       </td>
     </tr>
+    <tr class="notARow">
+      <td>
+        <button
+          class="btn btn-outline-dark"
+          (click)="addEvent()">
+          +
+        </button>
+      </td>
+    </tr>
   </tbody>
 
 </table>
+</div>

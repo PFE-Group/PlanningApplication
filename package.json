@@ -41,9 +41,11 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "morgan": "^1.9.1",
+    "ngx-malihu-scrollbar": "^7.0.0",
     "node-red": "^0.19.5",
     "node-sass-middleware": "^0.11.0",
     "rxjs": "~6.3.3",
+    "simplebar": "^3.1.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },

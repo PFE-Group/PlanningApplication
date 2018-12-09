@@ -23,6 +23,12 @@
     text-align: right;
 }
 
-.cal-event-title{
-  color:black;
+.cal-event-title {
+  color: black;
 }
+
+
+.btn:focus {
+  outline: none !important;
+}
+
