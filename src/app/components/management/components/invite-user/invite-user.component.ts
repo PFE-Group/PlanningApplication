@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User, createUser } from 'src/app/shared/models/user'
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-invite-user',
@@ -9,9 +10,13 @@ import { User, createUser } from 'src/app/shared/models/user'
 export class InviteUserComponent implements OnInit {
   users = Array<User>();
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    console.log("okok");
+    this.http.get('/users').subscribe((data)=>{
+      console.log(data)
+    })
     this.getAllUsers();
 
   }

@@ -34,14 +34,13 @@ router.get('/current', function(req, res, next) {
 router.get('/', function(req, res, next) {
     var objjson = {}
     db.dbFirestore.collection("users").get().then( (snap) => {
-        var j = 0;
+        var j = 0;        
         snap.forEach( (doc) => {
             var obj = {}
             var data = doc.data()
             for (var i in data){
                 obj[i] = data[i]
             }
-
             obj["plannings"] = []
             if (data.plannings !== undefined){
                 data.plannings.forEach( (i) => {
@@ -51,10 +50,8 @@ router.get('/', function(req, res, next) {
                     obj["plannings"].push(temp)
                 })
             }
-            
             objjson["user " + j++] = obj
         })
-        
         res.json(objjson)
     }).catch( (err) => {
         console.log("Error getting document:", err);
