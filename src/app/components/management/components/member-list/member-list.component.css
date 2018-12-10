@@ -1,6 +1,5 @@
 
  .lielem{
-    padding:5px;
     text-align: left;
     font-size: 14px;
  }
@@ -11,4 +10,8 @@
  .member-title {
    font-size: 20px;
    font-weight: bold;
+ }
+ #forms{
+    margin-left:10%;
+    margin-top:3em;
  }

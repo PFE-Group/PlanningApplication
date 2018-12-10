@@ -15,6 +15,7 @@ export const createUser = (partialUser: Partial<User>):User =>{
   
 export const fullUser = ():User =>{
     return{
+        userId: '',
         firstName:'',
         lastName:'',
         login:'',

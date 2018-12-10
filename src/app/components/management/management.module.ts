@@ -1,7 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AutocompleteComponentUser } from './components/autocompleteUser/autocomplete.component';
-import { AutocompleteComponentTasks } from './components/autocompleteTasks/autocomplete.component'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -14,6 +12,10 @@ import {UserInformationComponent} from './components/user-information/user-infor
 import {CalendarListComponent} from './components/calendar-list';
 import {MemberListComponent} from './components/member-list/member-list.component';
 import { MainComponent } from './components/main/main.component';
+import { AutocompleteComponentUser } from './components/autocompleteUser/autocomplete.component';
+import { AutocompleteComponentTasks } from './components/autocompleteTasks/autocomplete.component';
+
+
 import {
   MatBadgeModule,
   MatBottomSheetModule,
@@ -84,8 +86,13 @@ const MODULES = [
     MatTreeModule
 ]
 const COMPONENTS=[
-  ManagementComponent,AutocompleteComponentTasks,
-  MainComponent,AutocompleteComponentUser,UserInformationComponent,CalendarListComponent,MemberListComponent
+  ManagementComponent,
+  MainComponent,
+  UserInformationComponent,
+  CalendarListComponent,
+  MemberListComponent,
+  AutocompleteComponentUser,
+  AutocompleteComponentTasks
 ]
 
 @NgModule({

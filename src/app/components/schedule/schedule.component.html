@@ -1,12 +1,8 @@
 <div class=" background">
 
-  <nav class="navbar navbar-dark navbarTop">
-    <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="toggleSideBar()">
-      <span>Toggle plannings</span>
-    </button>
-    <span class="navbar-brand app-name">Scheduly</span>
-    <app-user-information [user]="user"></app-user-information>
-  </nav>
+  <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="toggleSideBar()">
+    <span>Toggle plannings</span>
+  </button>
   <div class="wrapper">
 
     <!-- Sidebar -->
@@ -19,7 +15,7 @@
     </nav>
 
     <!-- Page Content if Planning Selected -->
-    <div di="content" class="container" *ngIf="planningName != null">
+    <div class="content container" *ngIf="planningName != null">
       <div class="row bottom-part">
         <div class="elem col-7 app-calendar overflowscroll">
             <app-calendar></app-calendar>
@@ -31,7 +27,7 @@
     </div>
 
     <!-- Page Content if Planning Not Selected -->
-    <div di="content" class="container" *ngIf="planningName == null">
+    <div class="content container" *ngIf="planningName == null">
       <div class="row bottom-part">
         <div class="col">
           <p class="waiting">Choose one of your calendar to see the details</p>

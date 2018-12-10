@@ -1,12 +1,43 @@
-<div class="center ">
+<div  class="center ">
   <div class="member-title ">Membres du planning</div>
-  <ul class="list-group">
-    <li class="list-group-item container lielem" *ngFor="let u of memberList">
-      <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">First item</a>
-        <a href="#" class="list-group-item list-group-item-action">Second item</a>
-        <a href="#" class="list-group-item list-group-item-action">Third item</a>
-      </div> 
-    </li>
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle (click)='setCurrentState(UserRole.admin)' [class.active]="currentState === UserRole.admin">admin</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.membre)' [class.active]="currentState === UserRole.membre" >membre</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.invite)' [class.active]="currentState === UserRole.invite">invité</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.all)' [class.active]="currentState === UserRole.all">tous</mat-button-toggle>
+
+  </mat-button-toggle-group> 
+  <ul id="forms"class="list-group">
+    <div *ngIf="currentState===UserRole.all">
+      <li   class="list-group-item container lielem" *ngFor="let u of memberList">
+        <div class="list-group">
+          <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
+        </div> 
+      </li>
+    </div>
+    <div *ngIf="currentState===UserRole.membre">
+        <li  class="list-group-item container lielem" *ngFor="let u of memberListMember">
+            <div class="list-group">
+              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
+            </div> 
+      </li>
+    </div>
+    <div *ngIf="currentState===UserRole.admin">
+        <li class="list-group-item container lielem" *ngFor="let u of memberListAdmin">
+            <div class="list-group">
+              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
+            </div> 
+        </li>
+    </div>
+    <div *ngIf="currentState===UserRole.invite">
+        <li  class="list-group-item container lielem" *ngFor="let u of memberListInvite">
+            <div class="list-group">
+              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
+            </div> 
+    </li> 
+    </div>
+    
+    
+   
   </ul>
 </div>

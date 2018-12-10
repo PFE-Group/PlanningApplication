@@ -36,7 +36,8 @@ export const createPlanning = (partialPlanning: Partial<Planning>):Planning =>{
 
 export const fullPlanning = ():Planning =>{
   return{
-    name:'',
+    planningId: '',
+    name: '',
     startDate: new Date(),
     endDate: new Date(),
     members:Array<User>(),

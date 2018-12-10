@@ -5,7 +5,7 @@ import { ManagementComponent} from './components/management/management.component
 const routes: Routes = [
   { path: '', redirectTo: '/schedule', pathMatch:'full'},
   { path:'schedule', component: ScheduleComponent },
-  { path: 'management', component:ManagementComponent } 
+  { path:'management', component: ManagementComponent }
 ];
 
 @NgModule({

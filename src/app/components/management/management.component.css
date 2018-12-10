@@ -1,0 +1,28 @@
+.container{
+  max-width: 90%;
+}
+
+.wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+#sidebarCollapse{
+  position:absolute;
+  padding:8px;
+  margin:-46px 10px;
+}
+
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  min-height: 92vh;
+}
+
+.sidebar-elem{
+  min-height: 90.5vh;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}

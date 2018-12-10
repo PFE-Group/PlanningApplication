@@ -29,7 +29,6 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.listenToCurrentPlanning();
     this.planningService.fetchPlannings('111');
-    this.planningService.getPlannings();
     this.plannings = this.planningService.getPlannings();
     this.user = createUser({
       firstName: 'Thomas',
