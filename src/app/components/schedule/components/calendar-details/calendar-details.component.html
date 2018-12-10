@@ -4,11 +4,11 @@
       <button (click)="setState(CalendarDetailsEnum.Stats)" type="button" class="btn btn-secondary" [class.active]="currentState === CalendarDetailsEnum.Stats">Stats</button>
     </div>-->
     <div class="elem center" *ngIf="currentState === CalendarDetailsEnum.Events" style="position: relative" >
-      <button (click)="setState(CalendarDetailsEnum.Stats)" type="button" class="btn btn-secondary" [class.active]="currentState === CalendarDetailsEnum.Stats" style="position: absolute;left:10px;top:10px;">Visualize stats</button>
+      <button (click)="setState(CalendarDetailsEnum.Stats)" type="button" class="btn btn-secondary buttonForDetail" [class.active]="currentState === CalendarDetailsEnum.Stats" style="position: absolute;left:10px;top:10px;">Visualize stats</button>
       <app-calendar-events></app-calendar-events>
     </div>
     <div class="elem center" *ngIf="currentState === CalendarDetailsEnum.Stats" style="position: relative" >
-      <button (click)="setState(CalendarDetailsEnum.Events)" type="button" class="btn btn-secondary" [class.active]="currentState === CalendarDetailsEnum.Events" style="position: absolute;left:10px;top:10px;">Visualize events</button>
+      <button (click)="setState(CalendarDetailsEnum.Events)" type="button" class="btn btn-secondary buttonForDetail" [class.active]="currentState === CalendarDetailsEnum.Events" style="position: absolute;left:10px;top:10px;">Visualize events</button>
         <app-calendar-stats></app-calendar-stats>
     </div>
 

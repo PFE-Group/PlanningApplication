@@ -1,0 +1,78 @@
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="/management">
+    Gestion
+  </a>
+
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+        <div class="nav-link" [ngClass]="{'active':currentState === ManagementEnum.plannings}" (click)="setState(ManagementEnum.plannings)">Plannings</div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active':currentState === ManagementEnum.timeSlots}" (click)="setState(ManagementEnum.timeSlots)">Plages
+          horaires</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active':currentState === ManagementEnum.inviteUser}" (click)="setState(ManagementEnum.inviteUser)">Inviter
+          utilisateurs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active':currentState === ManagementEnum.tasks}" (click)="setState(ManagementEnum.tasks)">Taches</a>
+      </li>
+    </ul>
+  </div>
+  <app-user-information [user]="user"></app-user-information>
+</nav>
+<div class="container ">
+  <mat-card>
+    <div class="row bottom-part ">
+      <div class="col-2">
+        <app-calendar-list [plannings]="plannings"></app-calendar-list>
+      </div>
+      <div class="col-8">
+        <div *ngIf="currentState === ManagementEnum.plannings">
+          <app-plannings></app-plannings>
+        </div>
+        <div *ngIf="currentState === ManagementEnum.inviteUser">
+          <app-invite-user></app-invite-user>
+        </div>
+        <div *ngIf="currentState === ManagementEnum.timeSlots">
+          <app-time-slots></app-time-slots>
+        </div>
+        <div *ngIf="currentState === ManagementEnum.tasks">
+          <app-tasks></app-tasks>
+        </div>
+      </div>
+      <div class="col-2">
+        <app-member-list></app-member-list>
+      </div>
+    </div>
+  </mat-card>
+
+
+</div> -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="/management">
+    Gestion
+  </a>
+  <app-user-information [user]="user"></app-user-information>
+</nav>
+<div class="container ">
+  <mat-card>
+    <div class="row bottom-part ">
+      <div class="col-2">
+        <app-calendar-list [plannings]="plannings"></app-calendar-list>
+      </div>
+      <div class="col-8"> <!-- MAIN-->
+        <app-main></app-main>
+      </div>
+      <div class="col-2">
+        <app-member-list></app-member-list>
+      </div>
+    </div>
+  </mat-card>
+</div>

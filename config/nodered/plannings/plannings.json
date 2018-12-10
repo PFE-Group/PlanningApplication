@@ -4,7 +4,7 @@
       "planningId": "id1",
       "name": "PFE",
       "startDate": "2018-12-06T12:30:00.511Z",
-      "endDate": "2018-12-09T12:30:00.511Z",
+      "endDate": "2018-12-31T12:30:00.511Z",
       "members": [{
         "userId": "xxx",
         "role": "admin"
@@ -14,7 +14,7 @@
           "name": "Math",
           "expectedHours": "15",
           "doneHours": "0",
-          "color": "#FEFE00"
+          "color": "#AA0000"
         },
         {
           "name": "Algo",
@@ -24,19 +24,19 @@
         }],
       "timeSlots": [
         {
-          "start": "2018-12-08T08:30:00.511Z",
-          "end": "2018-12-08T18:30:00.511Z",
+          "start": "2018-12-13T08:30:00.511Z",
+          "end": "2018-12-13T18:30:00.511Z",
           "event": {
             "name": "Math",
             "expectedHours": "15",
             "doneHours": "0",
-            "color": "#FEFE00"
+            "color": "#AA0000"
           },
           "done": "false"
         },
         {
-          "start": "2018-12-07T08:30:00.511Z",
-          "end": "2018-12-07T19:30:00.511Z",
+          "start": "2018-12-15T08:30:00.511Z",
+          "end": "2018-12-15T19:30:00.511Z",
           "event": {
             "name": "Algo",
             "expectedHours": "18",
@@ -55,12 +55,13 @@
         "userId": "xxx",
         "role": "admin"
       }],
-      "events": [{
-        "name": "Langage C",
-        "expectedHours": "80",
-        "doneHours": "0",
-        "color": "#FEFE00"
-      },
+      "events": [
+        {
+          "name": "Langage C",
+          "expectedHours": "80",
+          "doneHours": "0",
+          "color": "#FEFE00"
+        },
         {
           "name": "Infrastructure Réseau",
           "expectedHours": "60",
@@ -80,8 +81,8 @@
           "color": "#33EF71"
         }],
       "timeSlots": [{
-        "start": "2018-12-08T12:30:00.511Z",
-        "end": "2018-12-08T18:30:00.511Z",
+        "start": "2018-12-14T12:30:00.511Z",
+        "end": "2018-12-14T18:30:00.511Z",
         "event": {
           "name": "Patterns",
           "expectedHours": "70",
@@ -91,8 +92,8 @@
         "done": "false"
       },
         {
-          "start": "2018-12-07T12:30:00.511Z",
-          "end": "2018-12-07T19:30:00.511Z",
+          "start": "2018-12-15T12:30:00.511Z",
+          "end": "2018-12-15T19:30:00.511Z",
           "event": {
             "name": "Patterns",
             "expectedHours": "70",
