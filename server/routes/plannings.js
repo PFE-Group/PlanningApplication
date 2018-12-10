@@ -62,7 +62,7 @@ router.post("/planning", (req, res, next) => {
         message.invalidFields.push("Require non empty [name]");
     }
     if(message.invalidFields.length > 0) {
-        res.status("403").json(message);
+        res.status("400").json(message);
         return;
     }
 
@@ -88,7 +88,7 @@ router.put("/:id/member", (req, res, next) => {
     // TODO : once authentication done; check whether the connected user is member of the document with a status different from "guest"
     const {login, role} = req.body;
     if(!validator.checkRole(role)) {
-        res.status(403).send("Invalid role");
+        res.status(400).send("Invalid role");
         return;
     }
     const id = req.params.id;
@@ -105,7 +105,7 @@ router.put("/:id/member", (req, res, next) => {
                 throw "User [" + login + "] already added";
             }
             
-            return transaction.get(userDocRef).then( (snap) => {
+            return transaction.get(userDocRef).then((snap) => {
                 if(snap.empty) {
                     throw "Unregistered user: ["+ login +"]";
                 }
@@ -135,7 +135,7 @@ router.put("/:id/member", (req, res, next) => {
     }).then( (planning) => {
         res.json(planning)
     }).catch( (error) => {
-        res.status(403).send("[Transaction failed]"+ error);
+        res.status(500).send("An error has occurred");
     })
 });
 
@@ -143,7 +143,67 @@ router.put("/:id/member", (req, res, next) => {
  * ADD A TASK TO THE PLANNING
  */
 router.put("/:id/task", (req, res, next) => {
-    //const {name, color, }
+    var {name, color, hoursExpected} = req.body;
+    const id = req.params.id;
+
+    var message = {
+        "invalidFields": []
+    };
+    hoursExpected = validator.checkNumber(hoursExpected);
+
+    var planningDocRef = db.db.collection("plannings").doc(id);
+
+    if(!name) {
+        message.invalidFields.push("Require non empty [name]");
+    }
+
+    var newtask = {
+        "name": name,
+        "color": color,
+        "hoursExpected": hoursExpected,
+        "hoursDone": 0
+    }
+
+    if(!color) {
+        delete newtask.color;
+    }
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef).then((planningDoc) => {
+            if(!planningDoc.exists) {
+                message.invalidFields.push("Any occurrence for id [" + id + "]");
+                return;
+            }
+            var data  = planningDoc.data();
+            var tasks = data.tasks;
+            var ok = true;
+            for(i in tasks) {
+                if(tasks[i].name === name) {
+                    ok = false; 
+                    break;
+                }
+            }
+
+            if(!ok) {
+                message.invalidFields.push("Name already used in the planning");
+                return;
+            }
+
+            tasks.push(newtask);
+            data.tasks = tasks;
+            transaction.update(planningDocRef, {tasks: tasks});
+            
+            return data;
+        })
+    }).then((planning) => {
+        if(message.invalidFields.length > 0){
+            res.status("400").json(message);
+        } else {
+            res.json(planning);
+        }
+    }).catch((error) => {
+
+    });
 });
 
 

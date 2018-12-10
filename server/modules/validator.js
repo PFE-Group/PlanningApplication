@@ -11,6 +11,11 @@ exports.checkDate = (date) => {
     return date;
 };
 
+exports.checkNumber = (n) => {
+    if(isNaN(n)) return 0;
+    return parseFloat(n);
+};
+
 exports.checkPwd = (pwd) => {
 
 };
