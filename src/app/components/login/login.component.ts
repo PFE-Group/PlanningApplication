@@ -33,7 +33,8 @@ export class LoginComponent implements OnInit {
         password: this.loginUserPassword
       })
       .subscribe((data) => {
-        this.authService.logIn(data)
+        //data["users"] === user connecté
+        this.authService.logIn(data["customToken"])
         this.good = true;
         this.messageToShow = "Success !"
         this.route.navigate(['schedule'])
@@ -75,7 +76,5 @@ export class LoginComponent implements OnInit {
     if (this.authStatus) {
       this.route.navigate(['schedule'])
     }
-
   }
-
 }

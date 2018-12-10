@@ -4,7 +4,7 @@ const firebase = require('firebase-admin')
 
 // GET : USER COURANT
 router.get('/current', function(req, res, next) {
-    firebase.firestore().collection("users").doc("3Jv3xT2Ti2s8aZHg2WsB").get().then( (doc) => {
+    firebase.firestore().collection("users").doc(req.body.userUid).get().then( (doc) => {
         if (doc && doc.exists){
             res.json(doc.data())
         }else{

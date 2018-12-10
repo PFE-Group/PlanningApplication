@@ -15,22 +15,37 @@ router.post('/login', function (req, res, next) {
         .where("email", "==", user.email)
         .get()
         .then((snap) => {
+            if (snap.size <= 0){
+                return res.status(403).send({
+                    message : "user not found"
+                })
+            }
             snap.forEach((doc) => {
-                bcrypt.compare(user.password, doc.data().password, (err, result) => {
+                var data = doc.data()
+                bcrypt.compare(user.password, data.password, (err, result) => {
                     if (err) {
-                        res.status(500).json(err)
+                        return res.status(500).send(err)
                     } else {
                         if (!result) {
-                            res.status(401).json({
+                            return res.status(401).send({
                                 message: "bad email/password"
                             })
                         } else {
                             user.uid = doc.id
-                            firebase.auth().createCustomToken(user.uid)
+                            var additionalClaims = {
+                                firstName: data.firstName,
+                                lastName: data.lastName,
+                                login: data.login
+                            }
+                            firebase.auth().createCustomToken(user.uid, additionalClaims)
                                 .then((customToken) => {
-                                    res.json(customToken)
+                                    data.password = ""
+                                    return res.status(200).send({
+                                        customToken : customToken,
+                                        user : data
+                                    })
                                 }).catch((err) => {
-                                    res.status(403).json(err)
+                                    return res.status(403).send(err)
                                 })
                         }
 
@@ -40,7 +55,7 @@ router.post('/login', function (req, res, next) {
             })
 
         }).catch((err) => {
-            res.status(403).json(err)
+            return res.status(403).send(err)
         })
 
 })
@@ -48,7 +63,7 @@ router.post('/login', function (req, res, next) {
 router.post('/register', function (req, res, next) {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
-            res.status(500).json(err)
+            return res.status(500).send(err)
         } else {
             let user = {
                 email: req.body.email,
@@ -63,18 +78,16 @@ router.post('/register', function (req, res, next) {
                 .then((result) => {
                     firebase.firestore().collection('users').doc(result.uid).set(user)
                         .then((userFound) => {
-                            res.json(userFound)
+                            return res.status(200).send(userFound)
                         }).catch((err) => {
-                            res.status(401).json(err)
+                            return res.status(401).send(err)
                         })
                 })
                 .catch((err) => {
-                    res.status(403).json(err)
+                    return res.status(403).send(err)
                 })
         }
     })
-
-
 })
 
 module.exports = router;

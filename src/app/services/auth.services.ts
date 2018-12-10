@@ -1,5 +1,16 @@
-export class AuthService {
+import * as firebase from 'firebase'
 
+var config = {
+    apiKey: "AIzaSyAllrr8fQmSbiL0QOBa9w0cey_060AHfhQ",
+    authDomain: "pfe01-6c98e.firebaseapp.com",
+    databaseURL: "https://pfe01-6c98e.firebaseio.com",
+    projectId: "pfe01-6c98e",
+    storageBucket: "pfe01-6c98e.appspot.com",
+    messagingSenderId: "521992410400"
+};
+firebase.initializeApp(config);
+
+export class AuthService {
     isAuth = false;
 
     storeToken(token) {
@@ -16,19 +27,19 @@ export class AuthService {
         localStorage.removeItem("token");
     }
 
-    logIn(token){
+    logIn(token) {
         this.storeToken(token)
-        this.isAuth = true
+        this.isAuth = true;
+        firebase.auth().signInWithCustomToken(token);
     }
 
-    logOut(){
+    logOut() {
         this.clearToken()
-        this.isAuth = false
+        this.isAuth = false;
+        firebase.auth().signOut()
     }
 
-    checkIfAuth(){
-        var token = this.retrieveToken()
-        return token !== null
+    checkIfAuth() {
+        return this.retrieveToken() !== null;
     }
-
 }
