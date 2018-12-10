@@ -2,17 +2,19 @@ var express = require('express');
 var router = express.Router();
 const db = require('../modules/db.js');
 
-//GET : TOUS LES PLANNINGS
+//GET : TOUS LES PLANNINGS => A changer
 router.get('/', function(req, res, next){
-    var objjson = {}
+    var array = []
     db.db.collection('plannings').get().then( (snap) => {
-        var j = 0
         snap.forEach( (doc) => {
-            objjson["planning " + j++] = doc.data()
+            var data = doc.data()
+            data["planningId"] = doc.id;
+            array.push(data)
         })
-        res.json(objjson)
+        res.json(array)
     }).catch( (err) => {
         console.log("Error : ", err)
+        res.status(500).send("An error has occurred")
     })
 })
 
@@ -36,7 +38,7 @@ router.post("/planning", (req, res, next) => {
         "startDate": "",
         "endDate": "",
         "users": {},
-        "tasks": {},
+        "tasks": [],
         "timeSlot": []
     }
     var {name, startDate, endDate} = req.body;
