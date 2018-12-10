@@ -206,6 +206,29 @@ router.put("/:id/task", (req, res, next) => {
     });
 });
 
+router.patch("/:id", (req, res, next) => {
+    var {name, startDate, endDate} = req.body;
+
+    startDate = validator.checkDate(startDate);
+    endDate = validator.checkDate(endDate);
+
+    if(!name && !startDate && !endDate) {
+        res.status(400).send("This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct.")
+        return;
+    }
+
+    var error = false;
+    var planningDocRef = db.db.collection("plannings").doc(id);
+
+    db.db.runTransaction((transaction) => {
+
+    }).then((planning) => {
+        
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send("An error has occurred. Sorry...")
+    });
+});
 
 /**
  * GET /users/:idPlanning
