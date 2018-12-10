@@ -139,16 +139,31 @@ router.put("/:id/member", (req, res, next) => {
 
 /**
  * GET /users/:idPlanning
- * Return a JSON of all users of a planning
+ * Send a JSON of all users of a planning
  */
 router.get('/users/:idPlanning', function(req, res, next){
-    console.log(req.params.idPlanning);
     db.db.collection('plannings')
     .doc(req.params.idPlanning)
     .get().then((doc) => {
         res.json(doc.data().users);
     }).catch((err) => {
-        console.log("Error getting document:", err)
+        console.log("Error getting document:", err);
+    });
+});
+
+/**
+ * DELETE /:idPlanning
+ * Delete a planning
+ */
+router.delete('/:idPlanning', function(req, res, next){
+    db.db.collection('plannings')
+    .doc(req.params.idPlanning)
+    .delete().then(() => {
+        // 204 No Content - Response to a successful request that won't be returning a body (like a DELETE request)
+        res.sendStatus(204); 
+        console.log("Planning", req.params.idPlanning, "has been deleted");
+    }).catch((err) => {
+        console.log("Error getting document:", err);
     });
 });
 
