@@ -17,7 +17,7 @@ router.get('/current', function(req, res, next) {
 
 /**
  * GET /
- * Return an array as a JSON of all users with their first name, last name, email and login
+ * Send an array into a JSON of all users with their first name, last name, email and login
  */
 router.get('/', function(req, res, next) {
     var arr = [];
@@ -51,6 +51,36 @@ router.get('/:login', function(req, res, next) {
     }).catch( (err) => {
         console.log("Error getting document:", err);
     } )
+});
+
+/**
+ * GET /plannings/:idUser
+ * Send an array into a JSON of all plannings of a user
+ */
+router.get('/plannings/:idUser', function(req, res, next){
+    db.db.collection('users')
+    .doc(req.params.idUser).get()
+    .then((doc) => {
+        var  promises = [];
+        var arr = doc.data().plannings;
+        var b = [];
+
+        arr.forEach((p) =>{
+            promises.push(db.db.collection('plannings')
+            .doc(p.planningID).get()
+            .then((doc) => {
+                b.push(doc.data());
+            }).catch((err) => {
+                console.log("Error getting document:", err);
+            }));
+        });
+        
+        Promise.all(promises).then(() =>
+            res.json(b)
+        );
+    }).catch((err) => {
+        console.log("Error getting document:", err);
+    });
 });
 
 module.exports = router;
