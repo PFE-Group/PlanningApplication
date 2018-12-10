@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../modules/db.js');
+const validator = require("../modules/validator.js");
 
 //GET : TOUS LES PLANNINGS => A changer
 router.get('/', function(req, res, next){
@@ -91,8 +92,11 @@ router.post("/planning", (req, res, next) => {
 // ADD A USER TO THE PLANNING WITH ID EQUAL TO REQ.PARAMS.ID
 router.put("/:id/member", (req, res, next) => {
     // TODO : once authentication done; check whether the connected user is member of the document with a status different from "guest"
-    const login = req.body.login;
-    const role = req.body.role;
+    const {login, role} = req.body;
+    if(!validator.checkRole(role)) {
+        res.status(403).send("Invalid role");
+        return;
+    }
     const id = req.params.id;
     var planningDocRef = db.db.collection("plannings").doc(id);
     var userDocRef = db.db.collection("users").where("login", "==", login);
@@ -101,7 +105,8 @@ router.put("/:id/member", (req, res, next) => {
             if(!planningDoc.exists) {
                 throw "No planning with id: [" + req.params.id + "]";
             }
-            var {users, name} = planningDoc.data();
+            var planningData = planningDoc.data();
+            var {users, name} = planningData;
             if(login in users) {
                 throw "User [" + login + "] already added";
             }
@@ -127,11 +132,14 @@ router.put("/:id/member", (req, res, next) => {
                     
                     transaction.update(doc.ref, {plannings: plannings});
                     transaction.update(planningDocRef, {users: users});
+                    planningData.users = users;
                 })
+
+                return planningData;
             })
         })
-    }).then( () => {
-        res.send("User successfully added");
+    }).then( (planning) => {
+        res.json(planning)
     }).catch( (error) => {
         res.status(403).send("[Transaction failed]"+ error);
     })
