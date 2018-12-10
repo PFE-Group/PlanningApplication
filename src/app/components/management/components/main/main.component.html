@@ -1,39 +1,7 @@
 <mat-accordion  class="example-headers-align">
-  <!-- NOUVEAU PLANNING -->
-  <mat-expansion-panel id="forms" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Nouveau planning
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-form-field>
-      <input matInput placeholder="nom"><!-- nom du planning-->
-    </mat-form-field>
-    <mat-form-field>
-      <!-- date de début du planning-->
-      <input matInput [matDatepicker]="picker1" placeholder="date de debut" >
-      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1 ></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field>
-      <!-- date de fin du planning-->
-      <input matInput [matDatepicker]="picker2" placeholder="data de fin" >
-      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2 ></mat-datepicker>
-    </mat-form-field>
-    <br>
-    <autocomplete-component-users [users]="users"></autocomplete-component-users> <!-- les membres-->
-    <br>
-    <autocomplete-component-tasks [tasks]="tasks"></autocomplete-component-tasks> <!-- les tâches-->
-    <br>
-    <button mat-stroked-button color="primary">Créer</button>
-
-    <mat-action-row>
-      <button mat-button color="primary" (click)="nextStep()">Suivant</button>
-    </mat-action-row>
-  </mat-expansion-panel>
+  
   <!-- INVITER UN UTILISATEUR-->
-  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Inviter un nouveau utilisateur
@@ -50,12 +18,11 @@
     <br>
     <button mat-stroked-button color="primary">Inviter</button>
     <mat-action-row>
-      <button mat-button color="warn" (click)="prevStep()">Précédent</button>
       <button mat-button color="primary" (click)="nextStep()">Suivant</button>
     </mat-action-row>
   </mat-expansion-panel>
   <!--Ajouter une plage-->
-  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Ajouter une plage horaire
@@ -83,7 +50,7 @@
     </mat-action-row>
   </mat-expansion-panel>
   <!-- ajouter une tâche -->
-  <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle>
+  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Ajouter une tâche

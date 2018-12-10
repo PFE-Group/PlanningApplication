@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { AppStateService } from '../../shared/services/app-state.service';
 import { Observable } from 'rxjs';
 import { PlanningService } from '../../shared/services/planning';
+import { DivEnums } from './models/div.enums';
+
 
 @Component({
   selector: 'app-management',
@@ -19,11 +21,26 @@ export class ManagementComponent implements OnInit {
   plannings: Observable<Array<Planning>>;
   currentPlanning: Observable<Planning>;
   displaySideBar = false;
-
+  DivEnums = DivEnums
+  currentDiv : DivEnums
+  showButton: boolean
   user: User;
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
+  }
+  onResize(){
+    if(window.innerWidth<1225){
+      this.showButton=true
+      this.currentDiv=DivEnums.management
+    }
+    else{
+      this.showButton=false
+      this.currentDiv=DivEnums.all
+    }
+  }
+  showDiv(div: DivEnums){
+    this.currentDiv=div;
   }
 
   constructor(private appStateService: AppStateService, private planningService: PlanningService){
@@ -31,6 +48,7 @@ export class ManagementComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onResize()
     this.user = createUser({
       firstName: 'Thomas',
       lastName: 'Ronsmans',

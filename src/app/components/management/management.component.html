@@ -14,15 +14,19 @@
       </div>
     </nav>
 
-    <div di="content" class="container" *ngIf="currentPlanning != null">
+    <div di="content" class="container" (window:resize)="onResize()" *ngIf="currentPlanning != null">
       <mat-card class="elem">
+          <mat-button-toggle-group [hidden]="!showButton" name="fontStyle" aria-label="Font Style">       
+              <mat-button-toggle (click)='showDiv(DivEnums.management)'>Gestion</mat-button-toggle>
+              <mat-button-toggle (click)='showDiv(DivEnums.members)'>Membres</mat-button-toggle>   
+            </mat-button-toggle-group>
         <div class="row bottom-part">
-          <div class="col-6"> <!-- MAIN-->
-            <app-main></app-main>
-          </div>
-          <div class="col-4">
-            <app-member-list></app-member-list>
-          </div>
+            <div [hidden]="currentDiv!==DivEnums.management && currentDiv!==DivEnums.all" class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-8"> <!-- MAIN-->
+              <app-main></app-main>
+            </div>
+            <div [hidden]="currentDiv!==DivEnums.members && currentDiv!==DivEnums.all" class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-4">
+              <app-member-list></app-member-list>
+            </div>
         </div>
       </mat-card>
     </div>
