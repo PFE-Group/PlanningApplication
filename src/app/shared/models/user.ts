@@ -1,6 +1,7 @@
 import { Planning } from "./planning";
 
 export interface User {
+    idUser: string;
     firstName: string;
     lastName: string;
     login: string;
@@ -14,6 +15,7 @@ export const createUser = (partialUser: Partial<User>):User =>{
   
 export const fullUser = ():User =>{
     return{
+        idUser: '',
         firstName:'',
         lastName:'',
         login:'',

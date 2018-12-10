@@ -3,6 +3,7 @@ import { PlanningEvent } from "./planning-event";
 import { TimeSlot } from "./time-slot";
 
 export interface Planning {
+    idPlanning: string,
     name: string;
     startDate: Date;
     endDate: Date;
@@ -19,6 +20,7 @@ export const createPlanning = (partialPlanning: Partial<Planning>):Planning =>{
 
 export const fullPlanning = ():Planning =>{
     return{
+        idPlanning: '',
         name:'',
         startDate: new Date(),
         endDate: new Date(),
