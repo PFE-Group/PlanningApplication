@@ -50,21 +50,13 @@ router.post("/planning", (req, res, next) => {
     };
 
     // validation of inputs
+    startDate = validator.checkDate(startDate);
     if(!startDate) {
-        message.invalidFields.push("Require non empty [startDate]");
-    } else {
-        startDate = new Date(startDate);
-        if(isNaN(startDate.getTime())) {
-            message.invalidFields.push("Require valid date format for [startDate");
-        }
+        message.invalidFields.push("Require valid date format for [startDate]");
     }
+    endDate = validator.checkDate(endDate);
     if(!endDate) {
         message.invalidFields.push("Require non empty [endDate]");
-    } else {
-        endDate = new Date(endDate);
-        if(isNaN(endDate.getTime())) {
-            message.invalidFields.push("Require valid date format for [endDate");
-        }
     }
     if(!name){
         message.invalidFields.push("Require non empty [name]");
@@ -74,9 +66,9 @@ router.post("/planning", (req, res, next) => {
         return;
     }
 
-    planning.endDate = endDate.getTime();
+    planning.endDate = endDate;
     planning.name = name;
-    planning.startDate = startDate.getTime();
+    planning.startDate = startDate;
 
     // insertion
     db.db.collection("plannings").add(planning)

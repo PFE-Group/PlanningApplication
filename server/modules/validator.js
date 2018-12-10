@@ -4,7 +4,11 @@ exports.checkRole = (role) => {
 };
 
 exports.checkDate = (date) => {
-
+    date = new Date(date).getTime();
+    if(isNaN(date)) {
+        return null;
+    }
+    return date;
 };
 
 exports.checkPwd = (pwd) => {
