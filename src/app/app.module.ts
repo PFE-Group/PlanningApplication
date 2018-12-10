@@ -12,7 +12,7 @@ import { UserInformationComponent } from './components/schedule/components/user-
 @NgModule({
   declarations: [
     AppComponent,
-    UserInformationComponent
+    UserInformationComponent,
   ],
   imports: [
     BrowserModule,
@@ -20,7 +20,7 @@ import { UserInformationComponent } from './components/schedule/components/user-
     ScheduleModule,
     HttpClientModule,
     AngularFontAwesomeModule,
-    ManagementModule
+    ManagementModule,
   ],
   providers: [
 

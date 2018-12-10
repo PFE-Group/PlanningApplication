@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 const COMPONENTS = [
-  
 ];
 
 const MODULES = [
