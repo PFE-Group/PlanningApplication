@@ -72,9 +72,21 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authStatus = this.authService.checkIfAuth()
-    if (this.authStatus) {
+    this.authService.checkIfAuth().then( (idToken) => {
+      //Faire une requete vers le back pour verifier le token
+      this.httpClient
+      .post('http://localhost:3030/api/login/verifyToken', {
+        idToken : idToken
+      })
+      .subscribe((data) => {
+        console.log("Voici l'user connecté : ", data)
+      },
+        (err) => {
+
+        })
+    })
+    /*if (this.authStatus) {
       this.route.navigate(['schedule'])
-    }
+    }*/
   }
 }

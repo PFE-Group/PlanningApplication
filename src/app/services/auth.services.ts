@@ -40,6 +40,21 @@ export class AuthService {
     }
 
     checkIfAuth() {
-        return this.retrieveToken() !== null;
+        return new Promise( (resolve, reject) => {
+            firebase.auth().onAuthStateChanged( (user) => {
+                if (user){
+                    user.getIdToken(true)
+                        .then( (idToken) => {
+                            resolve(idToken)
+                        })
+                }else{
+                    reject({
+                        message : "No connected"
+                    })
+                }
+            })
+        })
+
+        //return this.retrieveToken() !== null;
     }
 }
