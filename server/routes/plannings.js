@@ -40,7 +40,9 @@ router.post("/planning", (req, res, next) => {
         "endDate": "",
         "users": {},
         "tasks": [],
-        "timeSlot": []
+        "timeSlots": {
+            "version": 0
+        }
     }
     var {name, startDate, endDate} = req.body;
     var message = {
@@ -144,6 +146,14 @@ router.put("/:id/member", (req, res, next) => {
         res.status(403).send("[Transaction failed]"+ error);
     })
 });
+
+/**
+ * ADD A TASK TO THE PLANNING
+ */
+router.put("/:id/task", (req, res, next) => {
+    //const {name, color, }
+});
+
 
 /**
  * GET /users/:idPlanning
