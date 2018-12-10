@@ -206,8 +206,14 @@ router.put("/:id/task", (req, res, next) => {
     });
 });
 
+
+/**
+ * UPDATE PLANNING FIELDS
+ * MISSING CHECKS
+ */
 router.patch("/:id", (req, res, next) => {
     var {name, startDate, endDate} = req.body;
+    var id = req.params.id;
 
     startDate = validator.checkDate(startDate);
     endDate = validator.checkDate(endDate);
@@ -221,9 +227,34 @@ router.patch("/:id", (req, res, next) => {
     var planningDocRef = db.db.collection("plannings").doc(id);
 
     db.db.runTransaction((transaction) => {
-
+        return transaction.get(planningDocRef).then((planningDoc) => {
+            if(!planningDoc.exists) {
+                error = true;
+                return;
+            }
+            var data = planningDoc.data();
+            if(name) {
+                data.name = name;
+            }
+            if(startDate) {
+                data.startDate = startDate;
+            }
+            if(endDate) {
+                data.endDate = endDate;
+            }
+            transaction.update(planningDocRef, {
+                "name": data.name,
+                "startDate": data.startDate,
+                "endDate": data.endDate
+            })
+            return data;
+        })
     }).then((planning) => {
-        
+        if(error) {
+            res.status("404").send("Any occurence for id: [" + id + "]");
+        } else {
+            res.json(planning);
+        }
     }).catch((error) => {
         console.log(error);
         res.status(500).send("An error has occurred. Sorry...")
