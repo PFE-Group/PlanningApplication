@@ -8,7 +8,9 @@ const usersRouter = require('./routes/users');
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const planningsRouter = require('./routes/plannings');
+const cors = require('cors')
 const app = express();
+app.use(cors());
 
 const db = require('./modules/db.js');
 
