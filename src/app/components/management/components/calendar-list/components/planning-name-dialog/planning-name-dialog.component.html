@@ -1,0 +1,27 @@
+<mat-form-field>
+  <input matInput placeholder="nom"><!-- nom du planning-->
+</mat-form-field>
+<br>
+<mat-form-field>
+  <!-- date de début du planning-->
+  <input matInput [matDatepicker]="picker1" placeholder="date de debut" >
+  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+  <mat-datepicker #picker1 ></mat-datepicker>
+</mat-form-field>
+<br>
+<mat-form-field>
+  <!-- date de fin du planning-->
+  <input matInput [matDatepicker]="picker2" placeholder="data de fin" >
+  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+  <mat-datepicker #picker2 ></mat-datepicker>
+</mat-form-field>
+<br>
+<mat-form-field>
+  <input matInput placeholder="membres"><!-- nom du planning-->
+</mat-form-field>
+<br>
+<mat-form-field>
+  <input matInput placeholder="tâches"><!-- nom du planning-->
+</mat-form-field>
+<br>
+<button mat-stroked-button color="primary">Créer</button>

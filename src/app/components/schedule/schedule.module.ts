@@ -12,7 +12,6 @@ import { CalendarDetailsComponent } from './components/calendar-details';
 import { CalendarInformationComponent } from './components/calendar-information';
 import { CalendarEventsComponent } from './components/calendar-details/components/calendar-events';
 import { CalendarStatsComponent } from './components/calendar-details/components/calendar-stats';
-import { CalendarListComponent } from './components/calendar-list';
 import { MemberListComponent } from './components/member-list';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -20,7 +19,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WebApiService } from '../../shared/services/webapi';
 import { AppStateService } from '../../shared/services/app-state.service/app-state.service';
 import { PlanningService } from '../../shared/services/planning';
-import { PlanningNameDialogComponent } from './components/calendar-list/components/planning-name-dialog';
+import { CalendarListComponent } from '../../shared/components/calendar-list';
+import { PlanningNameDialogComponent } from '../../shared/components/calendar-list/components/planning-name-dialog';
 
 
 const COMPONENTS = [

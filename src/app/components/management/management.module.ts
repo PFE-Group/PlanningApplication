@@ -14,7 +14,7 @@ import {MemberListComponent} from './components/member-list/member-list.componen
 import { MainComponent } from './components/main/main.component';
 import { AutocompleteComponentUser } from './components/autocompleteUser/autocomplete.component';
 import { AutocompleteComponentTasks } from './components/autocompleteTasks/autocomplete.component';
-
+import { PlanningNameDialogComponent } from './components/calendar-list/components/planning-name-dialog';
 
 import {
   MatBadgeModule,
@@ -48,54 +48,63 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatTreeModule,
-  
+
 } from '@angular/material';
 import { InviteUserComponent } from './components/invite-user/invite-user.component';
 import { NewTasksComponent } from './components/new-tasks/new-tasks.component';
 import { NewTimeSlotComponent } from './components/new-time-slot/new-time-slot.component';
 
 const MODULES = [
-    BrowserModule,FormsModule,ReactiveFormsModule,BrowserAnimationsModule,
-    MatAutocompleteModule,MatFormFieldModule,MatInputModule,MatButtonToggleModule,MatCardModule,MatBadgeModule,
-    MatBottomSheetModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatIconModule,
-    MatListModule,
-    MatMenuModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatStepperModule,
-    MatTableModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatTreeModule
+  BrowserModule,
+  FormsModule,
+  ReactiveFormsModule,
+  BrowserAnimationsModule,
+  MatAutocompleteModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatStepperModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatTreeModule
 ]
-const COMPONENTS=[
+const COMPONENTS = [
   ManagementComponent,
   MainComponent,
   UserInformationComponent,
   CalendarListComponent,
   MemberListComponent,
   AutocompleteComponentUser,
-  AutocompleteComponentTasks
+  AutocompleteComponentTasks,
+  PlanningNameDialogComponent
 ]
 
 @NgModule({
@@ -104,11 +113,11 @@ const COMPONENTS=[
     InviteUserComponent,
     NewTasksComponent,
     NewTimeSlotComponent,
-    
   ],
   imports: [
     ...MODULES
   ],
   providers: [],
+  entryComponents: [PlanningNameDialogComponent]
 })
 export class ManagementModule { }
