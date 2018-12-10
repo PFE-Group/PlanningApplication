@@ -50,6 +50,9 @@ import {
   MatTreeModule,
   
 } from '@angular/material';
+import { InviteUserComponent } from './components/invite-user/invite-user.component';
+import { NewTasksComponent } from './components/new-tasks/new-tasks.component';
+import { NewTimeSlotComponent } from './components/new-time-slot/new-time-slot.component';
 
 const MODULES = [
     BrowserModule,FormsModule,ReactiveFormsModule,BrowserAnimationsModule,
@@ -98,6 +101,9 @@ const COMPONENTS=[
 @NgModule({
   declarations: [
     ...COMPONENTS,
+    InviteUserComponent,
+    NewTasksComponent,
+    NewTimeSlotComponent,
     
   ],
   imports: [
