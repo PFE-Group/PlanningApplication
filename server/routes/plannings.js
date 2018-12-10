@@ -9,7 +9,7 @@ router.get('/', function(req, res, next){
     db.db.collection('plannings').get().then( (snap) => {
         snap.forEach( (doc) => {
             var data = doc.data()
-            data["planningId"] = doc.id;
+            data["id"] = doc.id;
             array.push(data)
         })
         res.json(array)
@@ -176,15 +176,8 @@ router.put("/:id/task", (req, res, next) => {
             }
             var data  = planningDoc.data();
             var tasks = data.tasks;
-            var ok = true;
-            for(i in tasks) {
-                if(tasks[i].name === name) {
-                    ok = false; 
-                    break;
-                }
-            }
-
-            if(!ok) {
+            var ok = getTaskIndex(name, tasks);
+            if(ok !== -1) {
                 message.invalidFields.push("Name already used in the planning");
                 return;
             }
@@ -192,7 +185,7 @@ router.put("/:id/task", (req, res, next) => {
             tasks.push(newtask);
             data.tasks = tasks;
             transaction.update(planningDocRef, {tasks: tasks});
-            
+            data["id"] = planningDoc.id;
             return data;
         })
     }).then((planning) => {
@@ -247,6 +240,7 @@ router.patch("/:id", (req, res, next) => {
                 "startDate": data.startDate,
                 "endDate": data.endDate
             })
+            data["id"] = planningDoc.id;
             return data;
         })
     }).then((planning) => {
@@ -259,6 +253,60 @@ router.patch("/:id", (req, res, next) => {
         console.log(error);
         res.status(500).send("An error has occurred. Sorry...")
     });
+});
+
+router.patch("/:id/task/:taskName", (req, res, next) => {
+    const {id, taskName} = req.params;
+    var {name, hoursExpected, color} = req.body;
+
+    hoursExpected = validator.checkNumber(hoursExpected);
+
+    var message = [];
+
+    if(!name && !hoursExpected && !color) {
+        res.status(400).send("This request require at least one of the following fields : name, hoursExpected, color. Also make sure the format is correct.")
+        return;
+    }
+
+    var planningDocRef = db.db.collection("plannings").doc(id);
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef).then((planningDoc) => {
+            if(!planningDoc.exists){
+                message.push("Any occurrence of id [" + id + "]")
+                return;
+            }
+
+            var data = planningDoc.data();
+            var tasks = data.tasks;
+            var i = getTaskIndex(taskName, tasks);
+            if(i === -1) {
+                message.push("Any task with name [" + taskName + "]");
+                return;
+            }
+            if(name) {
+                tasks[i].name = name;
+            }
+            if(hoursExpected) {
+                tasks[i].hoursExpected = hoursExpected;
+            }
+            if(color) {
+                tasks[i].color = color;
+            }
+            transaction.update(planningDocRef, {tasks : tasks});
+            data.tasks = tasks;
+            return data;
+        })
+    }).then((planning) =>{
+        if(!planning) {
+            res.status(404).json(message);
+        } else {
+            res.json(planning);
+        }
+    }).catch((error) => {
+        res.status(500).send("An error has occured. Sorry...")
+        console.log("Modify task route: " +error);
+    });
+
 });
 
 /**
@@ -290,5 +338,15 @@ router.delete('/:idPlanning', function(req, res, next){
         console.log("Error getting document:", err);
     });
 });
+
+
+let getTaskIndex = (exname, tasks) => {
+    for(i in tasks) {
+        if(tasks[i].name === exname) {
+            return i;
+        }
+    }
+    return -1;
+};
 
 module.exports = router;
