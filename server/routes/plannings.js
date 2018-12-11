@@ -143,20 +143,31 @@ router.post("/planning", (req, res, next) => {
     planning.name = name;
     planning.startDate = startDate
 
-    db.db.collection("users").doc(user_id).get().then((userDoc) => {
-        var data = userDoc.data();
-        planning.users[data.login] = {
-            "firstName": data.firstName,
-            "lastName": data.lastName,
-            "role": "admin",
-            "id": userDoc.id
-        };
-        // insertion
-        db.db.collection("plannings").add(planning).then((docRef)  => {
-            planning["id"] = docRef.id;
-            res.json(planning)
-            console.log("Document written with ID: ", docRef.id);
-        })
+    var userDocRef = db.db.collection("users").doc(user_id);
+    var planningDocRef = db.db.collection("plannings").doc();
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(userDocRef).then((userDoc) => {
+            if(!userDoc) return;
+            var data = userDoc.data();
+            planning.users[data.login] = {
+                "firstName": data.firstName,
+                "lastName": data.lastName,
+                "role": "admin",
+                "id": userDoc.id
+            };
+            
+            var plannings = data.plannings;
+            plannings[planningDocRef.id] = {
+                "name": planning.name,
+                "role": "admin"
+            };
+
+            transaction.set(planningDocRef, planning);
+            transaction.update(userDocRef, {plannings: plannings});
+            planning["id"] = planningDocRef.id;
+            return res.json(planning);
+        });
     }).catch((error) => {
         res.sendStatus(500);
         console.log(error);
@@ -230,15 +241,12 @@ router.put("/:id/task", (req, res, next) => {
     var {name, color, hoursExpected} = req.body;
     const id = req.params.id;
 
-    var message = {
-        "invalidFields": []
-    };
     hoursExpected = validator.checkNumber(hoursExpected);
 
     var planningDocRef = db.db.collection("plannings").doc(id);
 
     if(!name) {
-        message.invalidFields.push("Require non empty [name]");
+        return res.status(400).json({"message": "Require non empty [name]"});
     }
 
     var newtask = {
@@ -255,16 +263,17 @@ router.put("/:id/task", (req, res, next) => {
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                message.invalidFields.push("Any occurrence for id [" + id + "]");
-                return res.status(400).json(message);
+                return res.status(404).json({"message": "Any occurrence for id [" + id + "]"});
             }
 
             var data  = planningDoc.data();
             var tasks = data.tasks;
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
+            }
             var ok = getTaskIndex(name, tasks);
             if(ok !== -1) {
-                message.invalidFields.push("Name already used in the planning");
-                return;
+                return res.status(403).json({"message": "Task name already used in the planning"});
             }
 
             tasks.push(newtask);
@@ -282,9 +291,9 @@ router.put("/:id/task", (req, res, next) => {
 
 /**
  * UPDATE PLANNING FIELDS
- * MISSING CHECKS
  */
 router.patch("/:id", (req, res, next) => {
+    const user_id = req.token.user;
     var {name, startDate, endDate} = req.body;
     var id = req.params.id;
 
@@ -292,47 +301,49 @@ router.patch("/:id", (req, res, next) => {
     endDate = validator.checkDate(endDate);
 
     if(!name && !startDate && !endDate) {
-        res.status(400).send("This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct.")
-        return;
+        return res.status(400).json({
+            "message": "This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct."
+        });
     }
 
-    var error = false;
     var planningDocRef = db.db.collection("plannings").doc(id);
+    var userDocRef = db.db.collection("users").doc(user_id);
 
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                error = true;
-                return;
+                return res.status(400).json({"message": "Any occurence for id: [" + id + "]"});
             }
             var data = planningDoc.data();
-            if(name) {
-                data.name = name;
-                // HERE UPDATE CONNECTED USER DATA
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
             }
-            if(startDate) {
-                data.startDate = startDate;
-            }
-            if(endDate) {
-                data.endDate = endDate;
-            }
-            transaction.update(planningDocRef, {
-                "name": data.name,
-                "startDate": data.startDate,
-                "endDate": data.endDate
-            })
-            data["id"] = planningDoc.id;
-            return data;
+            return transaction.get(userDocRef).then((userDoc) => {
+                if(!userDoc.exists) return;
+                var plans = userDoc.data().plannings;
+                if(name) {
+                    data.name = name;
+                    plans[planningDoc.id].name = name;
+                }
+                if(startDate) {
+                    data.startDate = startDate;
+                }
+                if(endDate) {
+                    data.endDate = endDate;
+                }
+                transaction.update(userDocRef, {plannings : plans});
+                transaction.update(planningDocRef, {
+                    "name": data.name,
+                    "startDate": data.startDate,
+                    "endDate": data.endDate
+                })
+                data["id"] = planningDoc.id;
+                return res.json(data);
+            });
         })
-    }).then((planning) => {
-        if(error) {
-            res.status("404").send("Any occurence for id: [" + id + "]");
-        } else {
-            res.json(planning);
-        }
     }).catch((error) => {
         console.log(error);
-        res.status(500).send("An error has occurred. Sorry...")
+        res.sendStatus(500);
     });
 });
 
@@ -340,6 +351,7 @@ router.patch("/:id", (req, res, next) => {
  * Modify task
  */
 router.patch("/:id/task/:taskName", (req, res, next) => {
+    const user_id = req.token.user;
     const {id, taskName} = req.params;
     var {name, hoursExpected, color} = req.body;
 
@@ -348,20 +360,23 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
     var message = [];
 
     if(!name && !hoursExpected && !color) {
-        res.status(400).send("This request require at least one of the following fields : name, hoursExpected, color. Also make sure the format is correct.")
-        return;
+        return res.status(400).json({
+            "message": "This request require at least one of the following fields : name, hoursExpected, color. Also make sure the format is correct."
+        });
     }
 
     var planningDocRef = db.db.collection("plannings").doc(id);
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists){
-                message.push("Any occurrence of id [" + id + "]")
-                return;
+                return res.status(404).json({"message": "Any occurrence of id [" + id + "]"});
             }
 
             var data = planningDoc.data();
             var tasks = data.tasks;
+            if(!existsWithModificationRight(user_id, data.users)){
+                return res.status(403).json({"message": "Access denied"});
+            }
             var i = getTaskIndex(taskName, tasks);
             if(i === -1) {
                 message.push("Any task with name [" + taskName + "]");
@@ -379,14 +394,8 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
             transaction.update(planningDocRef, {tasks : tasks});
             data.tasks = tasks;
             data.id = planningDoc.id;
-            return data;
+            return res.json(data);
         })
-    }).then((planning) =>{
-        if(!planning) {
-            res.status(404).json(message);
-        } else {
-            res.json(planning);
-        }
     }).catch((error) => {
         res.status(500).send("An error has occured. Sorry...")
         console.log("Modify task route: " +error);
