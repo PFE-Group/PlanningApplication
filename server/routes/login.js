@@ -34,15 +34,16 @@ router.post('/login', function (req, res, next) {
                             })*/
                             return;
                         } else {
-                            user.uid = doc.id
+                            user.id = doc.id
                             var exp = Date.now() + 12 * 60 * 60 * 1000;   // 12h
-                            jwt.sign({ user: user.uid, exp: exp }, jwtSecret, (err, token) => {
+                            console.log(jwtSecret)
+                            jwt.sign({ user: user.id, exp: exp }, jwtSecret, (err, token) => {
                                 if (err) {
                                     res.status(500).send({
                                         message : "error during token signing"
                                     });
                                 } else {
-                                    data.password = ""
+                                    delete data.password
                                     res.json({ jwt: token, user: data });
                                 }
                             });

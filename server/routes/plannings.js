@@ -3,77 +3,112 @@ var router = express.Router();
 const db = require('../modules/db.js');
 const validator = require("../modules/validator.js");
 
-//GET : TOUS LES PLANNINGS => A changer
+// COMMONS
+
+/**
+ * Return the index of the task which name matches exname
+ * @param {*} exname the name to find
+ * @param {*} tasks list of tasks
+ */
+let getTaskIndex = (exname, tasks) => {
+    for(i in tasks) {
+        if(tasks[i].name === exname) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+/**
+ * Check for user presence in a planning
+ * @param {*} id the user id
+ * @param {*} data the users object
+ */
+let exists = (id, data) => {
+    for(var key in data) {
+        if(data[key].id === id) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**
+ * Check for user presence with status admin in a planning
+ * @param {*} id the user id
+ * @param {*} data the users object
+ */
+let existsWithRoleAdmin = (id, data) => {
+    for(var key in data) {
+        if(data[key].id === id && data[key].role === "admin") {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**
+ * Check for user presence with modification rights in a planning
+ * @param {*} id the user id
+ * @param {*} data the users object
+ */
+let existsWithModificationRight = (id, data) => {
+    for(var key in data) {
+        if(data[key].id === id && (data[key].role === "admin" || data[key].role === "member")) {
+            return true;
+        }
+    }
+    return false;
+};
+
+
+
+// ROUTES
+
+//GET : TOUS LES PLANNINGS OF THE CONNECTED USER
 router.get('/', function(req, res, next){
+    const user_id = req.token.user;
     var array = []
-    db.db.collection('plannings').get().then( (snap) => {
-        snap.forEach( (doc) => {
+    db.db.collection('plannings').get().then((snap) => {
+        snap.forEach((doc) => {
             var data = doc.data()
-            data["id"] = doc.id;
-            array.push(data)
+            var users = data.users
+            if(exists(user_id, users)) {
+                data.id = doc.id;
+                array.push(data);
+            }               
         })
         res.json(array)
-    }).catch((err) => {
+    }).catch( (err) => {
         console.log("Error : ", err)
-        res.status(500).send("An error has occurred")
+        res.sendStatus(500);
     })
 })
 
 //GET : PLANNING AVEC L'ID DEMANDE
 router.get('/:id', function(req, res, next){
+   const user_id = req.token.user;
    db.db.collection('plannings').doc(req.params.id).get().then((doc) => {
         if (doc && doc.exists){
-            res.json(doc.data())
-        }else{
-            console.log("No such document")
+            var data = doc.data();
+            if(exists(user_id, data.users)) {
+                data.id = doc.id;
+                res.json(doc.data())
+            } else {
+                res.status(403).json({"message": "Access denied"});
+            }
+        } else {
+            res.status(400).json({"message": "No such document"})
         }
     }).catch( (err) => {
         console.log("Error : ", err)
+        res.sendStatus(500);
     })
 })
 
-/**
- * GET /users/:iduser
- * Send a JSON containing all the plannings (admin) of a user
- */
-router.get('/user/:iduser', function(req, res, next) {
-    var iduser = req.params.iduser;
-    var message = {"invalidFields": []};
-
-    // validation of inputs
-    iduser = validator.checkString(iduser);
-    if(!iduser) {
-        message.invalidFields.push("Require non empty [iduser]");
-    }
-
-    
-    db.db.collection('users')
-    .doc(iduser)
-    .get().then((doc) => {
-        var o = {};
-        var arrPlannings = doc.data().plannings;
-        arrPlannings.forEach((p) => {
-            if(p.role === 'admin'){
-                o[p.planningID] = {};
-            }
-        })
-        return o;
-    }).then((result) => {
-        var ids = Object.keys(result);
-        for(var id of ids){
-            db.db.collection('plannings').doc(id).get().then((doc) => {
-                result[id] = doc.data();
-                res.json(result);
-            })
-        }
-    }).catch((err) => {
-        console.log(error);
-        res.status(500).send("An error has occurred. Sorry...")
-    })
-});
-
 // CREATE A PLANNING FOR THE CONNECTED USER
 router.post("/planning", (req, res, next) => {
+    const user_id = req.token.user;
     var planning = {
         "name": "",
         "startDate": "",
@@ -106,24 +141,31 @@ router.post("/planning", (req, res, next) => {
 
     planning.endDate = endDate;
     planning.name = name;
-    planning.startDate = startDate;
+    planning.startDate = startDate
 
-    // insertion
-    db.db.collection("plannings").add(planning)
-    .then((docRef)  => {
-        planning["id"] = docRef.id;
-        res.json(planning)
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch((error) => {
-        res.status(500).send("Unknown error. Sorry...");
+    db.db.collection("users").doc(user_id).get().then((userDoc) => {
+        var data = userDoc.data();
+        planning.users[data.login] = {
+            "firstName": data.firstName,
+            "lastName": data.lastName,
+            "role": "admin",
+            "id": userDoc.id
+        };
+        // insertion
+        db.db.collection("plannings").add(planning).then((docRef)  => {
+            planning["id"] = docRef.id;
+            res.json(planning)
+            console.log("Document written with ID: ", docRef.id);
+        })
+    }).catch((error) => {
+        res.sendStatus(500);
         console.log(error);
     });
 });
 
 // ADD A USER TO THE PLANNING WITH ID EQUAL TO REQ.PARAMS.ID
 router.put("/:id/member", (req, res, next) => {
-    // TODO : once authentication done; check whether the connected user is member of the document with a status different from "guest"
+    const user_id = req.token.user;
     const {login, role} = req.body;
     if(!validator.checkRole(role)) {
         res.status(400).send("Invalid role");
@@ -132,22 +174,28 @@ router.put("/:id/member", (req, res, next) => {
     const id = req.params.id;
     var planningDocRef = db.db.collection("plannings").doc(id);
     var userDocRef = db.db.collection("users").where("login", "==", login);
+
     db.db.runTransaction( (transaction) => {
-        return transaction.get(planningDocRef).then( (planningDoc) => {
+        return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                throw "No planning with id: [" + req.params.id + "]";
+                return res.status(404).json({"message": "No planning with id: [" + req.params.id + "]"});
             }
             var planningData = planningDoc.data();
             var {users, name} = planningData;
-            if(login in users) {
-                throw "User [" + login + "] already added";
+
+            if(!existsWithRoleAdmin(user_id, users)) {
+                return res.status(403).json({"message": "No right to add members"});
             }
-            
+
+            if(login in users) {
+                return res.status(403).json({"message": "User [" + login + "] already added"});
+            }
+
             return transaction.get(userDocRef).then((snap) => {
                 if(snap.empty) {
-                    throw "Unregistered user: ["+ login +"]";
+                    return res.status(400).json({"message": "Unregistered user: ["+ login +"]"});
                 }
-                snap.forEach( (doc) => {
+                snap.forEach((doc) => {
                     var {firstName, lastName, plannings} = doc.data();
                     users[login] = {
                         "lastName": lastName,
@@ -165,14 +213,11 @@ router.put("/:id/member", (req, res, next) => {
                     transaction.update(planningDocRef, {users: users});
                     planningData.users = users;
                 })
-
-                return planningData;
+                return res.json(planningData);
             })
         })
-    }).then( (planning) => {
-        res.json(planning)
     }).catch( (error) => {
-        res.status(500).send("An error has occurred");
+        res.sendStatus(500);
         console.log("Add member : " + error)
     })
 });
@@ -181,6 +226,7 @@ router.put("/:id/member", (req, res, next) => {
  * ADD A TASK TO THE PLANNING
  */
 router.put("/:id/task", (req, res, next) => {
+    const user_id = req.token.user;
     var {name, color, hoursExpected} = req.body;
     const id = req.params.id;
 
@@ -210,8 +256,9 @@ router.put("/:id/task", (req, res, next) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
                 message.invalidFields.push("Any occurrence for id [" + id + "]");
-                return;
+                return res.status(400).json(message);
             }
+
             var data  = planningDoc.data();
             var tasks = data.tasks;
             var ok = getTaskIndex(name, tasks);
@@ -224,16 +271,11 @@ router.put("/:id/task", (req, res, next) => {
             data.tasks = tasks;
             transaction.update(planningDocRef, {tasks: tasks});
             data["id"] = planningDoc.id;
-            return data;
+            return res.json(data);
         })
-    }).then((planning) => {
-        if(message.invalidFields.length > 0){
-            res.status("400").json(message);
-        } else {
-            res.json(planning);
-        }
     }).catch((error) => {
-
+        console.log("ADD TASK: "+ error)
+        res.sendStatus(500);
     });
 });
 
@@ -446,16 +488,6 @@ router.post('/:id/timeslot', function(req, res, next){
     });
 });
 
-
-let getTaskIndex = (exname, tasks) => {
-    for(i in tasks) {
-        if(tasks[i].name === exname) {
-            return i;
-        }
-    }
-    return -1;
-};
-
 /**
  * PATCH /:id/timeslot/:idtimeslot
  * Modify a timeslot {task, done, startHour, endHour}
@@ -529,10 +561,14 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
                     error = true;
                     return true;
                 }
-                var timeSlotsDb = doc.data().timeSlots;
+                
+                var planning = doc.data();
+                var timeSlotsDb = planning.timeSlots;
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;
+                planning.timeSlots = timeSlotsDb;
+                planning.id = doc.id;
+                return planning;
         })
     }).then((result) => {
         if(result === true)
