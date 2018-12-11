@@ -463,12 +463,11 @@ router.delete('/:idPlanning', function(req, res, next){
  * NEEDED in body : task name, endhour, starthour
  */
 router.post('/:id/timeslot', function(req, res, next){
+    const user_id = req.token.user;
     var guid = validator.generateUniqueId();
     var id = req.params.id;
     var {task, startHour, endHour} = req.body;
     var message = {"invalidFields": []};
-
-    var error = false;
 
     // validation of inputs
     task = validator.checkString(task); // to change
@@ -484,8 +483,7 @@ router.post('/:id/timeslot', function(req, res, next){
         message.invalidFields.push("Require valid date format for [endHour]");
     }
     if(message.invalidFields.length > 0){
-        res.status(400).json(message);
-        return;
+        return res.status(400).json(message);;
     }
 
     // insertion
@@ -494,26 +492,27 @@ router.post('/:id/timeslot', function(req, res, next){
         return t.get(documentRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
-            
-                var timeSlotsDb = doc.data().timeSlots;
+                
+                var data = doc.data();
+
+                if(!existsWithModificationRight(user_id, data.usrs)) {
+                    return res.status(403).json({"message": "Access denied"});
+                }
+
+                var timeSlotsDb = data.timeSlots;
                 timeSlotsDb[guid] = {
-                    'task':task,
+                    'task': task,
                     'startHour':startHour,
                     'endHour': endHour,
                     'done': false
                 };
                 t.update(documentRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;    
+
+                data.timeSlots = timeSlotsDb;
+                return res.json(data);    
             });
-    }).then(result => {
-        if(result === true){
-            res.sendStatus(400);
-        }else{
-            res.json(result);
-        }
     }).catch(err => {
         console.log(err);
         res.sendStatus(500);
@@ -534,26 +533,32 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
     endHour = validator.checkDate(endHour);
 
     if(!task && !done && !startHour && !endHour) {
-        res.status(400).send("This request require at least one of the following fields : task, done, startHour, endHour. Also make sure the format is correct.")
-        return;
+        return res.status(400).send({"message":"This request require at least one of the following fields : task, done, startHour, endHour. Also make sure the format is correct."})
     }
 
-    var error = false;
     var planningDocRef = db.db.collection("plannings").doc(id);
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
-                var timeSlotsDb = doc.data().timeSlots;
+
+                var data = doc.data();
+
+                if(!existsWithModificationRight(user_id, data.usrs)) {
+                    return res.status(403).json({"message": "Access denied"});
+                }
+
+                var timeSlotsDb = data.timeSlots;
                 if(task) {
                     // rechercher task name dans les taches si existant
+                    // there is a function for this getTaskIndex...
                     timeSlotsDb[idtimeslot].task = task;
                 }
                 if(done) {
                     // add stats : endhour - starthour + hoursRealised dans les task
+                    // update data.tasks to take the update task 
                     timeSlotsDb[idtimeslot].done = done;
                 }
                 if(startHour) {
@@ -563,13 +568,9 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                     timeSlotsDb[idtimeslot].endHour = endHour;
                 }
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;
+                data.timeSlots = timeSlotsDb;
+                return res.json(data);
         })
-    }).then((result) => {
-        if(result === true)
-            res.sendStatus(400);
-        else
-            res.json(result);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(500);
