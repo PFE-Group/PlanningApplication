@@ -224,6 +224,7 @@ router.put("/:id/member", (req, res, next) => {
                     transaction.update(planningDocRef, {users: users});
                     planningData.users = users;
                 })
+                planningData.id = planningDoc.id;
                 return res.json(planningData);
             })
         })
@@ -408,12 +409,20 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
  * Send a JSON of all users of a planning
  */
 router.get('/users/:idPlanning', function(req, res, next){
+    const user_id = req.token.user;
     db.db.collection('plannings')
     .doc(req.params.idPlanning)
     .get().then((doc) => {
-        res.json(doc.data().users);
+        if(!doc.exists) return res.status(404).json({"message": "No such document"});
+        const users = doc.data().users;
+        if(exists(user_id, users)) {
+            res.json(users);
+        } else {
+            res.status(403).json({"message": "Access denied"});
+        }
     }).catch((err) => {
         console.log("Error getting document:", err);
+        res.sendStatus(500);
     });
 });
 
@@ -422,14 +431,28 @@ router.get('/users/:idPlanning', function(req, res, next){
  * Delete a planning
  */
 router.delete('/:idPlanning', function(req, res, next){
-    db.db.collection('plannings')
-    .doc(req.params.idPlanning)
-    .delete().then(() => {
-        // 204 No Content - Response to a successful request that won't be returning a body (like a DELETE request)
-        res.sendStatus(204); 
-        console.log("Planning", req.params.idPlanning, "has been deleted");
+    const user_id = req.token.user;
+    var planningDocRef = db.db.collection('plannings').doc(req.params.idPlanning);
+    var userDocRef = db.db.collection('users').doc(user_id);
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef).then((planningDoc) => {
+            if(!planningDoc.exists) return res.status(404).json({"message": "No such document"});
+            var data = planningDoc.data();
+            if(!existsWithRoleAdmin(user_id, data.users)) 
+                return res.status(403).json({"message": "Access denied"});
+            return transaction.get(userDocRef).then((userDoc) => {
+                var plannings = userDoc.data().plannings;
+                delete plannings[planningDoc.id];
+
+                transaction.update(userDocRef, {plannings: plannings});
+                transaction.delete(planningDocRef);
+                res.sendStatus(204);
+            });
+             
+        });
     }).catch((err) => {
         console.log("Error getting document:", err);
+        res.sendStatus(500);
     });
 });
 
