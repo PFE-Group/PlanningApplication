@@ -527,10 +527,14 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
                     error = true;
                     return true;
                 }
-                var timeSlotsDb = doc.data().timeSlots;
+                
+                var planning = doc.data();
+                var timeSlotsDb = planning.timeSlots;
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;
+                planning.timeSlots = timeSlotsDb;
+                planning.id = doc.id;
+                return planning;
         })
     }).then((result) => {
         if(result === true)
