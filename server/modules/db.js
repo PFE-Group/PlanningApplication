@@ -1,39 +1,31 @@
 const firebase = require("firebase-admin");
 var serviceAccount = require('../firebase-access.json')
 
-//Initialize firebase
-let connect = () => {
-    firebase.initializeApp({
-        credential: firebase.credential.cert(serviceAccount)
-    });
-}
+serviceAccount.private_key = process.env.FIREBASE_PKEY.replace(/\\n/g, '\n');
+serviceAccount.client_email = process.env.FIREBASE_CLIENT_EMAIL;
+serviceAccount.client_id = process.env.FIREBASE_CLIENT_ID;
+serviceAccount.private_key_id = process.env.FIREBASE_KEY_ID;
+serviceAccount.project_id = process.env.FIREBASE_PROJECT_ID;
 
-//Initialize Cloud Firestore through Firebase
-let connectFirestore = () => {
-    return new Promise( (resolve, reject) => {
+//Initialize Firebase and Cloud Firestore
+exports.connect = () => {
+    new Promise( (resolve, reject) => {
+        firebase.initializeApp({
+            credential: firebase.credential.cert(serviceAccount)
+        });
+        
         var db = firebase.firestore();
     
         //Disable deprecated features
         db.settings({
-            timestampsInSnapshots : true
-        })
+            timestampsInSnapshots: true
+        });
 
-        exports.dbFirestore = db;
-        resolve(exports.dbFirestore)
+        exports.db = db;
+        resolve(exports.db);
+        
+        console.log("Connected to Firestore!");
     })
 }
 
-//Initialize Realtime Database through Firebase
-let connectRealTimeDB = () => {
-    return new Promise( (resolve, reject) => {
-        var db = firebase.database();
-        exports.dbRealTimeDB = db;
-        resolve(exports.dbRealTimeDB)
-    })
-}
-
-exports.connect = connect;
-exports.connectFirestore = connectFirestore;
-exports.dbFirestore = null;
-exports.connectRealTimeDB = connectRealTimeDB;
-exports.dbRealTimeDB = null;
+exports.db = null;

@@ -1,0 +1,65 @@
+<div class="container login-page">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="page-title"> Bienvenue sur Scheduly</h1>
+    </div>
+  </div>
+  <div class="row login-form">
+    <div class="login-form-1 col-md-6">
+      <div class="col">
+        <label for="login-inputEmail" class="sr-only">Adresse email</label>
+        <input type="email" id="login-inputEmail" class="form-control" [(ngModel)]="loginUserEmail" placeholder="Adresse email"
+          required autofocus>
+      </div>
+
+      <div class="col">
+        <label for="login-inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" id="login-inputPassword" class="form-control" [(ngModel)]="loginUserPassword" placeholder="Mot de passe"
+          required>
+      </div>
+
+      <div class="col">
+        <button class="btn btn-lg btn-dark btn-block" type="submit" (click)="logIn()">Connexion</button>
+      </div>
+    </div>
+
+    <div class="login-form-2 col-md-6">
+        <div class="login-logo">
+            <img src="../../../assets/icon-calendar2.png" alt=""/>
+        </div>
+      <div class="col">
+        <label for="register-inputLastName" class="sr-only">Nom</label>
+        <input type="text" id="register-inputLastName" class="form-control" [(ngModel)]="registerUserLastname" placeholder="Nom"
+          required autofocus>
+      </div>
+
+      <div class="col">
+        <label for="register-inputFirstName" class="sr-only">Prénom</label>
+        <input type="text" id="register-inputFirstName" class="form-control" [(ngModel)]="registerUserFirstname" placeholder="Prenom"
+          required autofocus>
+      </div>
+
+      <div class="col">
+        <label for="register-inputLogin" class="sr-only">Pseudo</label>
+        <input type="text" id="register-inputLogin" class="form-control" [(ngModel)]="registerUserLogin" placeholder="Pseudo"
+          required autofocus>
+      </div>
+
+      <div class="col">
+        <label for="register-inputEmail" class="sr-only">Email</label>
+        <input type="email" id="register-inputEmail" class="form-control" [(ngModel)]="registerUserEmail" placeholder="Email"
+          required autofocus>
+      </div>
+
+      <div class="col">
+        <label for="register-inputPassword" class="sr-only">Password</label>
+        <input type="password" id="register-inputPassword" class="form-control" [(ngModel)]="registerUserPassword" placeholder="Mot de passe"
+          required>
+      </div>
+
+      <div class="col">
+        <button class="btn btn-lg btn-light btn-block" type="submit" (click)="signIn()">Inscription</button>
+      </div>
+    </div>
+  </div>
+</div>

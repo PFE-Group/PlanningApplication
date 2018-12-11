@@ -5,9 +5,6 @@
 <div class="container">
   <div class="row">
     <span class="user-detail">{{ user?.firstName }} {{ user?.lastName }} - {{ user?.login }}</span>
-    <span class="profile-picture-container">
-      <img class="profile-picture" src="{{ user?.profilePicture }}" alt="Default_user_profile_image" height="42" width="42">
-    </span>
-    <img class="logout-button" (click)="logOut()" src="{{ logOutLogo }}" alt="Default_log_out_logo" height="25" width="25">
+    <img class="logout-button" (click)="logOut()" src="{{ logOutLogo }}" alt="" height="25" width="25">
   </div>
 </div>

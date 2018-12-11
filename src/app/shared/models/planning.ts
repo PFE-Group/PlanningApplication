@@ -1,47 +1,48 @@
-import { User } from "./user";
-import { PlanningEvent } from "./planning-event";
-import {createTimeSlot, TimeSlot} from './time-slot';
+import {User} from './user';
+import {Task} from './task';
+import {createTimeSlots, TimeSlot} from './time-slot';
+import * as firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
 
 export interface Planning {
-  planningId: string;
+  id: string;
   name: string;
-  startDate: Date;
-  endDate: Date;
-  members: Array<User>;
-  events: Array<PlanningEvent>;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  users: Array<User>;
+  tasks: Array<Task>;
   timeSlots: Array<TimeSlot>;
 }
 
-export const createPlannings = (partialPlannings: Array<Partial<Planning>>): Array<Planning> => {
-  let plannings = Array<Planning>();
-  partialPlannings.forEach((planning: Partial<Planning>) => plannings.push(createPlanning(planning)));
+export const createPlannings = (partialPlannings: any[]): Array<Planning> => {
+  const plannings = Array<Planning>();
+  partialPlannings.forEach((planning: any) => plannings.push(createPlanning(planning)));
   return plannings;
 };
 
-export const createPlanning = (partialPlanning: Partial<Planning>): Planning => {
-  const timeslots = Array<TimeSlot>();
+export const createPlanning = (partialPlanning: any): Planning => {
   const obj = Object.assign(
     {},
     fullPlanning(),
     partialPlanning,
-    { startDate: new Date(partialPlanning.startDate) },
-    { endDate: new Date(partialPlanning.endDate) },
+    {startDate: new Date(partialPlanning.startDate)},
+    {endDate: new Date(partialPlanning.endDate)}
   ) as Planning;
-  obj.timeSlots.forEach((timeslot: TimeSlot) => {
-    timeslots.push(createTimeSlot(timeslot));
-  });
+  console.log('Planning created');
+  const timeslots = createTimeSlots(obj.timeSlots);
+  console.log('timeslots created : ' + obj.timeSlots);
   obj.timeSlots = timeslots;
   return obj;
 };
 
-export const fullPlanning = (): Planning =>{
-  return{
-    planningId: '',
+export const fullPlanning = (): Planning => {
+  return {
+    id: '',
     name: '',
-    startDate: new Date(),
-    endDate: new Date(),
-    members:Array<User>(),
-    events: Array<PlanningEvent>(),
+    startDate: new Timestamp(0, 0),
+    endDate: new Timestamp(0, 0),
+    users: Array<User>(),
+    tasks: Array<Task>(),
     timeSlots: Array<TimeSlot>()
-  } as Planning
+  } as Planning;
 };

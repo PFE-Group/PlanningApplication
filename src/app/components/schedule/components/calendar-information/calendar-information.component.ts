@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
+import * as firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
 
 
 @Component({
@@ -8,23 +10,22 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 
 export class CalendarInformationComponent implements OnInit {
-  picker: Date;
-  picker2: Date;
+  picker: Timestamp;
+  picker2: Timestamp;
 
-  @Input()
-  matDatepicker;
-  
-  @Input() 
-  for;
+  @Input() matDatepicker;
 
-  constructor() { }
+  @Input() for;
 
-  ngOnInit() {
-    this.picker = new Date();
-    this.picker2 = new Date();
+  constructor() {
   }
 
-  modifyName(){
+  ngOnInit() {
+    this.picker = new Timestamp(0, 0);
+    this.picker2 = new Timestamp(0, 0);
+  }
+
+  modifyName() {
 
   }
 

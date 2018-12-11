@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {Planning} from '../../models/planning';
+import {Planning} from '../../../../shared/models/planning';
 import {Observable} from 'rxjs/index';
-import {AppStateService} from '../../services/app-state.service';
+import {AppStateService} from '../../../../shared/services/app-state.service';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {PlanningNameDialogComponent} from './components/planning-name-dialog/planning-name-dialog.component';
@@ -19,7 +19,8 @@ export class CalendarListComponent implements OnInit {
   @Input() plannings: Observable<Array<Planning>>;
   @Output() deletePlanningEmitter = new EventEmitter<Planning>();
 
-  constructor(private appStateService: AppStateService, public router: Router, private dialog: MatDialog) { }
+  constructor(private appStateService: AppStateService, private router: Router, private dialog: MatDialog) {
+  }
 
   ngOnInit() {
   }
@@ -32,7 +33,7 @@ export class CalendarListComponent implements OnInit {
     this.appStateService.setCurrentPlanning(planning);
   }
 
-  openAddPlanningDialog(){
+  openAddPlanningDialog() {
     this.planningNameDialogRef = this.dialog.open(PlanningNameDialogComponent);
   }
 

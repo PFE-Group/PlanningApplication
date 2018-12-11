@@ -1,34 +1,50 @@
-import { PlanningEvent, fullPlanningEvent } from './planning-event';
+import {Task, fullTask} from './task';
 import {CalendarEvent} from 'angular-calendar';
+import * as firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
+import {createPlanning} from './planning';
 
 export interface TimeSlot {
-  start: Date;
-  end: Date;
-  event: PlanningEvent;
+  id: string;
+  endHour: Timestamp;
+  startHour: Timestamp;
+  task: Task;
   done: boolean;
 }
 
+export const createTimeSlots = (partialTimeSlots: any[]): Array<TimeSlot> => {
+  const timeSlots = Array<TimeSlot>();
 
-export const createTimeSlots = (partialTimeSlot: Array<Partial<TimeSlot>>):Array<TimeSlot> =>{
-  let timeslots = Array<TimeSlot>();
-  partialTimeSlot.forEach((timeslot: Partial<TimeSlot>) => timeslots.push(createTimeSlot(timeslot)));
-  return timeslots;
+  for (const pts in partialTimeSlots) {
+    const ts = fullTimeSlot();
+    ts.id = pts;
+    ts.endHour = partialTimeSlots[pts].endHour;
+    ts.startHour = partialTimeSlots[pts].startHour;
+    ts.task = partialTimeSlots[pts].task;
+    ts.done = partialTimeSlots[pts].done;
+    timeSlots.push(createTimeSlot(ts));
+  }
+  console.log('timeslots created');
+  return timeSlots;
 };
 
-export const createTimeSlot = (partialTimeSlot: Partial<TimeSlot>):TimeSlot =>{
+export const createTimeSlot = (partialTimeSlot: any): TimeSlot => {
   return Object.assign(
     {},
     fullTimeSlot(),
     partialTimeSlot,
-    { start: new Date(partialTimeSlot.start) },
-    { end: new Date(partialTimeSlot.end) });
+    {start: new Date(partialTimeSlot.start)},
+    {end: new Date(partialTimeSlot.end)},
+    {done: partialTimeSlot.done},
+    {timeSlotId: partialTimeSlot});
 };
 
-export const fullTimeSlot = ():TimeSlot =>{
-  return{
-    start: new Date(),
-    end: new Date(),
-    event: fullPlanningEvent(),
+export const fullTimeSlot = (): TimeSlot => {
+  return {
+    id: '',
+    startHour: new Timestamp(0, 0),
+    endHour: new Timestamp(0, 0),
+    task: fullTask(),
     done: false
   } as TimeSlot;
 };
@@ -43,17 +59,19 @@ export const convertTimeSlotToCalendarEvent = (timeslot: TimeSlot): CalendarEven
   return Object.assign(
     {},
     timeslot,
-    { color: { primary: timeslot.event.color, secondary: timeslot.event.color }},
-    { title: timeslot.event.name },
-    { resizable: { beforeStart: true, afterEnd: true }},
-    { draggable: true },
-    { actions: [
-      {
-        label: "<i class=\"fa fa-fw fa-times\"></i>"
-      },
-      {
-        label: "<i class=\"fa fa-fw fa-pencil\"></i>"
-      }
-    ]}
-) as CalendarEvent;
+    {color: {primary: timeslot.task.color, secondary: timeslot.task.color}},
+    {title: timeslot.task.name},
+    {resizable: {beforeStart: true, afterEnd: true}},
+    {draggable: true},
+    {
+      actions: [
+        {
+          label: '<i class="fa fa-fw fa-times"></i>'
+        },
+        {
+          label: '<i class="fa fa-fw fa-pencil"></i>'
+        }
+      ]
+    }
+  ) as CalendarEvent;
 };

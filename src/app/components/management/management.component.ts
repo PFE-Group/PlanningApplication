@@ -6,6 +6,8 @@ import {AppStateService} from '../../shared/services/app-state.service';
 import {Observable} from 'rxjs';
 import {PlanningService} from '../../shared/services/planning';
 import {DivEnums} from './models/div.enums';
+import {AutocompleteComponentUser} from './components/autocompleteUser';
+import {UserService} from '../../shared/services/user';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class ManagementComponent implements OnInit {
   DivEnums = DivEnums;
   currentDiv: DivEnums;
   showButton: boolean;
-  user: User;
+  user: Observable<User>;
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
@@ -43,20 +45,16 @@ export class ManagementComponent implements OnInit {
     this.currentDiv = div;
   }
 
-  constructor(private appStateService: AppStateService, private planningService: PlanningService) {
+  constructor(private appStateService: AppStateService, private userService: UserService, private planningService: PlanningService) {
 
   }
 
   ngOnInit() {
     this.onResize();
-    this.user = createUser({
-      firstName: 'Thomas',
-      lastName: 'Ronsmans',
-      login: 'T.R',
-      profilePicture: 'http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
-    } as Partial<User>);
+    this.userService.fetchCurrentUser();
+    this.user = this.userService.getCurrentUser();
     this.listenToCurrentPlanning();
-    this.planningService.fetchPlannings('111');
+    this.planningService.fetchPlannings(this.listenToCurrentUser());
     this.plannings = this.planningService.getPlannings();
     console.log(this.plannings);
   }
@@ -65,6 +63,15 @@ export class ManagementComponent implements OnInit {
     this.currentPlanning = this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     );
+  }
+
+  // @ts-ignore
+  private listenToCurrentUser(): string {
+    this.appStateService.getCurrentUser().pipe(
+      filter((user: User) => !!user)
+    ).subscribe((user: User) => {
+      return user.id;
+    });
   }
 
   deletePlanning(planning: Planning) {

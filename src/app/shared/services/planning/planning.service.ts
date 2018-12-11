@@ -20,16 +20,14 @@ export class PlanningService implements IPlanningService {
   }
 
   fetchPlannings(userid: string): void {
-    this.webApiService.getResponse(`http://127.0.0.1:8440/plannings/id2`, HttpMethod.GET) // ${userid}
-    // ENVIRONMENT.BASEURI
-    // this.webApiService.getResponse(`${environment.baseURI}/plannings/${userid}`, HttpMethod.GET) //${userid}
-    // this.webApiService.getResponse(`https://pfe-scheduly-dev.herokuapp.com/api/plannings`, HttpMethod.GET) //${userid}
+    // this.webApiService.getResponse(`http://127.0.0.1:8440/plannings/id2`, HttpMethod.GET) // ${userid}
+    this.webApiService.getResponse(`/api/plannings/`, HttpMethod.GET)
       .then(
         (data: any[]) => {
           // parse data
           console.log('plannings info', data);
           // @ts-ignore
-          const plannings = createPlannings(data.plannings);
+          const plannings = createPlannings(data);
           console.log('plannings parsed', plannings);
           this.planningsSubject.next(plannings);
         }, (error: any) => {

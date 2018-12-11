@@ -2,7 +2,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {PlanningEvent} from 'src/app/shared/models/planning-event';
+import {Task} from 'src/app/shared/models/task';
 
 
 /**
@@ -16,7 +16,7 @@ import {PlanningEvent} from 'src/app/shared/models/planning-event';
 export class AutocompleteComponentTasks implements OnInit {
   myControl = new FormControl();
   filteredOptions: Observable<String[]>;
-  @Input() tasks: Array<PlanningEvent>;
+  @Input() tasks: Array<Task>;
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(

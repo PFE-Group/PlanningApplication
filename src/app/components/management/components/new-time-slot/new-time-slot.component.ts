@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PlanningEvent, createPlanningEvent} from 'src/app/shared/models/planning-event';
+import {Task, createTask} from 'src/app/shared/models/task';
 
 
 @Component({
@@ -8,7 +8,7 @@ import {PlanningEvent, createPlanningEvent} from 'src/app/shared/models/planning
   styleUrls: ['./new-time-slot.component.css']
 })
 export class NewTimeSlotComponent implements OnInit {
-  tasks = Array<PlanningEvent>();
+  tasks = Array<Task>();
 
   constructor() {
   }
@@ -41,12 +41,12 @@ export class NewTimeSlotComponent implements OnInit {
       ]
     };
     jsonTasks.tasks.forEach((el) => {
-      this.tasks.push(createPlanningEvent({
+      this.tasks.push(createTask({
         name: el.name,
         expectedHours: el.expectedHours,
         doneHours: el.doneHours,
         color: el.color
-      } as Partial<PlanningEvent>));
+      } as Partial<Task>));
     });
   }
 

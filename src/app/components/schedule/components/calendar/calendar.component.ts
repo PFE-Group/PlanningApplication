@@ -19,7 +19,8 @@ export class CalendarComponent implements OnInit {
   refresh = new Subject<void>();
 
   constructor(private appStateService: AppStateService,
-              private planningService: PlanningService) { }
+              private planningService: PlanningService) {
+  }
 
   ngOnInit() {
     this.listenToCurrentPlanning();
@@ -62,7 +63,7 @@ export class CalendarComponent implements OnInit {
   private listenToCurrentPlanning() {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
-    ).subscribe((planning: Planning) =>  {
+    ).subscribe((planning: Planning) => {
       this.timeSlots = convertTimeSlotsToCalendarEvent(planning.timeSlots);
     });
   }

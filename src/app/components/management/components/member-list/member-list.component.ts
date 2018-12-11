@@ -61,8 +61,7 @@ export class MemberListComponent implements OnInit {
           firstName: element.firstName,
           lastName: element.lastName,
           login: element.login,
-          profilePicture: element.profilePicture,
-          userId: element.idUser
+          id: element.idUser
         }),
         role: element.role
       });

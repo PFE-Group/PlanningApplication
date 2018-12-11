@@ -1,13 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { User, createUser } from '../../shared/models/user';
-import { Planning } from '../../shared/models/planning';
-import { PlanningEvent, createPlanningEvent } from 'src/app/shared/models/planning-event';
-import { TimeSlot, createTimeSlot } from 'src/app/shared/models/time-slot';
+import {Component, OnInit, Input} from '@angular/core';
+import {User} from '../../shared/models/user';
+import {Planning} from '../../shared/models/planning';
 import {Observable} from 'rxjs/index';
+
 import {PlanningService} from '../../shared/services/planning';
 import {AppStateService} from '../../shared/services/app-state.service';
 import {filter} from 'rxjs/operators';
-import {forEach} from '@angular/router/src/utils/collection';
+import {UserService} from '../../shared/services/user';
 
 @Component({
   selector: 'app-schedule',
@@ -17,26 +16,23 @@ import {forEach} from '@angular/router/src/utils/collection';
 
 export class ScheduleComponent implements OnInit {
 
-  user: User;
+  user: Observable<User>;
   plannings: Observable<Array<Planning>>;
   @Input() hasBackdrop: string;
   @Input() mode: string;
-
   planningName: string;
   displaySideBar = false;
 
-  constructor(private planningService: PlanningService, private appStateService: AppStateService) { }
+  constructor(private planningService: PlanningService, private userService: UserService, private appStateService: AppStateService) {
+  }
 
   ngOnInit() {
+    this.userService.fetchCurrentUser();
+    this.user = this.userService.getCurrentUser();
     this.listenToCurrentPlanning();
-    this.planningService.fetchPlannings('111');
+    this.planningService.fetchPlannings(this.listenToCurrentUser());
     this.plannings = this.planningService.getPlannings();
-    this.user = createUser({
-      firstName: 'Thomas',
-      lastName: 'Ronsmans',
-      login: 'T.R',
-      profilePicture: 'http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
-    }as Partial<User>);
+
   }
 
   deletePlanning(planning: Planning) {
@@ -50,8 +46,17 @@ export class ScheduleComponent implements OnInit {
   private listenToCurrentPlanning() {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
-    ).subscribe((planning: Planning) =>  {
+    ).subscribe((planning: Planning) => {
       this.planningName = planning.name;
+    });
+  }
+
+  // @ts-ignore
+  private listenToCurrentUser(): string {
+    this.appStateService.getCurrentUser().pipe(
+      filter((user: User) => !!user)
+    ).subscribe((user: User) => {
+      return user;
     });
   }
 

@@ -21,12 +21,12 @@
         <input
           type="text"
           class="form-control"
-          [(ngModel)]="ts.event.name">
+          [(ngModel)]="ts.task.name">
       </td>
       <td>
         <input
           type="color"
-          [(ngModel)]="ts.event.color">
+          [(ngModel)]="ts.task.color">
       </td>
       <td>
 
@@ -47,7 +47,7 @@
           class="form-control"
           type="text"
           mwlFlatpickr
-          [(ngModel)]="ts.start"
+          [(ngModel)]="ts.startHour"
           placeholder="Not set">
       </td>
       <td>
@@ -67,7 +67,7 @@
           class="form-control"
           type="text"
           mwlFlatpickr
-          [(ngModel)]="ts.end"
+          [(ngModel)]="ts.endHour"
           placeholder="Not set">
       </td>
       <td>
