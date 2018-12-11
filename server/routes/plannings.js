@@ -485,9 +485,11 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 }
                 var timeSlotsDb = doc.data().timeSlots;
                 if(task) {
+                    // rechercher task name dans les taches si existant
                     timeSlotsDb[idtimeslot].task = task;
                 }
                 if(done) {
+                    // add stats : endhour - starthour + hoursRealised dans les task
                     timeSlotsDb[idtimeslot].done = done;
                 }
                 if(startHour) {
