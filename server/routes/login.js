@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET
 
 const firebase = require('firebase-admin')
+const db = require('../modules/db.js');
 
 router.post('/login', function (req, res, next) {
     let user = {
@@ -13,7 +14,7 @@ router.post('/login', function (req, res, next) {
         password: req.body.password
     }
 
-    firebase.firestore().collection('users')
+    db.db.collection('users')
         .where("email", "==", user.email)
         .get()
         .then((snap) => {
@@ -71,11 +72,11 @@ router.post('/register', function (req, res, next) {
                 lastName: req.body.lastName,
                 login: req.body.login,
                 picture: "",
-                plannings: []
+                plannings: {}
             }
             firebase.auth().createUser(user)
                 .then((result) => {
-                    firebase.firestore().collection('users').doc(result.uid).set(user)
+                    db.db.collection('users').doc(result.uid).set(user)
                         .then((userFound) => {
                             return res.status(200).send(userFound)
                         }).catch((err) => {

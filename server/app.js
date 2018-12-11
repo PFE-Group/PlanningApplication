@@ -8,9 +8,11 @@ const usersRouter = require('./routes/users');
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const planningsRouter = require('./routes/plannings');
+const cors = require('cors')
 const app = express();
 var jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
+app.use(cors());
 
 const db = require('./modules/db.js');
 

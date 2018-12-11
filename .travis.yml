@@ -10,7 +10,10 @@ node_js:
 # branches:
 #   except:
 #     - master
-
+cache:
+  directories:
+    - ~/.cache
+    
 install:
   - npm install
 
