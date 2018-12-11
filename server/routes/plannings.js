@@ -389,6 +389,8 @@ router.post('/:id/timeslot', function(req, res, next){
     var {task, startHour, endHour} = req.body;
     var message = {"invalidFields": []};
 
+    var error = false;
+
     // validation of inputs
     task = validator.checkString(task); // to change
     if(!task){
@@ -412,25 +414,30 @@ router.post('/:id/timeslot', function(req, res, next){
     db.db.runTransaction(t => {
         return t.get(documentRef)
             .then(doc => {
-                if(doc.exists){
-                    var timeSlotsDb = doc.data().timeSlots;
-                    timeSlotsDb[guid] = {
-                        'task':task,
-                        'startHour':startHour,
-                        'endHour': endHour,
-                        'done': false
-                    };
-                    t.update(documentRef, {timeSlots: timeSlotsDb});
-                    return timeSlotsDb;
-                }else{
-                    throw "No planning with id: [" + id + "]";
+                if(!doc.exists){
+                    error = true;
+                    return true;
                 }
+            
+                var timeSlotsDb = doc.data().timeSlots;
+                timeSlotsDb[guid] = {
+                    'task':task,
+                    'startHour':startHour,
+                    'endHour': endHour,
+                    'done': false
+                };
+                t.update(documentRef, {timeSlots: timeSlotsDb});
+                return timeSlotsDb;    
             });
     }).then(result => {
-        res.json(result);
-        console.log('Transaction success', result);
+        if(result === true){
+            res.sendStatus(400);
+        }else{
+            res.json(result);
+        }
     }).catch(err => {
-        console.log('Transaction failure:', err);
+        console.log(err);
+        res.sendStatus(500);
     });
 });
 
@@ -443,5 +450,92 @@ let getTaskIndex = (exname, tasks) => {
     }
     return -1;
 };
+
+/**
+ * PATCH /:id/timeslot/:idtimeslot
+ * Modify a timeslot {task, done, startHour, endHour}
+ */
+router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
+    var id = req.params.id;
+    var idtimeslot = req.params.idtimeslot;
+    var {task, done, startHour, endHour} = req.body;
+    done = (done == 'true');
+    
+    startHour = validator.checkDate(startHour);
+    endHour = validator.checkDate(endHour);
+
+    if(!task && !done && !startHour && !endHour) {
+        res.status(400).send("This request require at least one of the following fields : task, done, startHour, endHour. Also make sure the format is correct.")
+        return;
+    }
+
+    var error = false;
+    var planningDocRef = db.db.collection("plannings").doc(id);
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef)
+            .then(doc => {
+                if(!doc.exists){
+                    error = true;
+                    return true;
+                }
+                var timeSlotsDb = doc.data().timeSlots;
+                if(task) {
+                    timeSlotsDb[idtimeslot].task = task;
+                }
+                if(done) {
+                    timeSlotsDb[idtimeslot].done = done;
+                }
+                if(startHour) {
+                    timeSlotsDb[idtimeslot].startHour = startHour;
+                }
+                if(endHour) {
+                    timeSlotsDb[idtimeslot].endHour = endHour;
+                }
+                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                return timeSlotsDb;
+        })
+    }).then((result) => {
+        if(result === true)
+            res.sendStatus(400);
+        else
+            res.json(result);
+    }).catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+    });
+});
+
+/**
+ * DELETE /:id/timeslot/:idtimeslot
+ * Delete a timeslot of a planning
+ */
+router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
+    var idplanning = req.params.id;
+    var idtimeslot = req.params.idtimeslot;
+
+    var planningDocRef = db.db.collection('plannings').doc(idplanning);
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef)
+            .then(doc => {
+                if(!doc.exists){
+                    error = true;
+                    return true;
+                }
+                var timeSlotsDb = doc.data().timeSlots;
+                delete timeSlotsDb[idtimeslot];
+                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                return timeSlotsDb;
+        })
+    }).then((result) => {
+        if(result === true)
+            res.sendStatus(400);
+        else
+            res.json(result);
+    }).catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+    })
+});
 
 module.exports = router;
