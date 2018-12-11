@@ -3,16 +3,21 @@ var router = express.Router();
 const db = require('../modules/db.js');
 const validator = require("../modules/validator.js");
 
-//GET : TOUS LES PLANNINGS => A changer
+//GET : TOUS LES PLANNINGS
 router.get('/', function(req, res, next){
+    const user_id = req.token.user;
     var array = []
-    db.db.collection('plannings').get().then( (snap) => {
-        snap.forEach( (doc) => {
-            var data = doc.data()
-            data["id"] = doc.id;
-            array.push(data)
-        })
-        res.json(array)
+    db.db.collection('plannings').get().then((snap) => {
+            snap.forEach((doc) => {
+                var data = doc.data()
+                for(var key in data) {
+                    if(data[key].id === user_id) {
+                        data["id"] = doc.id;
+                        array.push(data)
+                    }
+                }                
+            })
+            res.json(array)
     }).catch( (err) => {
         console.log("Error : ", err)
         res.status(500).send("An error has occurred")
