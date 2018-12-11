@@ -32,6 +32,9 @@ exports.checkString = (string) => {
     return string;
 };
 
+/*
+ * Source : https://stackoverflow.com/a/105074/9568751
+ */
 exports.generateUniqueId = () => {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
