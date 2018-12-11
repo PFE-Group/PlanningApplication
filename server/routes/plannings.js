@@ -511,6 +511,7 @@ router.post('/:id/timeslot', function(req, res, next){
                 t.update(documentRef, {timeSlots: timeSlotsDb});
 
                 data.timeSlots = timeSlotsDb;
+                data.id = doc.id;
                 return res.json(data);    
             });
     }).catch(err => {
@@ -582,6 +583,7 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
  * Delete a timeslot of a planning
  */
 router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
+    const user_id = req.token.user;
     var idplanning = req.params.id;
     var idtimeslot = req.params.idtimeslot;
 
@@ -591,23 +593,22 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
         return transaction.get(planningDocRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
                 
                 var planning = doc.data();
+
+                if(!existsWithModificationRight(user_id, planning)) {
+                    return res.status(403).json({"message": "Access denied"}); 
+                }
+
                 var timeSlotsDb = planning.timeSlots;
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
                 planning.timeSlots = timeSlotsDb;
                 planning.id = doc.id;
-                return planning;
+                return res.json(planning);
         })
-    }).then((result) => {
-        if(result === true)
-            res.sendStatus(400);
-        else
-            res.json(result);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(500);
