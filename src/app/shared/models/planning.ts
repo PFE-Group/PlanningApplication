@@ -1,14 +1,14 @@
 import {User} from './user';
 import {Task} from './task';
 import {createTimeSlots, TimeSlot} from './time-slot';
-import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
+import * as firebase from 'firebase';
 
 export interface Planning {
   id: string;
   name: string;
-  startDate: Timestamp;
-  endDate: Timestamp;
+  startDate: Date;
+  endDate: Date;
   users: Array<User>;
   tasks: Array<Task>;
   timeSlots: Array<TimeSlot>;
@@ -25,8 +25,8 @@ export const createPlanning = (partialPlanning: any): Planning => {
     {},
     fullPlanning(),
     partialPlanning,
-    {startDate: new Date(partialPlanning.startDate)},
-    {endDate: new Date(partialPlanning.endDate)}
+    {startDate: new Date(partialPlanning.startDate._seconds)},
+    {endDate: new Date(partialPlanning.endDate._seconds)}
   ) as Planning;
   console.log('Planning created');
   const timeslots = createTimeSlots(obj.timeSlots);
@@ -39,8 +39,8 @@ export const fullPlanning = (): Planning => {
   return {
     id: '',
     name: '',
-    startDate: new Timestamp(0, 0),
-    endDate: new Timestamp(0, 0),
+    startDate: new Date(),
+    endDate: new Date(),
     users: Array<User>(),
     tasks: Array<Task>(),
     timeSlots: Array<TimeSlot>()

@@ -12,6 +12,8 @@
     "e2e": "ng e2e",
     "clean": "rm -rf dist",
     "server": "npm run build && nodemon server/bin/www",
+    "server:thomas": "nodemon server/bin/www",
+    "start:thomas": "ng serve --source-map",
     "dev": "npm run server",
     "cy:run": "cypress run",
     "start": "node server/bin/www",

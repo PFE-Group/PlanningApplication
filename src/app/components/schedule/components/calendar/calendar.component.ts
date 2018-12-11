@@ -61,10 +61,13 @@ export class CalendarComponent implements OnInit {
   }
 
   private listenToCurrentPlanning() {
+    console.log('nicoooooo');
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
+      console.log('xxxxxxxxxxxxxxxx', planning);
       this.timeSlots = convertTimeSlotsToCalendarEvent(planning.timeSlots);
+      console.log('dddddddddddddddd', this.timeSlots);
     });
   }
 

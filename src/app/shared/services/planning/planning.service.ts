@@ -32,7 +32,8 @@ export class PlanningService implements IPlanningService {
           this.planningsSubject.next(plannings);
         }, (error: any) => {
           console.error('error get plannings', error);
-        });
+        }
+      );
   }
 
   getPlannings(): Observable<Array<Planning>> {
@@ -47,7 +48,6 @@ export class PlanningService implements IPlanningService {
     //     console.error('error get plannings', error);
     //   });
   }
-
 
 
 }

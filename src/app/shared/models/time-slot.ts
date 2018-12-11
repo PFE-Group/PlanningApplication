@@ -1,13 +1,12 @@
 import {Task, fullTask} from './task';
 import {CalendarEvent} from 'angular-calendar';
-import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
-import {createPlanning} from './planning';
+import * as firebase from 'firebase';
 
 export interface TimeSlot {
   id: string;
-  endHour: Timestamp;
-  startHour: Timestamp;
+  endHour: Date;
+  startHour: Date;
   task: Task;
   done: boolean;
 }
@@ -18,8 +17,8 @@ export const createTimeSlots = (partialTimeSlots: any[]): Array<TimeSlot> => {
   for (const pts in partialTimeSlots) {
     const ts = fullTimeSlot();
     ts.id = pts;
-    ts.endHour = partialTimeSlots[pts].endHour;
-    ts.startHour = partialTimeSlots[pts].startHour;
+    ts.endHour = new Date(partialTimeSlots[pts].endHour._seconds);
+    ts.startHour = new Date(partialTimeSlots[pts].startHour._seconds);
     ts.task = partialTimeSlots[pts].task;
     ts.done = partialTimeSlots[pts].done;
     timeSlots.push(createTimeSlot(ts));
@@ -33,8 +32,8 @@ export const createTimeSlot = (partialTimeSlot: any): TimeSlot => {
     {},
     fullTimeSlot(),
     partialTimeSlot,
-    {start: new Date(partialTimeSlot.start)},
-    {end: new Date(partialTimeSlot.end)},
+    {start: partialTimeSlot.startHour},
+    {end: partialTimeSlot.endHour},
     {done: partialTimeSlot.done},
     {timeSlotId: partialTimeSlot});
 };
@@ -42,8 +41,8 @@ export const createTimeSlot = (partialTimeSlot: any): TimeSlot => {
 export const fullTimeSlot = (): TimeSlot => {
   return {
     id: '',
-    startHour: new Timestamp(0, 0),
-    endHour: new Timestamp(0, 0),
+    startHour: new Date(),
+    endHour: new Date(),
     task: fullTask(),
     done: false
   } as TimeSlot;
@@ -63,6 +62,8 @@ export const convertTimeSlotToCalendarEvent = (timeslot: TimeSlot): CalendarEven
     {title: timeslot.task.name},
     {resizable: {beforeStart: true, afterEnd: true}},
     {draggable: true},
+    {start: timeslot.startHour},
+    {end: timeslot.endHour},
     {
       actions: [
         {
