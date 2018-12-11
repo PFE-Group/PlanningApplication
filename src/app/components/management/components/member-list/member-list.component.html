@@ -6,38 +6,31 @@
     <mat-button-toggle (click)='setCurrentState(UserRole.invite)' [class.active]="currentState === UserRole.invite">invité</mat-button-toggle>
     <mat-button-toggle (click)='setCurrentState(UserRole.all)' [class.active]="currentState === UserRole.all">tous</mat-button-toggle>
 
-  </mat-button-toggle-group> 
+  </mat-button-toggle-group>
   <ul id="forms"class="list-group">
     <div *ngIf="currentState===UserRole.all">
       <li   class="list-group-item container lielem" *ngFor="let u of memberList">
-        <div class="list-group">
-          <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
-        </div> 
+        {{u.user.login}} | {{u.role}}
       </li>
     </div>
+
     <div *ngIf="currentState===UserRole.membre">
-        <li  class="list-group-item container lielem" *ngFor="let u of memberListMember">
-            <div class="list-group">
-              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
-            </div> 
+      <li  class="list-group-item container lielem" *ngFor="let u of memberListMember">
+        {{u.user.login}} | {{u.role}}
       </li>
     </div>
+
     <div *ngIf="currentState===UserRole.admin">
-        <li class="list-group-item container lielem" *ngFor="let u of memberListAdmin">
-            <div class="list-group">
-              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
-            </div> 
-        </li>
+      <li class="list-group-item container lielem" *ngFor="let u of memberListAdmin">
+        {{u.user.login}} | {{u.role}}
+      </li>
     </div>
+
     <div *ngIf="currentState===UserRole.invite">
-        <li  class="list-group-item container lielem" *ngFor="let u of memberListInvite">
-            <div class="list-group">
-              <div class="list-group-item list-group-item-action">{{u.user.login}} | {{u.role}}</div>
-            </div> 
-    </li> 
+      <li  class="list-group-item container lielem" *ngFor="let u of memberListInvite">
+        {{u.user.login}} | {{u.role}}
+      </li>
     </div>
-    
-    
-   
+
   </ul>
 </div>

@@ -19,7 +19,7 @@ export class CalendarListComponent implements OnInit {
   @Input() plannings: Observable<Array<Planning>>;
   @Output() deletePlanningEmitter = new EventEmitter<Planning>();
 
-  constructor(private appStateService: AppStateService, private router: Router, private dialog: MatDialog) { }
+  constructor(private appStateService: AppStateService, public router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
   }

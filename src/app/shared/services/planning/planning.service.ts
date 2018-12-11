@@ -5,21 +5,25 @@ import {HttpMethod} from '../../models/webapi';
 import {AppStateService} from '../app-state.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {createPlannings, Planning} from '../../models/planning';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class PlanningService implements IPlanningService {
 
   planningsSubject = new BehaviorSubject<Array<Planning>>([]);
 
-  constructor(private appStateService: AppStateService, private webApiService: WebApiService) { }
+  constructor(private appStateService: AppStateService, private webApiService: WebApiService) {
+  }
 
   savePlanningTimeSlot(data: any): Promise<any> {
-    return this.webApiService.getResponse('planning/timeslot/update', HttpMethod.PUT, { });
+    return this.webApiService.getResponse('planning/timeslot/update', HttpMethod.PUT, {});
   }
 
   fetchPlannings(userid: string): void {
-    this.webApiService.getResponse(`http://127.0.0.1:8440/plannings/id2`, HttpMethod.GET) //${userid}
-    //this.webApiService.getResponse(`https://pfe-scheduly-dev.herokuapp.com/api/plannings`, HttpMethod.GET) //${userid}
+    this.webApiService.getResponse(`http://127.0.0.1:8440/plannings/id2`, HttpMethod.GET) // ${userid}
+    // ENVIRONMENT.BASEURI
+    // this.webApiService.getResponse(`${environment.baseURI}/plannings/${userid}`, HttpMethod.GET) //${userid}
+    // this.webApiService.getResponse(`https://pfe-scheduly-dev.herokuapp.com/api/plannings`, HttpMethod.GET) //${userid}
       .then(
         (data: any[]) => {
           // parse data
@@ -45,5 +49,7 @@ export class PlanningService implements IPlanningService {
     //     console.error('error get plannings', error);
     //   });
   }
+
+
 
 }

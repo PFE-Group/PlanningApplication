@@ -1,5 +1,5 @@
 <mat-accordion  class="example-headers-align">
-  
+
   <!-- INVITER UN UTILISATEUR-->
   <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
     <mat-expansion-panel-header>
@@ -22,8 +22,8 @@
     </mat-expansion-panel-header>
     <app-new-time-slot></app-new-time-slot>
     <mat-action-row>
-        <button mat-button color="warn" (click)="prevStep()">Précédent</button>
-        <button mat-button color="primary" (click)="nextStep()">Suivant</button>
+      <button mat-button color="warn" (click)="prevStep()">Précédent</button>
+      <button mat-button color="primary" (click)="nextStep()">Suivant</button>
     </mat-action-row>
   </mat-expansion-panel>
   <!-- ajouter une tâche -->
@@ -35,13 +35,9 @@
     </mat-expansion-panel-header>
     <app-new-tasks></app-new-tasks>
     <mat-action-row>
-        <button mat-button color="warn" (click)="prevStep()">Précédent</button>
+      <button mat-button color="warn" (click)="prevStep()">Précédent</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
 
 
-<!-- Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-
-    can be found in the LICENSE file at http://angular.io/license -->

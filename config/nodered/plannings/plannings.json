@@ -21,7 +21,8 @@
           "expectedHours": "18",
           "doneHours": "0",
           "color": "#FE0015"
-        }],
+        }
+      ],
       "timeSlots": [
         {
           "start": "2018-12-13T08:30:00.511Z",

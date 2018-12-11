@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-main',
@@ -11,6 +11,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
   }
+
   setStep(index: number) {
     this.step = index;
   }
@@ -22,17 +23,12 @@ export class MainComponent implements OnInit {
   prevStep() {
     this.step--;
   }
+
   constructor() {
 
   }
 
-  
-
-  
 
 }
 
 
-/**  Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */

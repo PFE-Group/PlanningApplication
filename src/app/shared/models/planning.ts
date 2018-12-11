@@ -12,20 +12,20 @@ export interface Planning {
   timeSlots: Array<TimeSlot>;
 }
 
-export const createPlannings = (partialPlannings: Array<Partial<Planning>>):Array<Planning> =>{
+export const createPlannings = (partialPlannings: Array<Partial<Planning>>): Array<Planning> => {
   let plannings = Array<Planning>();
   partialPlannings.forEach((planning: Partial<Planning>) => plannings.push(createPlanning(planning)));
   return plannings;
 };
 
-export const createPlanning = (partialPlanning: Partial<Planning>):Planning =>{
+export const createPlanning = (partialPlanning: Partial<Planning>): Planning => {
   const timeslots = Array<TimeSlot>();
   const obj = Object.assign(
     {},
     fullPlanning(),
     partialPlanning,
     { startDate: new Date(partialPlanning.startDate) },
-    { endDate: new Date(partialPlanning.endDate) }
+    { endDate: new Date(partialPlanning.endDate) },
   ) as Planning;
   obj.timeSlots.forEach((timeslot: TimeSlot) => {
     timeslots.push(createTimeSlot(timeslot));
@@ -34,7 +34,7 @@ export const createPlanning = (partialPlanning: Partial<Planning>):Planning =>{
   return obj;
 };
 
-export const fullPlanning = ():Planning =>{
+export const fullPlanning = (): Planning =>{
   return{
     planningId: '',
     name: '',

@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/index';
 import {PlanningService} from '../../shared/services/planning';
 import {AppStateService} from '../../shared/services/app-state.service';
 import {filter} from 'rxjs/operators';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-schedule',
