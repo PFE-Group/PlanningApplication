@@ -6,6 +6,7 @@ serviceAccount.client_email = process.env.FIREBASE_CLIENT_EMAIL;
 serviceAccount.client_id = process.env.FIREBASE_CLIENT_ID;
 serviceAccount.private_key_id = process.env.FIREBASE_KEY_ID;
 serviceAccount.project_id = process.env.FIREBASE_PROJECT_ID;
+serviceAccount.client_cert_url = process.env.FIREBASE_CLIENT_CERT_URL;
 
 //Initialize Firebase and Cloud Firestore
 exports.connect = () => {
