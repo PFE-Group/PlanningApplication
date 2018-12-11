@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt')
+var jwt = require('jsonwebtoken')
+const jwtSecret = process.env.JWT_SECRET
 
 const firebase = require('firebase-admin')
 
@@ -27,31 +29,28 @@ router.post('/login', function (req, res, next) {
                         return res.status(500).send(err)
                     } else {
                         if (!result) {
-                            return res.status(401).send({
+                            /*return res.status(401).send({
                                 message: "bad email/password"
-                            })
+                            })*/
+                            return;
                         } else {
                             user.uid = doc.id
-                            var additionalClaims = {
-                                firstName: data.firstName,
-                                lastName: data.lastName,
-                                login: data.login
-                            }
-                            firebase.auth().createCustomToken(user.uid, additionalClaims)
-                                .then((customToken) => {
+                            var exp = Date.now() + 12 * 60 * 60 * 1000;   // 12h
+                            jwt.sign({ user: user.uid, exp: exp }, jwtSecret, (err, token) => {
+                                if (err) {
+                                    res.status(500).send({
+                                        message : "error during token signing"
+                                    });
+                                } else {
                                     data.password = ""
-                                    return res.status(200).send({
-                                        customToken : customToken,
-                                        user : data
-                                    })
-                                }).catch((err) => {
-                                    return res.status(403).send(err)
-                                })
+                                    res.json({ jwt: token, user: data });
+                                }
+                            });
                         }
 
                     }
                 })
-
+                return;
             })
 
         }).catch((err) => {
@@ -90,15 +89,14 @@ router.post('/register', function (req, res, next) {
     })
 })
 
-router.post('/verifyToken', function(req, res, next) {
+/*router.post('/verifyToken', function(req, res, next) {
     firebase.auth().verifyIdToken(req.body.idToken)
         .then( (decodedToken) => {
-            console.log("decoded token : ", decodedToken)
             return res.status(200).send(decodedToken)
         })
         .catch( (err) => {
             return res.status(403).send(err)
         })
-})
+})*/
 
 module.exports = router;

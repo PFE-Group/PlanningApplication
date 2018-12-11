@@ -9,10 +9,32 @@ const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const planningsRouter = require('./routes/plannings');
 const app = express();
+var jwt = require('jsonwebtoken');
+const jwtSecret = process.env.JWT_SECRET;
 
 const db = require('./modules/db.js');
 
 db.connect();
+
+const authMiddleware = (req, res, next) => {
+    var token = req.get('authorization');
+	if (!token) {
+		res.status(401).send('A token is mandatory');
+		return;
+	}
+	jwt.verify(token, jwtSecret, (err, decoded) => {
+		if (err) {
+			res.status(401).send('Unable to parse token');
+			return;
+		}
+		if (decoded.exp <= Date.now()) {
+			res.status(401).send('Token has expired');
+			return;
+		}
+        req.token = decoded;
+        next();
+    });
+}
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -34,9 +56,10 @@ app.use(function(req, res, next) {
     next();
 });
 app.use('/', indexRouter);
+app.use('/api/login', loginRouter);
+app.use(authMiddleware)
 app.use('/api/users', usersRouter);
 app.use('/api/plannings', planningsRouter);
-app.use('/api/login', loginRouter);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/client/index.html'));
