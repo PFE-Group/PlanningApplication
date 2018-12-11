@@ -32,6 +32,46 @@ router.get('/:id', function(req, res, next){
     })
 })
 
+/**
+ * GET /users/:iduser
+ * Send a JSON containing all the plannings (admin) of a user
+ */
+router.get('/user/:iduser', function(req, res, next) {
+    var iduser = req.params.iduser;
+    var message = {"invalidFields": []};
+
+    // validation of inputs
+    iduser = validator.checkString(iduser);
+    if(!iduser) {
+        message.invalidFields.push("Require non empty [iduser]");
+    }
+
+    
+    db.db.collection('users')
+    .doc(iduser)
+    .get().then((doc) => {
+        var o = {};
+        var arrPlannings = doc.data().plannings;
+        arrPlannings.forEach((p) => {
+            if(p.role === 'admin'){
+                o[p.planningID] = {};
+            }
+        })
+        return o;
+    }).then((result) => {
+        var ids = Object.keys(result);
+        for(var id of ids){
+            db.db.collection('plannings').doc(id).get().then((doc) => {
+                result[id] = doc.data();
+                res.json(result);
+            })
+        }
+    }).catch((err) => {
+        console.log(error);
+        res.status(500).send("An error has occurred. Sorry...")
+    })
+});
+
 // CREATE A PLANNING FOR THE CONNECTED USER
 router.post("/planning", (req, res, next) => {
     var planning = {
@@ -40,9 +80,7 @@ router.post("/planning", (req, res, next) => {
         "endDate": "",
         "users": {},
         "tasks": [],
-        "timeSlots": {
-            "version": 0
-        }
+        "timeSlots": {}
     }
     var {name, startDate, endDate} = req.body;
     var message = {
@@ -336,6 +374,63 @@ router.delete('/:idPlanning', function(req, res, next){
         console.log("Planning", req.params.idPlanning, "has been deleted");
     }).catch((err) => {
         console.log("Error getting document:", err);
+    });
+});
+
+/**
+ * POST /:id/timeslot
+ * Add a timeslot to a planning
+ * :id = id of the planning
+ * NEEDED in body : task name, endhour, starthour
+ */
+router.post('/:id/timeslot', function(req, res, next){
+    var guid = validator.generateUniqueId();
+    var id = req.params.id;
+    var {task, startHour, endHour} = req.body;
+    var message = {"invalidFields": []};
+
+    // validation of inputs
+    task = validator.checkString(task); // to change
+    if(!task){
+        message.invalidFields.push("Require non empty for [task]");
+    }
+    startHour = validator.checkDate(startHour);
+    if(!startHour){
+        message.invalidFields.push("Require valid date format for [startHour]");
+    }
+    endHour = validator.checkDate(endHour);
+    if(!endHour){
+        message.invalidFields.push("Require valid date format for [endHour]");
+    }
+    if(message.invalidFields.length > 0){
+        res.status(400).json(message);
+        return;
+    }
+
+    // insertion
+    var documentRef = db.db.collection('plannings').doc(id);
+    db.db.runTransaction(t => {
+        return t.get(documentRef)
+            .then(doc => {
+                if(doc.exists){
+                    var timeSlotsDb = doc.data().timeSlots;
+                    timeSlotsDb[guid] = {
+                        'task':task,
+                        'startHour':startHour,
+                        'endHour': endHour,
+                        'done': false
+                    };
+                    t.update(documentRef, {timeSlots: timeSlotsDb});
+                    return timeSlotsDb;
+                }else{
+                    throw "No planning with id: [" + id + "]";
+                }
+            });
+    }).then(result => {
+        res.json(result);
+        console.log('Transaction success', result);
+    }).catch(err => {
+        console.log('Transaction failure:', err);
     });
 });
 
