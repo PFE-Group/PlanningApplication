@@ -6,6 +6,11 @@ const jwtSecret = process.env.JWT_SECRET
 
 const db = require('../modules/db.js');
 
+/**
+ * POST /login
+ * Body -> email, password
+ * Send a JSON with JWT and user data
+ */
 router.post('/login', function (req, res, next) {
     let user = {
         uid: "",
@@ -60,6 +65,11 @@ router.post('/login', function (req, res, next) {
 
 })
 
+/**
+ * POST /register
+ * Body -> email, password, firstName, lastName, login
+ * Send a JSON with email, encrypted password, firstName, lastName, picture, email, plannings, id, login
+ */
 router.post('/register', function (req, res, next) {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
