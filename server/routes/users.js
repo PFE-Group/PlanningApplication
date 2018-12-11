@@ -13,10 +13,12 @@ router.get('/current', function(req, res, next) {
             res.json(doc.data())
         }else{
             console.log("No such document !")   
+            res.sendStatus(401);
         }
     }).catch( (err) => {
         console.log("Error getting document:", err);
-    } )
+        res.sendStatus(500)
+    })
 });
 
 /**
@@ -24,7 +26,7 @@ router.get('/current', function(req, res, next) {
  * Params -> login
  * Send a JSON with data of a user
  */
-router.get('/:login', function(req, res, next) {
+/*router.get('/:login', function(req, res, next) {
     db.db.collection("users")
     .where("login", "==", req.params.login)
     .get().then( (snap) => {
@@ -35,7 +37,7 @@ router.get('/:login', function(req, res, next) {
     }).catch( (err) => {
         console.log("Error getting document:", err);
     } )
-});
+});*/
 
 /**
  * GET /plannings/
