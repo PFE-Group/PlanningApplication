@@ -4,7 +4,17 @@
       <h1 class="page-title"> Bienvenue sur Scheduly</h1>
     </div>
   </div>
+
   <div class="row login-form">
+    <div class="col-md-12">
+      <div [ngClass]="{'alert' : true,
+          'alert alert-danger' : !good,
+          'alert alert-success' : good
+                  }"
+        role="alert">
+        {{messageToShow}}
+      </div>
+    </div>
     <div class="login-form-1 col-md-6">
       <div class="col">
         <label for="login-inputEmail" class="sr-only">Adresse email</label>
@@ -14,8 +24,8 @@
 
       <div class="col">
         <label for="login-inputPassword" class="sr-only">Mot de passe</label>
-        <input type="password" id="login-inputPassword" class="form-control" [(ngModel)]="loginUserPassword" placeholder="Mot de passe"
-          required>
+        <input type="password" id="login-inputPassword" class="form-control" [(ngModel)]="loginUserPassword"
+          placeholder="Mot de passe" required>
       </div>
 
       <div class="col">
@@ -24,19 +34,19 @@
     </div>
 
     <div class="login-form-2 col-md-6">
-        <div class="login-logo">
-            <img src="../../../assets/icon-calendar2.png" alt=""/>
-        </div>
+      <div class="login-logo">
+        <img src="../../../assets/icon-calendar2.png" alt="" />
+      </div>
       <div class="col">
         <label for="register-inputLastName" class="sr-only">Nom</label>
-        <input type="text" id="register-inputLastName" class="form-control" [(ngModel)]="registerUserLastname" placeholder="Nom"
-          required autofocus>
+        <input type="text" id="register-inputLastName" class="form-control" [(ngModel)]="registerUserLastname"
+          placeholder="Nom" required autofocus>
       </div>
 
       <div class="col">
         <label for="register-inputFirstName" class="sr-only">Prénom</label>
-        <input type="text" id="register-inputFirstName" class="form-control" [(ngModel)]="registerUserFirstname" placeholder="Prenom"
-          required autofocus>
+        <input type="text" id="register-inputFirstName" class="form-control" [(ngModel)]="registerUserFirstname"
+          placeholder="Prenom" required autofocus>
       </div>
 
       <div class="col">
@@ -53,8 +63,8 @@
 
       <div class="col">
         <label for="register-inputPassword" class="sr-only">Password</label>
-        <input type="password" id="register-inputPassword" class="form-control" [(ngModel)]="registerUserPassword" placeholder="Mot de passe"
-          required>
+        <input type="password" id="register-inputPassword" class="form-control" [(ngModel)]="registerUserPassword"
+          placeholder="Mot de passe" required>
       </div>
 
       <div class="col">

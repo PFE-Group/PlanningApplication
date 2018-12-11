@@ -1,5 +1,4 @@
 export class AuthService {
-
     isAuth = false;
 
     storeToken(token) {
@@ -16,19 +15,17 @@ export class AuthService {
         localStorage.removeItem("token");
     }
 
-    logIn(token){
+    logIn(token) {
         this.storeToken(token)
-        this.isAuth = true
+        this.isAuth = true;
     }
 
-    logOut(){
+    logOut() {
         this.clearToken()
-        this.isAuth = false
+        this.isAuth = false;
     }
 
-    checkIfAuth(){
-        var token = this.retrieveToken()
-        return token !== null
+    checkIfAuth() {
+        return this.retrieveToken() !== null;
     }
-
 }
