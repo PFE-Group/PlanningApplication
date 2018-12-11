@@ -143,7 +143,33 @@ router.post("/planning", (req, res, next) => {
     planning.name = name;
     planning.startDate = startDate
 
-    db.db.collection("users").doc(user_id).get().then((userDoc) => {
+    var userDocRef = db.db.collection("users").doc(user_id);
+    var planningDocRef = db.db.collection("plannings").doc();
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(userDocRef).then((userDoc) => {
+            if(!userDoc) return;
+            var data = userDoc.data();
+            planning.users[data.login] = {
+                "firstName": data.firstName,
+                "lastName": data.lastName,
+                "role": "admin",
+                "id": userDoc.id
+            };
+            
+            var plannings = data.plannings;
+            plannings[planningDocRef.id] = planning;
+
+            transaction.set(planningDocRef, planning);
+            transaction.update(userDocRef, {plannings: plannings});
+            planning["id"] = planningDocRef.id;
+            return res.json(planning);
+        });
+    }).catch((error) => {
+        res.sendStatus(500);
+        console.log(error);
+    });
+    /*db.db.collection("users").doc(user_id).get().then((userDoc) => {
         var data = userDoc.data();
         planning.users[data.login] = {
             "firstName": data.firstName,
@@ -160,7 +186,7 @@ router.post("/planning", (req, res, next) => {
     }).catch((error) => {
         res.sendStatus(500);
         console.log(error);
-    });
+    });*/
 });
 
 // ADD A USER TO THE PLANNING WITH ID EQUAL TO REQ.PARAMS.ID
@@ -230,15 +256,12 @@ router.put("/:id/task", (req, res, next) => {
     var {name, color, hoursExpected} = req.body;
     const id = req.params.id;
 
-    var message = {
-        "invalidFields": []
-    };
     hoursExpected = validator.checkNumber(hoursExpected);
 
     var planningDocRef = db.db.collection("plannings").doc(id);
 
     if(!name) {
-        message.invalidFields.push("Require non empty [name]");
+        return res.status(400).json({"message": "Require non empty [name]"});
     }
 
     var newtask = {
@@ -255,16 +278,17 @@ router.put("/:id/task", (req, res, next) => {
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                message.invalidFields.push("Any occurrence for id [" + id + "]");
-                return res.status(400).json(message);
+                return res.status(404).json({"message": "Any occurrence for id [" + id + "]"});
             }
 
             var data  = planningDoc.data();
             var tasks = data.tasks;
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
+            }
             var ok = getTaskIndex(name, tasks);
             if(ok !== -1) {
-                message.invalidFields.push("Name already used in the planning");
-                return;
+                return res.status(403).json({"message": "Task name already used in the planning"});
             }
 
             tasks.push(newtask);
@@ -285,6 +309,7 @@ router.put("/:id/task", (req, res, next) => {
  * MISSING CHECKS
  */
 router.patch("/:id", (req, res, next) => {
+    const user_id = req.token.user;
     var {name, startDate, endDate} = req.body;
     var id = req.params.id;
 
@@ -292,23 +317,33 @@ router.patch("/:id", (req, res, next) => {
     endDate = validator.checkDate(endDate);
 
     if(!name && !startDate && !endDate) {
-        res.status(400).send("This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct.")
-        return;
+        return res.status(400).json({
+            "message": "This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct."
+        });
     }
 
-    var error = false;
     var planningDocRef = db.db.collection("plannings").doc(id);
+    var userDocRef = db.db.collection("users").doc(user_id);
 
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                error = true;
-                return;
+                return res.status(400).json({"message": "Any occurence for id: [" + id + "]"});
             }
             var data = planningDoc.data();
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
+            }
             if(name) {
                 data.name = name;
-                // HERE UPDATE CONNECTED USER DATA
+                userDocRef.get().then((userDoc) => {
+                    if(userDoc.exists) {
+                        var plans = userDoc.data().plannings;
+                        console.log(plans[id])
+                        plans[planningDoc.id].name = name;
+                        transaction.update(userDocRef, {plannings : plans});
+                    }
+                })
             }
             if(startDate) {
                 data.startDate = startDate;
@@ -325,14 +360,10 @@ router.patch("/:id", (req, res, next) => {
             return data;
         })
     }).then((planning) => {
-        if(error) {
-            res.status("404").send("Any occurence for id: [" + id + "]");
-        } else {
-            res.json(planning);
-        }
+        res.json(planning);
     }).catch((error) => {
         console.log(error);
-        res.status(500).send("An error has occurred. Sorry...")
+        res.sendStatus(500);
     });
 });
 
