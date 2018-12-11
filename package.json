@@ -16,7 +16,7 @@
     "cy:run": "cypress run",
     "start": "node server/bin/www",
     "test": "npm run build && start-server-and-test start http://localhost:3030 cy:run",
-    "lol": "nodemon server/bin/www"
+    "postinstall": "ng build --prod"
   },
   "dependencies": {
     "@angular/animations": "~7.1.0",
