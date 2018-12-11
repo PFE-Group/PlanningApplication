@@ -4,7 +4,6 @@ var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET
 
-const firebase = require('firebase-admin')
 const db = require('../modules/db.js');
 
 router.post('/login', function (req, res, next) {
@@ -74,17 +73,12 @@ router.post('/register', function (req, res, next) {
                 picture: "",
                 plannings: {}
             }
-            firebase.auth().createUser(user)
-                .then((result) => {
-                    db.db.collection('users').doc(result.uid).set(user)
-                        .then((userFound) => {
-                            return res.status(200).send(userFound)
-                        }).catch((err) => {
-                            return res.status(401).send(err)
-                        })
-                })
-                .catch((err) => {
-                    return res.status(403).send(err)
+            db.db.collection('users').add(user)
+                .then((userRef) => {
+                    user.id = userRef.id
+                    return res.status(200).json(user)
+                }).catch((err) => {
+                    return res.status(401).send(err)
                 })
         }
     })

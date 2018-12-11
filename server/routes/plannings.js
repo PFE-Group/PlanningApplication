@@ -13,7 +13,7 @@ router.get('/', function(req, res, next){
             array.push(data)
         })
         res.json(array)
-    }).catch( (err) => {
+    }).catch((err) => {
         console.log("Error : ", err)
         res.status(500).send("An error has occurred")
     })
