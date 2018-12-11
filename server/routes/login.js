@@ -57,7 +57,7 @@ router.post('/register', function (req, res, next) {
                 lastName: req.body.lastName,
                 login: req.body.login,
                 picture: "",
-                plannings: []
+                plannings: {}
             }
             firebase.auth().createUser(user)
                 .then((result) => {

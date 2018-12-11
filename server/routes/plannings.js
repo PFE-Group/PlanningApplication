@@ -118,11 +118,10 @@ router.put("/:id/member", (req, res, next) => {
                         "id": doc.id
                     };
                     
-                    plannings.push({
+                    plannings[planningDoc.id] = {
                         "name": name,
-                        "id": id,
                         "role": role
-                    });
+                    };
                     
                     transaction.update(doc.ref, {plannings: plannings});
                     transaction.update(planningDocRef, {users: users});
@@ -136,6 +135,7 @@ router.put("/:id/member", (req, res, next) => {
         res.json(planning)
     }).catch( (error) => {
         res.status(500).send("An error has occurred");
+        console.log("Add member : " + error)
     })
 });
 
@@ -228,6 +228,7 @@ router.patch("/:id", (req, res, next) => {
             var data = planningDoc.data();
             if(name) {
                 data.name = name;
+                // HERE UPDATE CONNECTED USER DATA
             }
             if(startDate) {
                 data.startDate = startDate;
@@ -255,6 +256,9 @@ router.patch("/:id", (req, res, next) => {
     });
 });
 
+/**
+ * Modify task
+ */
 router.patch("/:id/task/:taskName", (req, res, next) => {
     const {id, taskName} = req.params;
     var {name, hoursExpected, color} = req.body;
@@ -294,6 +298,7 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
             }
             transaction.update(planningDocRef, {tasks : tasks});
             data.tasks = tasks;
+            data.id = planningDoc.id;
             return data;
         })
     }).then((planning) =>{
