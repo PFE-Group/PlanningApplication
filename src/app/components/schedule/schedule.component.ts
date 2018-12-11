@@ -4,7 +4,6 @@ import { Planning } from '../../shared/models/planning';
 import { PlanningEvent, createPlanningEvent } from 'src/app/shared/models/planning-event';
 import { TimeSlot, createTimeSlot } from 'src/app/shared/models/time-slot';
 import {Observable} from 'rxjs/index';
-import {Router} from '@angular/router';
 
 import {PlanningService} from '../../shared/services/planning';
 import {AppStateService} from '../../shared/services/app-state.service';
@@ -26,7 +25,7 @@ export class ScheduleComponent implements OnInit {
   planningName: string;
   displaySideBar = false;
 
-  constructor(private planningService: PlanningService, private appStateService: AppStateService,private router: Router) { }
+  constructor(private planningService: PlanningService, private appStateService: AppStateService) { }
 
   ngOnInit() {
     this.listenToCurrentPlanning();
@@ -55,7 +54,5 @@ export class ScheduleComponent implements OnInit {
       this.planningName = planning.name;
     });
   }
-  ok(){
-    this.router.navigate(['management']);
-  }
+ 
 }

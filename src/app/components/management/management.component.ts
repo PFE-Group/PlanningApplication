@@ -6,6 +6,7 @@ import { AppStateService } from '../../shared/services/app-state.service';
 import { Observable } from 'rxjs';
 import { PlanningService } from '../../shared/services/planning';
 import { DivEnums } from './models/div.enums';
+import { AutocompleteComponentUser } from './components/autocompleteUser';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class ManagementComponent implements OnInit {
     this.currentDiv=div;
   }
 
-  constructor(private appStateService: AppStateService, private planningService: PlanningService){
+  constructor(private appStateService: AppStateService, private planningService: PlanningService  ){
 
   }
 

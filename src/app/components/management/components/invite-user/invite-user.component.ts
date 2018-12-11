@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { User, createUser } from 'src/app/shared/models/user'
-import { HttpClient } from '@angular/common/http';
+import { WebApiService } from 'src/app/shared/services/webapi';
+import {HttpMethod} from 'src/app/shared/models/webapi';
+import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-invite-user',
@@ -8,48 +13,48 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./invite-user.component.css']
 })
 export class InviteUserComponent implements OnInit {
-  users = Array<User>();
+  // autoComplete
+  myControl = new FormControl();
+  filteredOptions: Observable<String[]>;
 
-  constructor(private http: HttpClient) { }
+  users = Array<User>();
+  loginUser :string;
+  membre: boolean;
+  constructor(private webApiService: WebApiService) { }
 
   ngOnInit() {
-    console.log("okok");
-    this.http.get('/users').subscribe((data)=>{
-      console.log(data)
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+    this.webApiService.getResponse('/api/users', HttpMethod.GET, { }).then((res)=>{
+      this.users=res
     })
-    this.getAllUsers();
-
   }
-  getAllUsers() {
-    var jsonUsers = {
-      "users": [{
-        "firstName": "dani",
-        "lastName": "rocha",
-        "login": "danii",
-        "profilePicture": "....."
-      },
-      {
-        "firstName": "ismail",
-        "lastName": "abdou",
-        "login": "isma",
-        "profilePicture": "....."
-      }, {
-        "firstName": "youness",
-        "lastName": "Belhassnaoui",
-        "login": "you",
-        "profilePicture": "....."
-      }
-      ]
-    }
-    jsonUsers.users.forEach((el) => {
-      this.users.push(createUser({
-        firstName: el.firstName,
-        lastName: el.lastName,
-        login: el.login,
-        profilePicture: el.profilePicture
-      } as Partial<User>))
-    })
 
+  inviteUser(){
+    var role='';
+    if(this.membre===true)
+      role="membre"
+    else
+      role="invite"
+      this.webApiService.getResponse('/api/plannings/Q8KROwZvxkxwGxelnI9u/member', HttpMethod.PUT, {
+        login:this.loginUser,
+        role:role
+      }).then((res)=>{
+         console.log(res.getResponse)
+         /* clear input 
+          this.loginUser='';
+          
+         */
+      })
   }
+
+
+  private _filter(value: string): String[] {
+    const filterValue = value.toLowerCase();
+    return this.users.map(user=>user.login).filter(login =>login.toLowerCase().indexOf(filterValue) === 0);
+  }
+  
 
 }

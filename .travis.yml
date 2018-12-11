@@ -3,14 +3,18 @@ language: node_js
 node_js:
   - 8
 
-before_install:
-  openssl aes-256-cbc -K $encrypted_50f1fbeadf05_key -iv $encrypted_50f1fbeadf05_iv -in server/firebase-access.json.enc -out server/firebase-access.json -d
+#before_install:
+#  openssl aes-256-cbc -K $encrypted_50f1fbeadf05_key -iv $encrypted_50f1fbeadf05_iv -in server/firebase-access.json.enc -out server/firebase-access.json -d
 
 # blocklist
 # branches:
 #   except:
 #     - master
-
+cache:
+  directories:
+    - /node_modules
+    - ~/.cache
+    
 install:
   - npm install
 

@@ -8,11 +8,15 @@ import { ScheduleModule } from './components/schedule/schedule.module';
 import { ManagementModule } from './components/management/management.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { UserInformationComponent } from './components/schedule/components/user-information';
+import { LoginComponent } from './components/login/login.component';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from './services/auth.services'
 
 @NgModule({
   declarations: [
     AppComponent,
     UserInformationComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -21,11 +25,14 @@ import { UserInformationComponent } from './components/schedule/components/user-
     HttpClientModule,
     AngularFontAwesomeModule,
     ManagementModule,
-  ],
-  providers: [
+    FormsModule,
+    HttpClientModule
 
   ],
   bootstrap: [AppComponent],
-  entryComponents: []
+  entryComponents: [],
+  providers: [
+    AuthService
+  ],
 })
 export class AppModule { }
