@@ -21,6 +21,7 @@ import {PlanningService} from '../../shared/services/planning';
 import {CalendarListComponent} from './components/calendar-list';
 import {PlanningNameDialogComponent} from './components/calendar-list/components/planning-name-dialog';
 import {UserService} from '../../shared/services/user';
+import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 
 
 const COMPONENTS = [
@@ -47,6 +48,8 @@ const MODULES = [
   BrowserAnimationsModule,
   FormsModule,
   MatDialogModule,
+ DlDateTimePickerDateModule,
+
   CalendarModule.forRoot({
     provide: DateAdapter,
     useFactory: adapterFactory
