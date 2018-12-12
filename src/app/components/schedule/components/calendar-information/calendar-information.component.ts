@@ -15,41 +15,49 @@ import { HttpMethod } from 'src/app/shared/models/webapi';
 })
 
 export class CalendarInformationComponent implements OnInit {
-  startDate: any
-  endDate: any
+  startDate: Date
+  endDate: Date
   planningID: string
   planningName: string
+  planningNameBeforeUp:string
+  showUpdate: boolean
   @Input() matDatepicker;
 
   @Input() for;
 
-  constructor(private webApiService: WebApiService,private appStateService: AppStateService) {
+  constructor(private webApiService: WebApiService, private appStateService: AppStateService) {
   }
 
   ngOnInit() {
     this.listenToCurrentPlanning();
-   
+    this.showUpdate = false
+  }
+  modify() {
+    this.showUpdate = true
   }
   listenToCurrentPlanning() {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      this.planningID=planning.id
-      this.planningName=planning.name
-      console.log(planning.endDate+"|||||||");
+      this.planningID = planning.id;
+      this.planningName = planning.name;
+      this.endDate = planning.endDate;
+      this.startDate = planning.startDate;
+
     })
   }
   changer() {
-    console.log(this.planningName+":"+this.planningID+":"+this.startDate+":"+this.endDate)
-    this.webApiService.getResponse('/api/plannings/'+this.planningID,HttpMethod.PATCH,{
-      name:this.planningName,
-      startDate:this.startDate,
-      endDate:this.endDate,
-    }).then((res)=>{
-      console.log("ok",res)
-    }).catch((err)=>{
-      console.log("err",err)
-    })
+    this.showUpdate = false
+    console.log(this.planningNameBeforeUp + ":" + this.planningID + ":" + this.startDate + ":" + this.endDate)
+    // this.webApiService.getResponse('/api/plannings/'+this.planningID,HttpMethod.PATCH,{
+    //   name:this.planningName,
+    //   startDate:this.startDate,
+    //   endDate:this.endDate,
+    // }).then((res)=>{
+    //   console.log("ok",res)
+    // }).catch((err)=>{
+    //   console.log("err",err)
+    // })
   }
 
 }
