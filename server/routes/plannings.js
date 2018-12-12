@@ -551,7 +551,7 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 var tasksDb = data.tasks;
                 var timeSlotsDb = data.timeSlots;
 
-                if(!existsWithModificationRight(user_id, data.usrs)) {
+                if(!existsWithModificationRight(user_id, data.users)) {
                     return res.status(403).json({"message": "Access denied"});
                 }
 
@@ -607,7 +607,7 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
                 
                 var planning = doc.data();
 
-                if(!existsWithModificationRight(user_id, planning)) {
+                if(!existsWithModificationRight(user_id, planning.users)) {
                     return res.status(403).json({"message": "Access denied"}); 
                 }
 
