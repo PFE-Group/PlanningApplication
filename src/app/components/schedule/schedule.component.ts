@@ -32,7 +32,6 @@ export class ScheduleComponent implements OnInit {
     this.listenToCurrentPlanning();
     this.planningService.fetchPlannings(this.listenToCurrentUser());
     this.plannings = this.planningService.getPlannings();
-
   }
 
   deletePlanning(planning: Planning) {

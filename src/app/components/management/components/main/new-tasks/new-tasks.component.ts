@@ -45,7 +45,6 @@ export class NewTasksComponent implements OnInit {
       console.log(res)
       this.messageError.emit();
     })
-    
   }
 
 
