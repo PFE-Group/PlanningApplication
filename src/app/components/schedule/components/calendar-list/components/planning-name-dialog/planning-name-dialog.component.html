@@ -4,7 +4,7 @@
 <br>
 <mat-form-field>
   <!-- date de début du planning-->
-  <input matInput [matDatepicker]="picker1" placeholder="date de debut">
+  <input matInput [matDatepicker]="picker1" placeholder="Start Date">
   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
   <mat-datepicker #picker1></mat-datepicker>
 </mat-form-field>
@@ -24,4 +24,4 @@
   <input matInput placeholder="tâches"><!-- nom du planning-->
 </mat-form-field>
 <br>
-<button mat-stroked-button color="primary">Créer</button>
+<button mat-stroked-button color="primary" (click)="createPlanning()">Créer</button>
