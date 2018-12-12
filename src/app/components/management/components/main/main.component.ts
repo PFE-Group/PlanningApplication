@@ -8,19 +8,29 @@ import {Component, OnInit} from '@angular/core';
 
 export class MainComponent implements OnInit {
   step = 0;
-
+  showError:boolean
+  messageError(){
+    this.showError=true;
+  }
   ngOnInit() {
+    this.showError=false;
   }
 
   setStep(index: number) {
+    this.showError=false;
+
     this.step = index;
   }
 
   nextStep() {
+    this.showError=false;
+
     this.step++;
   }
 
   prevStep() {
+    this.showError=false;
+
     this.step--;
   }
 

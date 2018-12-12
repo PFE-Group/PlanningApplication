@@ -1,5 +1,6 @@
 <!-- <autocomplete-component-users (onChange)="loginUser = $event.value" [users]="users"></autocomplete-component-users> -->
 <!-- champ login -->
+<h3>{{planningCurrent.name}}</h3>
 <mat-form-field class="example-full-width">
   <input  type="text" placeholder="login" [(ngModel)]="loginUser" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
@@ -16,4 +17,4 @@
   </mat-button-toggle-group>
 </div>
 <br>
-<button mat-stroked-button color="primary" (click)="inviteUser()">Inviter</button>
+<button mat-stroked-button color="primary" (click)="inviteUser()">Inviter </button>

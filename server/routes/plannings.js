@@ -183,6 +183,7 @@ router.put("/:id/member", (req, res, next) => {
         return;
     }
     const id = req.params.id;
+    console.log(login+":"+":"+role+":"+id)
     var planningDocRef = db.db.collection("plannings").doc(id);
     var userDocRef = db.db.collection("users").where("login", "==", login);
 
@@ -254,7 +255,7 @@ router.put("/:id/task", (req, res, next) => {
         "name": name,
         "color": color,
         "hoursExpected": hoursExpected,
-        "hoursDone": 0
+        "hoursRealised": 0
     }
 
     if(!color) {
@@ -497,7 +498,7 @@ router.post('/:id/timeslot', function(req, res, next){
                 
                 var data = doc.data();
 
-                if(!existsWithModificationRight(user_id, data.usrs)) {
+                if(!existsWithModificationRight(user_id, data.users)) {
                     return res.status(403).json({"message": "Access denied"});
                 }
 
@@ -529,6 +530,8 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
     var idtimeslot = req.params.idtimeslot;
     var {task, done, startHour, endHour} = req.body;
     done = (done == 'true');
+
+    var message = [];
     
     startHour = validator.checkDate(startHour);
     endHour = validator.checkDate(endHour);
@@ -546,21 +549,26 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 }
 
                 var data = doc.data();
+                var tasksDb = data.tasks;
+                var timeSlotsDb = data.timeSlots;
 
                 if(!existsWithModificationRight(user_id, data.usrs)) {
                     return res.status(403).json({"message": "Access denied"});
                 }
 
-                var timeSlotsDb = data.timeSlots;
+                var i = getTaskIndex(task, tasksDb);
+                if(i === -1) {
+                    message.push("Any task with name [" + task + "]");
+                    return;
+                }
+
                 if(task) {
-                    // rechercher task name dans les taches si existant
-                    // there is a function for this getTaskIndex...
                     timeSlotsDb[idtimeslot].task = task;
                 }
                 if(done) {
-                    // add stats : endhour - starthour + hoursRealised dans les task
-                    // update data.tasks to take the update task 
                     timeSlotsDb[idtimeslot].done = done;
+                    tasksDb[i].hoursRealised += timeSlotsDb[idtimeslot].endHour - timeSlotsDb[idtimeslot].startHour;
+                    tasksDb[i].hoursRealised /= 3600000; // conversion ms en heure
                 }
                 if(startHour) {
                     timeSlotsDb[idtimeslot].startHour = startHour;
@@ -568,8 +576,10 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 if(endHour) {
                     timeSlotsDb[idtimeslot].endHour = endHour;
                 }
-                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                //transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                //transaction.update(planningDocRef, {tasks: tasksDb});
                 data.timeSlots = timeSlotsDb;
+                data.tasks = tasksDb;
                 return res.json(data);
         })
     }).catch((err) => {
