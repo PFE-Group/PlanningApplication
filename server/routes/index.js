@@ -14,4 +14,8 @@ router.get('/schedule', function(req, res){
     res.sendFile(path.join(__dirname,'../../dist/client/index.html'));
 });
 
+router.get('/management', function(req, res){
+    res.sendFile(path.join(__dirname,'../../dist/client/index.html'));
+});
+
 module.exports = router;
