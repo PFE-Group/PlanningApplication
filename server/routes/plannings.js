@@ -612,6 +612,9 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
                 }
 
                 var timeSlotsDb = planning.timeSlots;
+                if(timeSlotsDb.done) {
+                    return res.status(403).json({"message": "Timeslot already validated"});
+                }
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
                 planning.timeSlots = timeSlotsDb;
