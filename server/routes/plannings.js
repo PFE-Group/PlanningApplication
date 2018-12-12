@@ -326,6 +326,7 @@ router.patch("/:id", (req, res, next) => {
                 if(name) {
                     data.name = name;
                     plans[planningDoc.id].name = name;
+
                 }
                 if(startDate) {
                     data.startDate = startDate;

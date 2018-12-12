@@ -1,6 +1,11 @@
-import {Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
+import { AppStateService } from '../../../../shared/services/app-state.service';
+import { filter } from 'rxjs/internal/operators';
+import { Planning } from '../../../../shared/models/planning';
+import { WebApiService } from 'src/app/shared/services/webapi';
+import { HttpMethod } from 'src/app/shared/models/webapi';
 
 
 @Component({
@@ -10,23 +15,49 @@ import Timestamp = firebase.firestore.Timestamp;
 })
 
 export class CalendarInformationComponent implements OnInit {
-  picker: Timestamp;
-  picker2: Timestamp;
-
+  startDate: Date
+  endDate: Date
+  planningID: string
+  planningName: string
+  planningNameBeforeUp:string
+  showUpdate: boolean
   @Input() matDatepicker;
 
   @Input() for;
 
-  constructor() {
+  constructor(private webApiService: WebApiService, private appStateService: AppStateService) {
   }
 
   ngOnInit() {
-    this.picker = new Timestamp(0, 0);
-    this.picker2 = new Timestamp(0, 0);
+    this.listenToCurrentPlanning();
+    this.showUpdate = false
   }
+  modify() {
+    this.showUpdate = true
+  }
+  listenToCurrentPlanning() {
+    this.appStateService.getCurrentPlanning().pipe(
+      filter((planning: Planning) => !!planning)
+    ).subscribe((planning: Planning) => {
+      this.planningID = planning.id;
+      this.planningName = planning.name;
+      this.endDate = planning.endDate;
+      this.startDate = planning.startDate;
 
-  modifyName() {
-
+    })
+  }
+  changer() {
+    this.showUpdate = false
+    console.log(this.planningNameBeforeUp + ":" + this.planningID + ":" + this.startDate + ":" + this.endDate)
+    // this.webApiService.getResponse('/api/plannings/'+this.planningID,HttpMethod.PATCH,{
+    //   name:this.planningName,
+    //   startDate:this.startDate,
+    //   endDate:this.endDate,
+    // }).then((res)=>{
+    //   console.log("ok",res)
+    // }).catch((err)=>{
+    //   console.log("err",err)
+    // })
   }
 
 }

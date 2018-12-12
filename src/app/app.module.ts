@@ -11,7 +11,6 @@ import { UserInformationComponent } from './components/schedule/components/user-
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.services'
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +26,6 @@ import { AuthService } from './services/auth.services'
     ManagementModule,
     FormsModule,
     HttpClientModule
-
   ],
   bootstrap: [AppComponent],
   entryComponents: [],
