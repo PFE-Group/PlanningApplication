@@ -12,7 +12,6 @@ import {UserInformationComponent} from './components/user-information/user-infor
 import {CalendarListComponent} from './components/calendar-list';
 import {MemberListComponent} from './components/member-list/member-list.component';
 import { MainComponent } from './components/main/main.component';
-import { AutocompleteComponentUser } from './components/autocompleteUser/autocomplete.component';
 import { AutocompleteComponentTasks } from './components/autocompleteTasks/autocomplete.component';
 import { PlanningNameDialogComponent } from './components/calendar-list/components/planning-name-dialog';
 
@@ -50,9 +49,10 @@ import {
   MatTreeModule,
 
 } from '@angular/material';
-import { InviteUserComponent } from './components/invite-user/invite-user.component';
-import { NewTasksComponent } from './components/new-tasks/new-tasks.component';
-import { NewTimeSlotComponent } from './components/new-time-slot/new-time-slot.component';
+import { InviteUserComponent } from './components/main/invite-user/invite-user.component';
+import { NewTasksComponent } from './components/main/new-tasks/new-tasks.component';
+import { NewTimeSlotComponent } from './components/main/new-time-slot/new-time-slot.component';
+import { MemberListService } from 'src/app/shared/services/memberList/memberlistService';
 
 const MODULES = [
   BrowserModule,
@@ -102,7 +102,6 @@ const COMPONENTS = [
   UserInformationComponent,
   CalendarListComponent,
   MemberListComponent,
-  AutocompleteComponentUser,
   AutocompleteComponentTasks,
   PlanningNameDialogComponent
 ]
@@ -117,7 +116,7 @@ const COMPONENTS = [
   imports: [
     ...MODULES
   ],
-  providers: [],
+  providers: [MemberListService],
   entryComponents: [PlanningNameDialogComponent]
 })
 export class ManagementModule { }

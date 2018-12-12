@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { IWebApiService } from './webapi.service.interface';
+import { AuthService } from 'src/app/services/auth.services';
+
 import {Observable} from 'rxjs';
 import {HttpMethod} from '../../models/webapi/http-method.enum';
 
 @Injectable()
 export class WebApiService implements IWebApiService {
-
+  jwt = this.authService.retrieveToken() === null ? "" : this.authService.retrieveToken()
   headers = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
+    "Authorization" : this.jwt
+
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private authService: AuthService) { }
 
   getResponse(url: string, method: HttpMethod, payload?: any, timeout: number = 10000): Promise<any> {
     return new Promise((resolve, reject) => {
