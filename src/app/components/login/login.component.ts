@@ -42,15 +42,15 @@ export class LoginComponent implements OnInit {
         password: this.loginUserPassword
       }, httpOptions)
       .subscribe((data) => {
-        console.log("DATa : ", data)
         this.authService.logIn(data["jwt"])
         this.good = true;
         this.messageToShow = "Success !"
         this.route.navigate(['schedule'])
       },
         (err) => {
+          console.log("Error login : ", err)
           this.good = false;
-          this.messageToShow = err
+          this.messageToShow = err.error.message
         })
   }
 
@@ -71,8 +71,17 @@ export class LoginComponent implements OnInit {
         this.messageToShow = "Success !"
       },
         (err) => {
+          console.log("ERROR REGIS : ", err)
           this.good = false;
-          this.messageToShow = err.error.message
+          this.messageToShow = "";
+          for (var i in err.error.invalidFields){
+            if (this.messageToShow === undefined){
+              this.messageToShow = err.error.invalidFields[i]
+            }else{
+              this.messageToShow = ""+this.messageToShow+"\n"+err.error.invalidFields[i]
+            }
+            
+          }
         })
   }
 
@@ -83,7 +92,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.authStatus = this.authService.checkIfAuth()
     if (this.authStatus){
-      this.route.navigate['schedule']
+      this.route.navigate(['schedule'])
     }
 
   }

@@ -552,14 +552,13 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 var tasksDb = data.tasks;
                 var timeSlotsDb = data.timeSlots;
 
-                if(!existsWithModificationRight(user_id, data.usrs)) {
+                if(!existsWithModificationRight(user_id, data.users)) {
                     return res.status(403).json({"message": "Access denied"});
                 }
 
                 var i = getTaskIndex(task, tasksDb);
                 if(i === -1) {
-                    message.push("Any task with name [" + task + "]");
-                    return;
+                    return res.status(404).json({"message": "Any task with name [" + task + "]"});
                 }
 
                 if(task) {
@@ -576,10 +575,11 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 if(endHour) {
                     timeSlotsDb[idtimeslot].endHour = endHour;
                 }
-                //transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                //transaction.update(planningDocRef, {tasks: tasksDb});
+                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                transaction.update(planningDocRef, {tasks: tasksDb});
                 data.timeSlots = timeSlotsDb;
                 data.tasks = tasksDb;
+                data.id = doc.id;
                 return res.json(data);
         })
     }).catch((err) => {
@@ -608,11 +608,14 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
                 
                 var planning = doc.data();
 
-                if(!existsWithModificationRight(user_id, planning)) {
+                if(!existsWithModificationRight(user_id, planning.users)) {
                     return res.status(403).json({"message": "Access denied"}); 
                 }
 
                 var timeSlotsDb = planning.timeSlots;
+                if(timeSlotsDb.done) {
+                    return res.status(403).json({"message": "Timeslot already validated"});
+                }
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
                 planning.timeSlots = timeSlotsDb;
