@@ -630,4 +630,65 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
     })
 });
 
+/**
+ * DELETE /:id/member/:idMember
+ * Delete a member of a planning
+ */
+router.delete('/:id/member/:idMember', function(req, res, next) {
+    const user_id = req.token.user;
+    var idplanning = req.params.id;
+    var idUser = req.params.idMember;
+
+    var planningDocRef = db.db.collection('plannings').doc(idplanning);
+    var usersDocRef = db.db.collection('users').doc(idUser);
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef)
+            .then(doc => {
+                if(!doc.exists){
+                    return res.status(404).json({"message": "No such document"});
+                }
+                
+                var planning = doc.data();
+
+                if(!existsWithRoleAdmin(user_id, planning.users)) {
+                    return res.status(403).json({"message": "Access denied"}); 
+                }
+
+                var planUsers = planning.users
+                var loginUser = null
+                for (var i in planUsers){
+                    if (planUsers[i].id === idUser && planUsers[i].id !== user_id){
+                        loginUser = i;
+                        break;
+                    }
+                }
+
+                if (loginUser === null){
+                    return res.status(403).json({
+                        "message" : "Cannot delete this user"
+                    })
+                }
+
+                return transaction.get(usersDocRef)
+                        .then( (doc2) => {
+                            if (!doc2.exists){
+                                return res.status(404).json({"message": "No such document"});
+                            }
+                            var users = doc2.data()
+                            delete users.plannings[idplanning]
+                            delete planUsers[loginUser];
+                            transaction.update(planningDocRef, {users: planUsers});
+                            transaction.update(usersDocRef, {plannings : users.plannings})
+                            planning.users = planUsers;
+                            planning.id = doc.id;
+                            return res.json(planning);
+                        })
+
+        })
+    }).catch((err) => {
+        res.status(500).json(err);
+    })
+});
+
 module.exports = router;

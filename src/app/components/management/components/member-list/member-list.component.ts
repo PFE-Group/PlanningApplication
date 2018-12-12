@@ -23,6 +23,11 @@ export class MemberListComponent implements OnInit {
   memberListInvite: Array<Member>
   UserRole = UserRole
   currentState: UserRole
+  currentPlanning : string
+
+  good : boolean = true;
+  messageError:string;
+
   constructor(private webApiService: WebApiService, private appStateService: AppStateService, private memberService: MemberListService) { }
   change(res: any) {
     var user = createUser({
@@ -64,6 +69,7 @@ export class MemberListComponent implements OnInit {
       this.memberListAdmin.length = 0;
       this.memberListInvite.length = 0;
       this.memberListMember.length = 0;
+      this.currentPlanning = planning.id
       this.getAllUsersPlanning(planning.id);
     })
   }
@@ -91,7 +97,16 @@ export class MemberListComponent implements OnInit {
     })
   }
 
-
-
+  deleteUser(user){
+    this.webApiService.getResponse('/api/plannings/'+this.currentPlanning+"/member/"+user.user.id, HttpMethod.DELETE, {})
+          .then( (res) => {
+            this.good = true;
+            //TODO Mettre à jour l'UI
+          })
+          .catch( (err) => {
+            this.good = false;
+            this.messageError = err.error.message;
+          })
+  }
 
 }
