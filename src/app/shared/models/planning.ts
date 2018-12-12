@@ -21,7 +21,6 @@ export const createPlannings = (partialPlannings: any[]): Array<Planning> => {
 };
 
 export const createPlanning = (partialPlanning: any): Planning => {
-  console.log("DaNI,"+new Date(partialPlanning.startDate));
   const obj = Object.assign(
     {},
     fullPlanning(),
@@ -30,8 +29,6 @@ export const createPlanning = (partialPlanning: any): Planning => {
     {startDate: new Date(partialPlanning.startDate)},
     {endDate: new Date(partialPlanning.endDate)}
   ) as Planning;
-  //console.log("DANI,"+obj.startDate.getFullYear());
-
   console.log('----- Planning created -----');
   console.log('----- creating tasks -----');
   const tasks = createTasks(obj.tasks);

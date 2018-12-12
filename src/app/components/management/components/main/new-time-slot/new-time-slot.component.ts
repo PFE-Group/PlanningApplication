@@ -7,6 +7,7 @@ import {HttpMethod} from 'src/app/shared/models/webapi';
 import { AppStateService } from '../../../../../shared/services/app-state.service';
 import { filter } from 'rxjs/internal/operators';
 import {Planning} from '../../../../../shared/models/planning';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-time-slot',
@@ -19,11 +20,12 @@ export class NewTimeSlotComponent implements OnInit {
   endHour: Date;
   task: String;
 
+  myControl = new FormControl();
+
   message: String;
 
-  myControl = new FormControl();
   filteredOptions: Observable<String[]>;
-  @Input() tasks: Array<Task> = new Array<Task>();
+  tasks = [];
 
   planningCurrent: Planning;
 
@@ -31,7 +33,17 @@ export class NewTimeSlotComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.myControl) {
+      this.myControl.valueChanges.subscribe(v => {
+          this.task = v;
+      });
+    }
     this.listenToCurrentPlanning();
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+    );
   }
 
   getAllTasks() {
@@ -41,13 +53,14 @@ export class NewTimeSlotComponent implements OnInit {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      this.planningCurrent=planning
-      this.tasks = planning.tasks;
+      this.planningCurrent=planning;
+      for(var i in planning.tasks){
+        this.tasks[i] = planning.tasks[i].name;
+      }
     })
   }
 
   sendTimeSlot() {
-    console.log(this.planningCurrent)
     if(!this.startHour || !this.task || !this.endHour) {
       this.message = "Tous les champs sont requis. Veuillez prêter attention au format des dates.";
       return;
@@ -66,5 +79,11 @@ export class NewTimeSlotComponent implements OnInit {
       }
     });
     
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tasks.filter(option => option.toLowerCase().includes(filterValue));
   }
 }
