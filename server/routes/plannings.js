@@ -557,8 +557,7 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
 
                 var i = getTaskIndex(task, tasksDb);
                 if(i === -1) {
-                    message.push("Any task with name [" + task + "]");
-                    return;
+                    return res.status(404).json({"message": "Any task with name [" + task + "]"});
                 }
 
                 if(task) {
@@ -575,10 +574,11 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 if(endHour) {
                     timeSlotsDb[idtimeslot].endHour = endHour;
                 }
-                //transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                //transaction.update(planningDocRef, {tasks: tasksDb});
+                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                transaction.update(planningDocRef, {tasks: tasksDb});
                 data.timeSlots = timeSlotsDb;
                 data.tasks = tasksDb;
+                data.id = doc.id;
                 return res.json(data);
         })
     }).catch((err) => {
