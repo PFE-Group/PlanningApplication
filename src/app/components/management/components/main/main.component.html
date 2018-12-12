@@ -1,7 +1,12 @@
 <mat-accordion class="example-headers-align">
   <div class="row">
-    <div [hidden]="!showError" class="alert alert-danger col-12 col-sm-12  col-md-12 col-lg-12 col-xl-8" role="alert">
+    <div [hidden]="!showError" class="alert alert-danger col-12 " role="alert">
       Action non permise
+    </div>
+  </div>
+  <div class="row">
+    <div [hidden]="!showOk" class="alert alert-success col-12 " role="alert">
+      Action réussi
     </div>
   </div>
   <!-- INVITER UN UTILISATEUR-->
@@ -12,7 +17,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
 
-    <app-invite-user (messageError)="messageError()"></app-invite-user>
+    <app-invite-user (messageError)="messageError()" (messageOK)="messageOK()"></app-invite-user>
     <mat-action-row>
       <button mat-button color="primary" (click)="nextStep()">Suivant</button>
     </mat-action-row>
@@ -37,7 +42,7 @@
         Ajouter une tâche
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-new-tasks (messageError)="messageError()"></app-new-tasks>
+    <app-new-tasks (messageError)="messageError()" (messageOK)="messageOK()"></app-new-tasks>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Précédent</button>
     </mat-action-row>

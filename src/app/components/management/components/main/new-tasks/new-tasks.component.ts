@@ -17,7 +17,7 @@ export class NewTasksComponent implements OnInit {
   planningCurrent : Planning
 
   @Output() messageError = new EventEmitter<any>();
-
+  @Output() messageOK = new EventEmitter<any>();
   constructor(private appStateService: AppStateService,private webApiService: WebApiService) {
   }
   
@@ -40,6 +40,7 @@ export class NewTasksComponent implements OnInit {
       hoursExpected:this.hourExpected
     }).then((res)=>{
       console.log(res);
+      this.messageOK.emit();
     }).catch((res)=>{
       console.log(res)
       this.messageError.emit();

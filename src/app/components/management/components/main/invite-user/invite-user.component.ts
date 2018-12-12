@@ -24,6 +24,7 @@ export class InviteUserComponent implements OnInit {
   planningCurrent: Planning;
   // avertir parent qu'il y a une erreur 
   @Output() messageError = new EventEmitter<any>();
+  @Output() messageOK = new EventEmitter<any>();
   constructor(private webApiService: WebApiService,private memberService: MemberListService,private appStateService: AppStateService) { }
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class InviteUserComponent implements OnInit {
       }).then((res)=>{
         if(res.status!==200)
           this.memberService.getMembersOnServer(res['users'][this.loginUser]);
+          this.messageOK.emit();
       }).catch((res)=>{
         console.log("error inviteUser"+ res)
         this.messageError.emit();
