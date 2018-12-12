@@ -1,11 +1,10 @@
-
 <h3 class="tableTitle">
-  {{ planningName }} management
+  {{ planning.name }} management
 </h3>
 <div class="table-responsive">
-<table class="table table-hover">
+  <table class="table table-hover">
 
-  <thead class="thead-dark">
+    <thead class="thead-dark">
     <tr>
       <th scope="col">Title</th>
       <th scope="col">Color</th>
@@ -13,9 +12,9 @@
       <th scope="col">Ends at</th>
       <th scope="col">Remove</th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
+    <tbody>
     <tr *ngFor="let ts of timeSlots; let index = index">
       <td scope="row">
         <input
@@ -31,16 +30,16 @@
       <td>
 
         <!--<mat-form-field style="max-width: 150px;">-->
-          <!--<input matInput-->
-                 <!--[matDatepicker]="picker"-->
-                 <!--class="form-control"-->
-                 <!--type="text"-->
-                 <!--mwlFlatpickr-->
-                 <!--[(ngModel)]="ts.start"-->
-                 <!--placeholder="From"-->
-                 <!--dateformat="Y-m-dTH:i">-->
-          <!--<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-          <!--<mat-datepicker #picker></mat-datepicker>-->
+        <!--<input matInput-->
+        <!--[matDatepicker]="picker"-->
+        <!--class="form-control"-->
+        <!--type="text"-->
+        <!--mwlFlatpickr-->
+        <!--[(ngModel)]="ts.start"-->
+        <!--placeholder="From"-->
+        <!--dateformat="Y-m-dTH:i">-->
+        <!--<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+        <!--<mat-datepicker #picker></mat-datepicker>-->
         <!--</mat-form-field>-->
 
         <input
@@ -52,15 +51,15 @@
       </td>
       <td>
         <!--<mat-form-field style="max-width: 150px;">-->
-          <!--<input matInput [matDatepicker]="picker2"-->
-                 <!--class="form-control"-->
-                 <!--type="text"-->
-                 <!--mwlFlatpickr-->
-                 <!--[(ngModel)]="ts.end"-->
-                 <!--placeholder="To"-->
-                 <!--dateformat="Y-m-dTH:i">-->
-          <!--<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>-->
-          <!--<mat-datepicker #picker2></mat-datepicker>-->
+        <!--<input matInput [matDatepicker]="picker2"-->
+        <!--class="form-control"-->
+        <!--type="text"-->
+        <!--mwlFlatpickr-->
+        <!--[(ngModel)]="ts.end"-->
+        <!--placeholder="To"-->
+        <!--dateformat="Y-m-dTH:i">-->
+        <!--<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>-->
+        <!--<mat-datepicker #picker2></mat-datepicker>-->
         <!--</mat-form-field>-->
 
         <input
@@ -73,7 +72,7 @@
       <td>
         <button
           class="btn btn-danger"
-          (click)="timeSlots.splice(index, 1);">
+          (click)="this.timeSlots.splice(index, 1);deleteTimeSlot(ts)">
           Delete
         </button>
       </td>
@@ -87,7 +86,7 @@
         </button>
       </td>
     </tr>
-  </tbody>
+    </tbody>
 
-</table>
+  </table>
 </div>

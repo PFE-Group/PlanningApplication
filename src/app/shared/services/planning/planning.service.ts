@@ -25,10 +25,10 @@ export class PlanningService implements IPlanningService {
       .then(
         (data: any[]) => {
           // parse data
-          console.log('plannings info', data);
+          console.log('plannings info ', data);
           // @ts-ignore
           const plannings = createPlannings(data);
-          console.log('plannings parsed', plannings);
+          console.log('plannings parsed ', plannings);
           this.planningsSubject.next(plannings);
         }, (error: any) => {
           console.error('error get plannings', error);

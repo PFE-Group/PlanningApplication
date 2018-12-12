@@ -11,15 +11,19 @@ export interface TimeSlot {
   done: boolean;
 }
 
-export const createTimeSlots = (partialTimeSlots: any[]): Array<TimeSlot> => {
+export const createTimeSlots = (partialTimeSlots: any[], tasks: Array<Task>): Array<TimeSlot> => {
   const timeSlots = Array<TimeSlot>();
 
   for (const pts in partialTimeSlots) {
     const ts = fullTimeSlot();
     ts.id = pts;
-    ts.endHour = new Date(partialTimeSlots[pts].endHour._seconds);
-    ts.startHour = new Date(partialTimeSlots[pts].startHour._seconds);
-    ts.task = partialTimeSlots[pts].task;
+    ts.endHour = new Date(partialTimeSlots[pts].endHour._seconds * 1000);
+    ts.startHour = new Date(partialTimeSlots[pts].startHour._seconds * 1000);
+    tasks.forEach((task: Task) =>{
+      if(task.name === partialTimeSlots[pts].task){
+        ts.task = task;
+      }
+    });
     ts.done = partialTimeSlots[pts].done;
     timeSlots.push(createTimeSlot(ts));
   }

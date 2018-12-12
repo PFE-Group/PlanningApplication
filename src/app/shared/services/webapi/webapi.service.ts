@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { take } from 'rxjs/operators';
-import { IWebApiService } from './webapi.service.interface';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {take} from 'rxjs/operators';
+import {IWebApiService} from './webapi.service.interface';
 import {Observable} from 'rxjs';
 import {HttpMethod} from '../../models/webapi/http-method.enum';
 
@@ -27,6 +27,12 @@ export class WebApiService implements IWebApiService {
           break;
         case HttpMethod.PUT:
           observable = this.http.put(url, payload, { headers: this.headers });
+          break;
+        case HttpMethod.DELETE:
+          observable = this.http.delete(url, { headers: this.headers });
+          break;
+        case HttpMethod.PATCH:
+          observable = this.http.patch(url, payload, { headers: this.headers });
           break;
       }
       observable.pipe(
