@@ -85,14 +85,4 @@ router.post('/register', function (req, res, next) {
     })
 })
 
-/*router.post('/verifyToken', function(req, res, next) {
-    firebase.auth().verifyIdToken(req.body.idToken)
-        .then( (decodedToken) => {
-            return res.status(200).send(decodedToken)
-        })
-        .catch( (err) => {
-            return res.status(403).send(err)
-        })
-})*/
-
 module.exports = router;
