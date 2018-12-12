@@ -1,16 +1,16 @@
-<autocomplete-component-tasks [tasks]="tasks"></autocomplete-component-tasks> <!-- les taches-->
+<autocomplete-component-tasks [tasks]="tasks" [(ngModel)]="task"></autocomplete-component-tasks> <!-- les taches-->
 
 <mat-form-field>
   <!-- date de début du planning-->
-  <input matInput [matDatepicker]="picker3" placeholder="date de debut">
+  <input matInput [matDatepicker]="picker3" [(ngModel)]="startDate" placeholder="date de début">
   <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
   <mat-datepicker #picker3></mat-datepicker>
 </mat-form-field>
 <mat-form-field>
   <!-- date de fin du planning-->
-  <input matInput [matDatepicker]="picker4" placeholder="data de fin">
+  <input matInput [matDatepicker]="picker4" [(ngModel)]="endDate" placeholder="date de fin">
   <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
   <mat-datepicker #picker4></mat-datepicker>
 </mat-form-field>
 <br>
-<button mat-stroked-button color="primary">Créer</button>
+<button mat-stroked-button color="primary" (click)="sendTimeSlot()">Créer</button>

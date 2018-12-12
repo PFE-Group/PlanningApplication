@@ -8,46 +8,23 @@ import {Task, createTask} from 'src/app/shared/models/task';
   styleUrls: ['./new-time-slot.component.css']
 })
 export class NewTimeSlotComponent implements OnInit {
-  tasks = Array<Task>();
+
+  startDate: any;
+  endDate: any;
+  task: String;
+  tasks: Array<Task>
 
   constructor() {
+    this.tasks = new Array<Task>();
   }
 
   ngOnInit() {
-    this.getAllTasks();
-
   }
 
   getAllTasks() {
-    const jsonTasks = {
-      'tasks': [{
-        'name': 'math1',
-        'expectedHours': 10,
-        'doneHours': 5,
-        'color': 'red'
-      },
-        {
-          'name': 'pattern',
-          'expectedHours': 5,
-          'doneHours': 2,
-          'color': 'blue'
-        },
-        {
-          'name': 'SD',
-          'expectedHours': 6,
-          'doneHours': 0,
-          'color': 'vert'
-        }
-      ]
-    };
-    jsonTasks.tasks.forEach((el) => {
-      this.tasks.push(createTask({
-        name: el.name,
-        expectedHours: el.expectedHours,
-        doneHours: el.doneHours,
-        color: el.color
-      } as Partial<Task>));
-    });
   }
 
+  sendTimeSlot() {
+    console.log("HELLO")
+  }
 }
