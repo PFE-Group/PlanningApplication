@@ -55,21 +55,21 @@ export class MemberListComponent implements OnInit {
   }
   setCurrentState(role: UserRole) {
     this.currentState = role
-  } 
+  }
   listenToCurrentPlanning() {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      this.memberList.length=0;
-      this.memberListAdmin.length=0;
-      this.memberListInvite.length=0;
-      this.memberListMember.length=0;
+      this.memberList.length = 0;
+      this.memberListAdmin.length = 0;
+      this.memberListInvite.length = 0;
+      this.memberListMember.length = 0;
       this.getAllUsersPlanning(planning.id);
     })
   }
   getAllUsersPlanning(idPlanning) {
     console.log("okok");
-    this.webApiService.getResponse('/api/plannings/users/'+idPlanning, HttpMethod.GET, {}).then((res) => {
+    this.webApiService.getResponse('/api/plannings/users/' + idPlanning, HttpMethod.GET, {}).then((res) => {
       for (var i in res) {
         var member = createMember({
           user: createUser({
