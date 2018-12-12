@@ -57,15 +57,22 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
 app.use('/', indexRouter);
 app.use('/api/login', loginRouter);
-app.use(authMiddleware)
+app.use("/api/*", authMiddleware)
 app.use('/api/users', usersRouter);
 app.use('/api/plannings', planningsRouter);
 
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
+    next(createError(404));
+  });
+
+/*app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/client/index.html'));
   });
+
+
 // error handler
 /*app.use((err, req, res, next) => {
     // set locals, only providing error in development
