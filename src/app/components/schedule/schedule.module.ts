@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 
 import {SharedModule} from '../../shared/shared.module';
 import {MatDatepickerModule, MatNativeDateModule, MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule,MatExpansionModule} from '@angular/material';
 
 import {ScheduleComponent} from '.';
 import {CalendarComponent} from './components/calendar';
@@ -45,7 +45,7 @@ const MODULES = [
   SharedModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  BrowserAnimationsModule,
+  BrowserAnimationsModule,MatExpansionModule,
   FormsModule,
   MatDialogModule,
  DlDateTimePickerDateModule,

@@ -1,42 +1,63 @@
-<div class="container">
-  <div class=" row alert alert-dark " role="alert">
-    <b>{{planningName}} </b> du <b>{{startDate.getDate()}}/{{startDate.getMonth()}}</b> au <b>
-      {{endDate.getDate()}}/{{endDate.getMonth()}}</b>
-    <img (click)="modify()" src="http://cdn.onlinewebfonts.com/svg/img_263621.png" width="20" height="20">
-  </div>
-
-
-
-  <div class="row" [hidden]="!showUpdate">
-    <div class="col-3">
-      <div class="row">
-        <div class="col">
-          <input class="form-control" [(ngModel)]="planningNameBeforeUp" type="text" placeholder=" put the planning name here "
-            [class.disabled]="">
+<mat-accordion>
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title class="row">
+        <div class="col-4">
+          <b>{{planningName}} </b>
         </div>
-
-      </div>
-    </div>
-    <div class="col">
-      <div class="row">
-        <div class="col">
-          <mat-form-field>
-            <input matInput [(ngModel)]="startDate" [matDatepicker]="picker" placeholder="De">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+        <div class="col-3">
+          <b>{{startDate.getDate()}}/{{startDate.getMonth()}}</b>
         </div>
-        <div class="col">
-          <mat-form-field>
-            <input matInput [(ngModel)]="endDate" [matDatepicker]="picker2" placeholder="à">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
+        <div class="col-2"> au </div>
+        <div class="col-3">
+          <b>{{endDate.getDate()}}/{{endDate.getMonth()}}</b>
         </div>
-        <div class="col">
-          <button type="button" class="btn btn-secondary" (click)="changer()">Changer</button>
+      </mat-panel-title>
+      <mat-panel-description>
+        Clique ici pour modifier
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="row">
+        <div [hidden]="!showError" class="alert alert-danger col-12 " role="alert">
+          Action non permise
         </div>
       </div>
+      <div class="row">
+        <div [hidden]="!showOk" class="alert alert-success col-12 " role="alert">
+          Action réussie
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-3">
+        <div class="row">
+          <div class="col">
+            <input class="form-control" [(ngModel)]="planningNameBeforeUp" type="text" placeholder=" Nouveau nom "
+              [class.disabled]="">
+          </div>
+
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <input matInput [(ngModel)]="startDateBeforeUp" [matDatepicker]="picker" placeholder="De">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field>
+              <input matInput [(ngModel)]="endDateBeforeUp" [matDatepicker]="picker2" placeholder="à">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-secondary" (click)="changer()">Changer</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </mat-expansion-panel>
+</mat-accordion>

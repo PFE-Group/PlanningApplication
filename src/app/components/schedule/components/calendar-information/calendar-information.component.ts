@@ -15,26 +15,61 @@ import { HttpMethod } from 'src/app/shared/models/webapi';
 })
 
 export class CalendarInformationComponent implements OnInit {
-  startDate: Date
-  endDate: Date
-  planningID: string
-  planningName: string
-  planningNameBeforeUp:string
-  showUpdate: boolean
-  @Input() matDatepicker;
-
-  @Input() for;
+   //----------- pour stocker les nouvelles données s ------------------------
+   planningNameBeforeUp: string
+   startDateBeforeUp: Date
+   endDateBeforeUp: Date
+   //----------- pour afficher les données dans le div ------------------------
+   endDate: Date
+   startDate: Date
+   planningName: string
+   planningID: string
+   //// gestion error--------------------
+   showError: boolean
+   showOk: boolean
+   // variable pour le panel
+   step: number
+   @Input() matDatepicker;
+ 
+   @Input() for;
 
   constructor(private webApiService: WebApiService, private appStateService: AppStateService) {
   }
 
   ngOnInit() {
     this.listenToCurrentPlanning();
-    this.showUpdate = false
+    this.showError = false
+    this.showOk = false
+    this.step=-1;
+
   }
-  modify() {
-    this.showUpdate = true
+
+  changer() {
+    console.log(this.planningNameBeforeUp + ":" + this.planningID + ":" + this.startDate + ":" + this.endDate)
+    this.webApiService.getResponse('/api/plannings/' + this.planningID, HttpMethod.PATCH, {
+      name: this.planningNameBeforeUp,
+      startDate: this.startDateBeforeUp,
+      endDate: this.endDateBeforeUp,
+    }).then((res) => {
+      this.showError = false
+      this.showOk = true
+      
+
+    }).catch((err) => {
+      this.showError = true
+      this.showOk = false
+    })
   }
+  setStep(index: number) {
+    this.showError = false;
+    this.showOk = false;
+    this.planningNameBeforeUp=''
+    this.startDateBeforeUp=null;
+      this.endDateBeforeUp=null;
+
+    this.step = index;
+  }
+
   listenToCurrentPlanning() {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
@@ -46,18 +81,6 @@ export class CalendarInformationComponent implements OnInit {
 
     })
   }
-  changer() {
-    this.showUpdate = false
-    console.log(this.planningNameBeforeUp + ":" + this.planningID + ":" + this.startDate + ":" + this.endDate)
-    // this.webApiService.getResponse('/api/plannings/'+this.planningID,HttpMethod.PATCH,{
-    //   name:this.planningName,
-    //   startDate:this.startDate,
-    //   endDate:this.endDate,
-    // }).then((res)=>{
-    //   console.log("ok",res)
-    // }).catch((err)=>{
-    //   console.log("err",err)
-    // })
-  }
+  
 
 }
