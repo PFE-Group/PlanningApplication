@@ -17,10 +17,11 @@
     <tbody>
     <tr *ngFor="let ts of timeSlots; let index = index">
       <td scope="row">
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="ts.task.name">
+        <select calss="form-control">
+          <option *ngFor="let t of tasks">
+            {{ t.name }}
+          </option>
+        </select>
       </td>
       <td>
         <input
@@ -35,7 +36,7 @@
         <!--class="form-control"-->
         <!--type="text"-->
         <!--mwlFlatpickr-->
-        <!--[(ngModel)]="ts.start"-->
+        <!--[(ngModel)]="ts.startHour"-->
         <!--placeholder="From"-->
         <!--dateformat="Y-m-dTH:i">-->
         <!--<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
@@ -47,6 +48,7 @@
           type="text"
           mwlFlatpickr
           [(ngModel)]="ts.startHour"
+          dateformat="Y-m-dTH:i"
           placeholder="Not set">
       </td>
       <td>
@@ -55,7 +57,7 @@
         <!--class="form-control"-->
         <!--type="text"-->
         <!--mwlFlatpickr-->
-        <!--[(ngModel)]="ts.end"-->
+        <!--[(ngModel)]="ts.endHour"-->
         <!--placeholder="To"-->
         <!--dateformat="Y-m-dTH:i">-->
         <!--<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>-->
@@ -67,6 +69,7 @@
           type="text"
           mwlFlatpickr
           [(ngModel)]="ts.endHour"
+          dateformat="Y-m-dTH:i"
           placeholder="Not set">
       </td>
       <td>
