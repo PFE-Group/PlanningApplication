@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
       })
     }
     this.httpClient
-      .post('http://localhost:3030/api/login/login', {
+      .post('/api/login/login', {
         email: this.loginUserEmail,
         password: this.loginUserPassword
       }, httpOptions)
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
 
   signIn() {
     this.httpClient
-      .post('http://localhost:3030/api/login/register', {
+      .post('/api/login/register', {
         email: this.registerUserEmail,
         password: this.registerUserPassword,
         lastName: this.registerUserLastname,
