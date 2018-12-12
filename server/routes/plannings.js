@@ -54,7 +54,7 @@ let existsWithRoleAdmin = (id, data) => {
  */
 let existsWithModificationRight = (id, data) => {
     for(var key in data) {
-        if(data[key].id === id && (data[key].role === "admin" || data[key].role === "member")) {
+        if(data[key].id === id && (data[key].role === "admin" || data[key].role === "membre")) {
             return true;
         }
     }
@@ -497,11 +497,12 @@ router.post('/:id/timeslot', function(req, res, next){
                 }
                 
                 var data = doc.data();
-
                 if(!existsWithModificationRight(user_id, data.users)) {
                     return res.status(403).json({"message": "Access denied"});
                 }
-
+                if(getTaskIndex(task, data.tasks) == -1) {
+                    return res.status(404).json({"message": "Please create the task"});
+                }
                 var timeSlotsDb = data.timeSlots;
                 timeSlotsDb[guid] = {
                     'task': task,

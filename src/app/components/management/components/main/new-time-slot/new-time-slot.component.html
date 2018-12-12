@@ -1,16 +1,24 @@
-<autocomplete-component-tasks [tasks]="tasks" [(ngModel)]="task"></autocomplete-component-tasks> <!-- les taches-->
+<h5>{{message}}</h5>
+<mat-form-field class="example-full-width">
+  <input  type="text" [(ngModel)]="task" placeholder="tâche" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
 
 <mat-form-field>
-  <!-- date de début du planning-->
-  <input matInput [matDatepicker]="picker3" [(ngModel)]="startDate" placeholder="date de début">
-  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-  <mat-datepicker #picker3></mat-datepicker>
-</mat-form-field>
+    <!-- date de début du planning-->
+    <input matInput [matDatepicker]="picker3" [(ngModel)]="startHour" placeholder="date de début">
+    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+    <mat-datepicker #picker3></mat-datepicker>
+  </mat-form-field>
 <mat-form-field>
-  <!-- date de fin du planning-->
-  <input matInput [matDatepicker]="picker4" [(ngModel)]="endDate" placeholder="date de fin">
-  <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-  <mat-datepicker #picker4></mat-datepicker>
+    <!-- date de fin du planning-->
+    <input matInput [matDatepicker]="picker4" [(ngModel)]="endHour" placeholder="date de fin">
+    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+    <mat-datepicker #picker4></mat-datepicker>
 </mat-form-field>
 <br>
 <button mat-stroked-button color="primary" (click)="sendTimeSlot()">Créer</button>
