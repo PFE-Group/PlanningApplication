@@ -143,20 +143,31 @@ router.post("/planning", (req, res, next) => {
     planning.name = name;
     planning.startDate = startDate
 
-    db.db.collection("users").doc(user_id).get().then((userDoc) => {
-        var data = userDoc.data();
-        planning.users[data.login] = {
-            "firstName": data.firstName,
-            "lastName": data.lastName,
-            "role": "admin",
-            "id": userDoc.id
-        };
-        // insertion
-        db.db.collection("plannings").add(planning).then((docRef)  => {
-            planning["id"] = docRef.id;
-            res.json(planning)
-            console.log("Document written with ID: ", docRef.id);
-        })
+    var userDocRef = db.db.collection("users").doc(user_id);
+    var planningDocRef = db.db.collection("plannings").doc();
+
+    db.db.runTransaction((transaction) => {
+        return transaction.get(userDocRef).then((userDoc) => {
+            if(!userDoc) return;
+            var data = userDoc.data();
+            planning.users[data.login] = {
+                "firstName": data.firstName,
+                "lastName": data.lastName,
+                "role": "admin",
+                "id": userDoc.id
+            };
+            
+            var plannings = data.plannings;
+            plannings[planningDocRef.id] = {
+                "name": planning.name,
+                "role": "admin"
+            };
+
+            transaction.set(planningDocRef, planning);
+            transaction.update(userDocRef, {plannings: plannings});
+            planning["id"] = planningDocRef.id;
+            return res.json(planning);
+        });
     }).catch((error) => {
         res.sendStatus(500);
         console.log(error);
@@ -213,6 +224,7 @@ router.put("/:id/member", (req, res, next) => {
                     transaction.update(planningDocRef, {users: users});
                     planningData.users = users;
                 })
+                planningData.id = planningDoc.id;
                 return res.json(planningData);
             })
         })
@@ -230,22 +242,19 @@ router.put("/:id/task", (req, res, next) => {
     var {name, color, hoursExpected} = req.body;
     const id = req.params.id;
 
-    var message = {
-        "invalidFields": []
-    };
     hoursExpected = validator.checkNumber(hoursExpected);
 
     var planningDocRef = db.db.collection("plannings").doc(id);
 
     if(!name) {
-        message.invalidFields.push("Require non empty [name]");
+        return res.status(400).json({"message": "Require non empty [name]"});
     }
 
     var newtask = {
         "name": name,
         "color": color,
         "hoursExpected": hoursExpected,
-        "hoursDone": 0
+        "hoursRealised": 0
     }
 
     if(!color) {
@@ -255,16 +264,17 @@ router.put("/:id/task", (req, res, next) => {
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                message.invalidFields.push("Any occurrence for id [" + id + "]");
-                return res.status(400).json(message);
+                return res.status(404).json({"message": "Any occurrence for id [" + id + "]"});
             }
 
             var data  = planningDoc.data();
             var tasks = data.tasks;
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
+            }
             var ok = getTaskIndex(name, tasks);
             if(ok !== -1) {
-                message.invalidFields.push("Name already used in the planning");
-                return;
+                return res.status(403).json({"message": "Task name already used in the planning"});
             }
 
             tasks.push(newtask);
@@ -282,9 +292,9 @@ router.put("/:id/task", (req, res, next) => {
 
 /**
  * UPDATE PLANNING FIELDS
- * MISSING CHECKS
  */
 router.patch("/:id", (req, res, next) => {
+    const user_id = req.token.user;
     var {name, startDate, endDate} = req.body;
     var id = req.params.id;
 
@@ -292,47 +302,49 @@ router.patch("/:id", (req, res, next) => {
     endDate = validator.checkDate(endDate);
 
     if(!name && !startDate && !endDate) {
-        res.status(400).send("This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct.")
-        return;
+        return res.status(400).json({
+            "message": "This request require at least one of the following fields : name, endDate, startDate. Also make sure the format is correct."
+        });
     }
 
-    var error = false;
     var planningDocRef = db.db.collection("plannings").doc(id);
+    var userDocRef = db.db.collection("users").doc(user_id);
 
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists) {
-                error = true;
-                return;
+                return res.status(400).json({"message": "Any occurence for id: [" + id + "]"});
             }
             var data = planningDoc.data();
-            if(name) {
-                data.name = name;
-                // HERE UPDATE CONNECTED USER DATA
+            if(!existsWithModificationRight(user_id, data.users)) {
+                return res.status(403).json({"message": "Access denied"});
             }
-            if(startDate) {
-                data.startDate = startDate;
-            }
-            if(endDate) {
-                data.endDate = endDate;
-            }
-            transaction.update(planningDocRef, {
-                "name": data.name,
-                "startDate": data.startDate,
-                "endDate": data.endDate
-            })
-            data["id"] = planningDoc.id;
-            return data;
+            return transaction.get(userDocRef).then((userDoc) => {
+                if(!userDoc.exists) return;
+                var plans = userDoc.data().plannings;
+                if(name) {
+                    data.name = name;
+                    plans[planningDoc.id].name = name;
+                }
+                if(startDate) {
+                    data.startDate = startDate;
+                }
+                if(endDate) {
+                    data.endDate = endDate;
+                }
+                transaction.update(userDocRef, {plannings : plans});
+                transaction.update(planningDocRef, {
+                    "name": data.name,
+                    "startDate": data.startDate,
+                    "endDate": data.endDate
+                })
+                data["id"] = planningDoc.id;
+                return res.json(data);
+            });
         })
-    }).then((planning) => {
-        if(error) {
-            res.status("404").send("Any occurence for id: [" + id + "]");
-        } else {
-            res.json(planning);
-        }
     }).catch((error) => {
         console.log(error);
-        res.status(500).send("An error has occurred. Sorry...")
+        res.sendStatus(500);
     });
 });
 
@@ -340,6 +352,7 @@ router.patch("/:id", (req, res, next) => {
  * Modify task
  */
 router.patch("/:id/task/:taskName", (req, res, next) => {
+    const user_id = req.token.user;
     const {id, taskName} = req.params;
     var {name, hoursExpected, color} = req.body;
 
@@ -348,20 +361,23 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
     var message = [];
 
     if(!name && !hoursExpected && !color) {
-        res.status(400).send("This request require at least one of the following fields : name, hoursExpected, color. Also make sure the format is correct.")
-        return;
+        return res.status(400).json({
+            "message": "This request require at least one of the following fields : name, hoursExpected, color. Also make sure the format is correct."
+        });
     }
 
     var planningDocRef = db.db.collection("plannings").doc(id);
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef).then((planningDoc) => {
             if(!planningDoc.exists){
-                message.push("Any occurrence of id [" + id + "]")
-                return;
+                return res.status(404).json({"message": "Any occurrence of id [" + id + "]"});
             }
 
             var data = planningDoc.data();
             var tasks = data.tasks;
+            if(!existsWithModificationRight(user_id, data.users)){
+                return res.status(403).json({"message": "Access denied"});
+            }
             var i = getTaskIndex(taskName, tasks);
             if(i === -1) {
                 message.push("Any task with name [" + taskName + "]");
@@ -379,14 +395,8 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
             transaction.update(planningDocRef, {tasks : tasks});
             data.tasks = tasks;
             data.id = planningDoc.id;
-            return data;
+            return res.json(data);
         })
-    }).then((planning) =>{
-        if(!planning) {
-            res.status(404).json(message);
-        } else {
-            res.json(planning);
-        }
     }).catch((error) => {
         res.status(500).send("An error has occured. Sorry...")
         console.log("Modify task route: " +error);
@@ -399,12 +409,20 @@ router.patch("/:id/task/:taskName", (req, res, next) => {
  * Send a JSON of all users of a planning
  */
 router.get('/users/:idPlanning', function(req, res, next){
+    const user_id = req.token.user;
     db.db.collection('plannings')
     .doc(req.params.idPlanning)
     .get().then((doc) => {
-        res.json(doc.data().users);
+        if(!doc.exists) return res.status(404).json({"message": "No such document"});
+        const users = doc.data().users;
+        if(exists(user_id, users)) {
+            res.json(users);
+        } else {
+            res.status(403).json({"message": "Access denied"});
+        }
     }).catch((err) => {
         console.log("Error getting document:", err);
+        res.sendStatus(500);
     });
 });
 
@@ -413,14 +431,28 @@ router.get('/users/:idPlanning', function(req, res, next){
  * Delete a planning
  */
 router.delete('/:idPlanning', function(req, res, next){
-    db.db.collection('plannings')
-    .doc(req.params.idPlanning)
-    .delete().then(() => {
-        // 204 No Content - Response to a successful request that won't be returning a body (like a DELETE request)
-        res.sendStatus(204); 
-        console.log("Planning", req.params.idPlanning, "has been deleted");
+    const user_id = req.token.user;
+    var planningDocRef = db.db.collection('plannings').doc(req.params.idPlanning);
+    var userDocRef = db.db.collection('users').doc(user_id);
+    db.db.runTransaction((transaction) => {
+        return transaction.get(planningDocRef).then((planningDoc) => {
+            if(!planningDoc.exists) return res.status(404).json({"message": "No such document"});
+            var data = planningDoc.data();
+            if(!existsWithRoleAdmin(user_id, data.users)) 
+                return res.status(403).json({"message": "Access denied"});
+            return transaction.get(userDocRef).then((userDoc) => {
+                var plannings = userDoc.data().plannings;
+                delete plannings[planningDoc.id];
+
+                transaction.update(userDocRef, {plannings: plannings});
+                transaction.delete(planningDocRef);
+                res.sendStatus(204);
+            });
+             
+        });
     }).catch((err) => {
         console.log("Error getting document:", err);
+        res.sendStatus(500);
     });
 });
 
@@ -431,12 +463,11 @@ router.delete('/:idPlanning', function(req, res, next){
  * NEEDED in body : task name, endhour, starthour
  */
 router.post('/:id/timeslot', function(req, res, next){
+    const user_id = req.token.user;
     var guid = validator.generateUniqueId();
     var id = req.params.id;
     var {task, startHour, endHour} = req.body;
     var message = {"invalidFields": []};
-
-    var error = false;
 
     // validation of inputs
     task = validator.checkString(task); // to change
@@ -452,8 +483,7 @@ router.post('/:id/timeslot', function(req, res, next){
         message.invalidFields.push("Require valid date format for [endHour]");
     }
     if(message.invalidFields.length > 0){
-        res.status(400).json(message);
-        return;
+        return res.status(400).json(message);;
     }
 
     // insertion
@@ -462,26 +492,28 @@ router.post('/:id/timeslot', function(req, res, next){
         return t.get(documentRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
-            
-                var timeSlotsDb = doc.data().timeSlots;
+                
+                var data = doc.data();
+
+                if(!existsWithModificationRight(user_id, data.users)) {
+                    return res.status(403).json({"message": "Access denied"});
+                }
+
+                var timeSlotsDb = data.timeSlots;
                 timeSlotsDb[guid] = {
-                    'task':task,
+                    'task': task,
                     'startHour':startHour,
                     'endHour': endHour,
                     'done': false
                 };
                 t.update(documentRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;    
+
+                data.timeSlots = timeSlotsDb;
+                data.id = doc.id;
+                return res.json(data);    
             });
-    }).then(result => {
-        if(result === true){
-            res.sendStatus(400);
-        }else{
-            res.json(result);
-        }
     }).catch(err => {
         console.log(err);
         res.sendStatus(500);
@@ -497,30 +529,45 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
     var idtimeslot = req.params.idtimeslot;
     var {task, done, startHour, endHour} = req.body;
     done = (done == 'true');
+
+    var message = [];
     
     startHour = validator.checkDate(startHour);
     endHour = validator.checkDate(endHour);
 
     if(!task && !done && !startHour && !endHour) {
-        res.status(400).send("This request require at least one of the following fields : task, done, startHour, endHour. Also make sure the format is correct.")
-        return;
+        return res.status(400).send({"message":"This request require at least one of the following fields : task, done, startHour, endHour. Also make sure the format is correct."})
     }
 
-    var error = false;
     var planningDocRef = db.db.collection("plannings").doc(id);
     db.db.runTransaction((transaction) => {
         return transaction.get(planningDocRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
-                var timeSlotsDb = doc.data().timeSlots;
+
+                var data = doc.data();
+                var tasksDb = data.tasks;
+                var timeSlotsDb = data.timeSlots;
+
+                if(!existsWithModificationRight(user_id, data.usrs)) {
+                    return res.status(403).json({"message": "Access denied"});
+                }
+
+                var i = getTaskIndex(task, tasksDb);
+                if(i === -1) {
+                    message.push("Any task with name [" + task + "]");
+                    return;
+                }
+
                 if(task) {
                     timeSlotsDb[idtimeslot].task = task;
                 }
                 if(done) {
                     timeSlotsDb[idtimeslot].done = done;
+                    tasksDb[i].hoursRealised += timeSlotsDb[idtimeslot].endHour - timeSlotsDb[idtimeslot].startHour;
+                    tasksDb[i].hoursRealised /= 3600000; // conversion ms en heure
                 }
                 if(startHour) {
                     timeSlotsDb[idtimeslot].startHour = startHour;
@@ -528,14 +575,12 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
                 if(endHour) {
                     timeSlotsDb[idtimeslot].endHour = endHour;
                 }
-                transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
-                return timeSlotsDb;
+                //transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
+                //transaction.update(planningDocRef, {tasks: tasksDb});
+                data.timeSlots = timeSlotsDb;
+                data.tasks = tasksDb;
+                return res.json(data);
         })
-    }).then((result) => {
-        if(result === true)
-            res.sendStatus(400);
-        else
-            res.json(result);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(500);
@@ -547,6 +592,7 @@ router.patch('/:id/timeslot/:idtimeslot', function(req, res, next){
  * Delete a timeslot of a planning
  */
 router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
+    const user_id = req.token.user;
     var idplanning = req.params.id;
     var idtimeslot = req.params.idtimeslot;
 
@@ -556,23 +602,22 @@ router.delete('/:id/timeslot/:idtimeslot', function(req, res, next) {
         return transaction.get(planningDocRef)
             .then(doc => {
                 if(!doc.exists){
-                    error = true;
-                    return true;
+                    return res.status(404).json({"message": "No such document"});
                 }
                 
                 var planning = doc.data();
+
+                if(!existsWithModificationRight(user_id, planning)) {
+                    return res.status(403).json({"message": "Access denied"}); 
+                }
+
                 var timeSlotsDb = planning.timeSlots;
                 delete timeSlotsDb[idtimeslot];
                 transaction.update(planningDocRef, {timeSlots: timeSlotsDb});
                 planning.timeSlots = timeSlotsDb;
                 planning.id = doc.id;
-                return planning;
+                return res.json(planning);
         })
-    }).then((result) => {
-        if(result === true)
-            res.sendStatus(400);
-        else
-            res.json(result);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(500);
