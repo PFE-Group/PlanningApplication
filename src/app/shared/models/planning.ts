@@ -25,7 +25,7 @@ export const createPlanning = (partialPlanning: any): Planning => {
     {},
     fullPlanning(),
     partialPlanning,
-    {id: partialPlanning.planningId},
+    {id: partialPlanning.id},
     {startDate: new Date(partialPlanning.startDate._seconds)},
     {endDate: new Date(partialPlanning.endDate._seconds)}
   ) as Planning;
