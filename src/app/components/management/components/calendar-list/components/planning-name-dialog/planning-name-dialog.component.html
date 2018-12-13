@@ -1,27 +1,32 @@
+<div class="row">
+  <div [hidden]="!showError" class="alert alert-danger col-12 " role="alert">
+    Action non permise
+  </div>
+</div>
+<div class="row">
+  <div [hidden]="!showOk" class="alert alert-success col-12 " role="alert">
+    Action réussie
+  </div>
+</div>
 <mat-form-field>
-  <input matInput placeholder="nom"><!-- nom du planning-->
+  <input [(ngModel)]="planningName" matInput placeholder="nom"><!-- nom du planning-->
 </mat-form-field>
 <br>
-<mat-form-field>
-  <!-- date de début du planning-->
-  <input matInput [matDatepicker]="picker1" placeholder="date de debut">
-  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-  <mat-datepicker #picker1></mat-datepicker>
-</mat-form-field>
+
+<div class="col">
+  <mat-form-field>
+    <input matInput [(ngModel)]="startDate" [matDatepicker]="picker" placeholder="De">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+</div>
 <br>
-<mat-form-field>
-  <!-- date de fin du planning-->
-  <input matInput [matDatepicker]="picker2" placeholder="data de fin">
-  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-  <mat-datepicker #picker2></mat-datepicker>
-</mat-form-field>
-<br>
-<mat-form-field>
-  <input matInput placeholder="membres"><!-- nom du planning-->
-</mat-form-field>
-<br>
-<mat-form-field>
-  <input matInput placeholder="tâches"><!-- nom du planning-->
-</mat-form-field>
-<br>
-<button mat-stroked-button color="primary">Créer</button>
+<div class="col">
+  <mat-form-field>
+    <input matInput [(ngModel)]="endDate" [matDatepicker]="picker2" placeholder="à">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field>
+</div>
+
+<button mat-stroked-button color="primary" (click)="createPlanning()">Créer</button>

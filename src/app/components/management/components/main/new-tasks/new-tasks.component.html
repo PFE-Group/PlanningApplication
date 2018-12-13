@@ -10,10 +10,11 @@
   <mat-form-field>
     <input matInput name="hoursExpected" [(ngModel)]="hourExpected" type="number" min="1" placeholder="heures voulues">
   </mat-form-field>
-  <mat-form-field>
-    <input matInput name="color" [(ngModel)]="color" placeholder="couleur"><!-- la couleur-->
-  </mat-form-field>
-  <br>
+  <!-- <mat-form-field>
+    <input matInput name="color" [(ngModel)]="color" placeholder="couleur">--><!-- la couleur-->
+ <!-- </mat-form-field> -->
+  
+    <input type="color" [(ngModel)]="color" name="hi" />
   <button mat-stroked-button (click)="createTask()" color="primary">Créer</button>
 
 </div>
