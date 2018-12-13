@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import {PlanningService} from '../../shared/services/planning';
 import {DivEnums} from './models/div.enums';
 import {UserService} from '../../shared/services/user';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -44,7 +45,8 @@ export class ManagementComponent implements OnInit {
     this.currentDiv = div;
   }
 
-  constructor(private appStateService: AppStateService, private userService: UserService, private planningService: PlanningService) {
+  constructor(private appStateService: AppStateService, private userService: UserService,
+              private planningService: PlanningService) {
 
   }
 

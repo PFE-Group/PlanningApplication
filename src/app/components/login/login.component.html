@@ -1,7 +1,7 @@
 <div class="container login-page">
   <div class="row">
     <div class="col-md-12">
-      <span class="getmarged"><h1>Bienvenue sur Scheduly</h1></span>
+      <span class="getmarged"><h1>Welcome on Scheduly !</h1></span>
     </div>
   </div>
 
@@ -17,20 +17,20 @@
     </div>
     <div class="login-form-1 col-md-6">
       <div class="col">
-        <label for="login-inputEmail" class="sr-only">Adresse email</label>
+        <label for="login-inputEmail" class="sr-only">e-mail</label>
         <input type="email" id="login-inputEmail" class="form-control" [(ngModel)]="loginUserEmail"
-               placeholder="Adresse email"
+               placeholder="e-mail"
                required autofocus>
       </div>
 
       <div class="col">
-        <label for="login-inputPassword" class="sr-only">Mot de passe</label>
+        <label for="login-inputPassword" class="sr-only">password</label>
         <input type="password" id="login-inputPassword" class="form-control" [(ngModel)]="loginUserPassword"
-               placeholder="Mot de passe" required>
+               placeholder="password" required>
       </div>
 
       <div class="col">
-        <button class="btn btn-lg btn-dark btn-block" type="submit" (click)="logIn()">Connexion</button>
+        <button class="btn btn-lg btn-dark btn-block" type="submit" (click)="logIn()">Log in</button>
       </div>
     </div>
 
@@ -41,39 +41,39 @@
           alt=""/>
       </div>
       <div class="col">
-        <label for="register-inputLastName" class="sr-only">Nom</label>
+        <label for="register-inputLastName" class="sr-only">last name</label>
         <input type="text" id="register-inputLastName" class="form-control" [(ngModel)]="registerUserLastname"
-               placeholder="Nom" required autofocus>
+               placeholder="lastname" required autofocus>
       </div>
 
       <div class="col">
-        <label for="register-inputFirstName" class="sr-only">Prénom</label>
+        <label for="register-inputFirstName" class="sr-only">first name</label>
         <input type="text" id="register-inputFirstName" class="form-control" [(ngModel)]="registerUserFirstname"
-               placeholder="Prenom" required autofocus>
+               placeholder="firstname" required autofocus>
       </div>
 
       <div class="col">
-        <label for="register-inputLogin" class="sr-only">Pseudo</label>
+        <label for="register-inputLogin" class="sr-only">username</label>
         <input type="text" id="register-inputLogin" class="form-control" [(ngModel)]="registerUserLogin"
-               placeholder="Pseudo"
+               placeholder="username"
                required autofocus>
       </div>
 
       <div class="col">
-        <label for="register-inputEmail" class="sr-only">Email</label>
+        <label for="register-inputEmail" class="sr-only">e-mail</label>
         <input type="email" id="register-inputEmail" class="form-control" [(ngModel)]="registerUserEmail"
-               placeholder="Email"
+               placeholder="e-mail"
                required autofocus>
       </div>
 
       <div class="col">
-        <label for="register-inputPassword" class="sr-only">Password</label>
+        <label for="register-inputPassword" class="sr-only">password</label>
         <input type="password" id="register-inputPassword" class="form-control" [(ngModel)]="registerUserPassword"
                placeholder="Mot de passe" required>
       </div>
 
       <div class="col">
-        <button class="btn btn-lg btn-dark btn-block" type="submit" (click)="signIn()">Inscription</button>
+        <button class="btn btn-lg btn-dark btn-block" type="submit" (click)="signIn()">Sign in</button>
       </div>
     </div>
   </div>

@@ -10,6 +10,7 @@ import { Planning } from '../../../../shared/models/planning';
 
 import { WebApiService } from 'src/app/shared/services/webapi';
 import { MemberListService } from 'src/app/shared/services/memberList/memberlistService';
+
 @Component({
   selector: 'app-member-list',
   templateUrl: './member-list.component.html',
@@ -65,13 +66,16 @@ export class MemberListComponent implements OnInit {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      this.memberList.length = 0;
-      this.memberListAdmin.length = 0;
-      this.memberListInvite.length = 0;
-      this.memberListMember.length = 0;
+     this.clearList()
       this.currentPlanning = planning.id
       this.getAllUsersPlanning(planning.id);
     })
+  }
+  clearList(){
+    this.memberList.length = 0;
+    this.memberListAdmin.length = 0;
+    this.memberListInvite.length = 0;
+    this.memberListMember.length = 0;
   }
   getAllUsersPlanning(idPlanning) {
     console.log("okok");
@@ -101,7 +105,8 @@ export class MemberListComponent implements OnInit {
     this.webApiService.getResponse('/api/plannings/'+this.currentPlanning+"/member/"+user.user.id, HttpMethod.DELETE, {})
           .then( (res) => {
             this.good = true;
-            //TODO Mettre à jour l'UI
+            this.clearList()
+            this.getAllUsersPlanning(this.currentPlanning) ;          
           })
           .catch( (err) => {
             this.good = false;

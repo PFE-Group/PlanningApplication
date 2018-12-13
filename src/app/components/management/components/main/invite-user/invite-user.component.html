@@ -2,7 +2,7 @@
 <!-- champ login -->
 <div class="content container" *ngIf="planningCurrent == null">
   <div>
-    <p>Aucun planning select</p>
+    <p>Choose a planning</p>
   </div>
 </div>
 <div class="content container" *ngIf="planningCurrent != null">
@@ -16,13 +16,12 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <!------------------------------->
   <div class="form-group">
     <mat-button-toggle-group [(ngModel)]="membre" name="fontStyle" value="true" aria-label="Font Style">
-      <mat-button-toggle [value]="true" value="membre">membre</mat-button-toggle>
-      <mat-button-toggle [value]="false" value="invite">invité</mat-button-toggle>
+      <mat-button-toggle [value]="true" value="membre">Member</mat-button-toggle>
+      <mat-button-toggle [value]="false" value="invite">Guest</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
   <br>
-  <button mat-stroked-button color="primary" (click)="inviteUser()">Inviter </button>
+  <button mat-stroked-button color="primary" (click)="inviteUser()">Invite</button>
 </div>
