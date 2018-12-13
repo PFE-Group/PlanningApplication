@@ -1,39 +1,47 @@
-<mat-accordion  class="example-headers-align">
-
+<mat-accordion class="example-headers-align">
+  <div class="row">
+    <div [hidden]="!showError" class="alert alert-danger col-12 " role="alert">
+      Action non permise
+    </div>
+  </div>
+  <div class="row">
+    <div [hidden]="!showOk" class="alert alert-success col-12 " role="alert">
+      Action réussie
+    </div>
+  </div>
   <!-- INVITER UN UTILISATEUR-->
   <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Inviter un nouveau utilisateur
+        Inviter un utilisateur
       </mat-panel-title>
     </mat-expansion-panel-header>
 
-    <app-invite-user></app-invite-user>
+    <app-invite-user (messageError)="messageError()" (messageOK)="messageOK()"></app-invite-user>
     <mat-action-row>
       <button mat-button color="primary" (click)="nextStep()">Suivant</button>
     </mat-action-row>
   </mat-expansion-panel>
   <!--Ajouter une plage-->
-  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+  <!--<mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Ajouter une plage horaire
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-new-time-slot></app-new-time-slot>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Précédent</button>
       <button mat-button color="primary" (click)="nextStep()">Suivant</button>
     </mat-action-row>
-  </mat-expansion-panel>
+  </mat-expansion-panel>-->
   <!-- ajouter une tâche -->
-  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Ajouter une tâche
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-new-tasks></app-new-tasks>
+    <app-new-tasks (messageError)="messageError()" (messageOK)="messageOK()"></app-new-tasks>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Précédent</button>
     </mat-action-row>

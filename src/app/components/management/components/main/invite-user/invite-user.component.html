@@ -1,0 +1,28 @@
+<!-- <autocomplete-component-users (onChange)="loginUser = $event.value" [users]="users"></autocomplete-component-users> -->
+<!-- champ login -->
+<div class="content container" *ngIf="planningCurrent == null">
+  <div>
+    <p>Aucun planning select</p>
+  </div>
+</div>
+<div class="content container" *ngIf="planningCurrent != null">
+  <h3>{{planningCurrent.name}}</h3>
+  <mat-form-field class="example-full-width">
+    <input type="text" placeholder="login" [(ngModel)]="loginUser" aria-label="Number" matInput [formControl]="myControl"
+      [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <!------------------------------->
+  <div class="form-group">
+    <mat-button-toggle-group [(ngModel)]="membre" name="fontStyle" value="true" aria-label="Font Style">
+      <mat-button-toggle [value]="true" value="membre">membre</mat-button-toggle>
+      <mat-button-toggle [value]="false" value="invite">invité</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <br>
+  <button mat-stroked-button color="primary" (click)="inviteUser()">Inviter </button>
+</div>

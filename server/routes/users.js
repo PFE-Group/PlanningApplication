@@ -77,7 +77,7 @@ router.get('/current', function(req, res, next) {
  * GET /
  * Send an array into a JSON of all users with their first name, last name, email and login
  */
-/*
+
 router.get('/', function(req, res, next) {
     var arr = [];
     var i = 0;
@@ -97,6 +97,6 @@ router.get('/', function(req, res, next) {
         res.status(500).send("Oups an error has occurred");
     });
 });
-*/
+
 
 module.exports = router;
