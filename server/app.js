@@ -8,12 +8,16 @@ const usersRouter = require('./routes/users');
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const planningsRouter = require('./routes/plannings');
-const cors = require('cors')
+const cors = require('cors');
+const helmet = require('helmet');
+const jwt = require('jsonwebtoken');
+
 const app = express();
-var jwt = require('jsonwebtoken');
-const jwtSecret = process.env.JWT_SECRET;
+
+app.use(helmet());
 app.use(cors());
 
+const jwtSecret = process.env.JWT_SECRET;
 const db = require('./modules/db.js');
 
 db.connect();

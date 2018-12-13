@@ -148,7 +148,7 @@ router.post("/planning", (req, res, next) => {
 
     db.db.runTransaction((transaction) => {
         return transaction.get(userDocRef).then((userDoc) => {
-            if(!userDoc) return;
+            if(!userDoc.exists) return;
             var data = userDoc.data();
             planning.users[data.login] = {
                 "firstName": data.firstName,
