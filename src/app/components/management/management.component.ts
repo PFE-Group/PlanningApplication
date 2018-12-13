@@ -54,7 +54,7 @@ export class ManagementComponent implements OnInit {
     this.userService.fetchCurrentUser();
     this.user = this.userService.getCurrentUser();
     this.listenToCurrentPlanning();
-    this.planningService.fetchPlannings(this.listenToCurrentUser());
+    this.planningService.fetchPlannings();
     this.plannings = this.planningService.getPlannings();
     console.log(this.plannings);
   }
@@ -63,15 +63,6 @@ export class ManagementComponent implements OnInit {
     this.currentPlanning = this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     );
-  }
-
-  // @ts-ignore
-  private listenToCurrentUser(): string {
-    this.appStateService.getCurrentUser().pipe(
-      filter((user: User) => !!user)
-    ).subscribe((user: User) => {
-      return user.id;
-    });
   }
 
   deletePlanning(planning: Planning) {

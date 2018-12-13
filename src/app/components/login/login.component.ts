@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../../services/auth.services';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {AuthService} from '../../services/auth.services';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  logorreg = false;
 
   loginUserEmail: string;
   loginUserPassword: string;
@@ -22,36 +24,37 @@ export class LoginComponent implements OnInit {
   authStatus: boolean;
 
   messageToShow: string;
-  good: boolean = false;
+  good = false;
 
-  constructor(private httpClient: HttpClient, private authService: AuthService, private route: Router) { }
+  constructor(private httpClient: HttpClient, private authService: AuthService, private route: Router) {
+  }
 
   logIn() {
-    var jwt = this.authService.retrieveToken() === null ? "" : this.authService.retrieveToken()
+    var jwt = this.authService.retrieveToken() === null ? '' : this.authService.retrieveToken();
 
     var httpOptions = {
       headers: new HttpHeaders({
-        "Accept" : "application/json",
-        "Content-type": "application/json", 
-        "Authorization" : jwt
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        'Authorization': jwt
       })
-    }
+    };
     this.httpClient
       .post('/api/login/login', {
         email: this.loginUserEmail,
         password: this.loginUserPassword
       }, httpOptions)
       .subscribe((data) => {
-        this.authService.logIn(data["jwt"])
-        this.good = true;
-        this.messageToShow = "Success !"
-        this.route.navigate(['schedule'])
-      },
+          this.authService.logIn(data['jwt']);
+          this.good = true;
+          this.messageToShow = 'Success !';
+          this.route.navigate(['schedule']);
+        },
         (err) => {
-          console.log("Error login : ", err)
+          console.log('Error login : ', err);
           this.good = false;
-          this.messageToShow = err.error.message
-        })
+          this.messageToShow = err.error.message;
+        });
   }
 
   signIn() {
@@ -64,36 +67,41 @@ export class LoginComponent implements OnInit {
         login: this.registerUserLogin
       })
       .subscribe(() => {
-        this.loginUserEmail = this.registerUserEmail;
-        this.loginUserPassword = this.registerUserPassword;
-        this.logIn()
-        this.good = true;
-        this.messageToShow = "Success !"
-      },
+          this.loginUserEmail = this.registerUserEmail;
+          this.loginUserPassword = this.registerUserPassword;
+          this.logIn();
+          this.good = true;
+          this.messageToShow = 'Success !';
+        },
         (err) => {
-          console.log("ERROR REGIS : ", err)
+          console.log('ERROR REGIS : ', err);
           this.good = false;
-          this.messageToShow = "";
-          for (var i in err.error.invalidFields){
-            if (this.messageToShow === undefined){
-              this.messageToShow = err.error.invalidFields[i]
-            }else{
-              this.messageToShow = ""+this.messageToShow+"\n"+err.error.invalidFields[i]
+          this.messageToShow = '';
+          for (var i in err.error.invalidFields) {
+            if (this.messageToShow === undefined) {
+              this.messageToShow = err.error.invalidFields[i];
+            } else {
+              this.messageToShow = '' + this.messageToShow + '\n' + err.error.invalidFields[i];
             }
-            
+
           }
-        })
+        });
   }
 
   signOut() {
-    this.authService.logOut()
+    this.authService.logOut();
   }
 
   ngOnInit() {
-    this.authStatus = this.authService.checkIfAuth()
-    if (this.authStatus){
-      this.route.navigate(['schedule'])
+    this.authStatus = this.authService.checkIfAuth();
+    if (this.authStatus) {
+      this.route.navigate(['schedule']);
     }
 
   }
+
+  swapForm() {
+    this.logorreg = !this.logorreg;
+  }
+
 }

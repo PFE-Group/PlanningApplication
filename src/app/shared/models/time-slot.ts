@@ -19,8 +19,8 @@ export const createTimeSlots = (partialTimeSlots: any[], tasks: Array<Task>): Ar
     ts.id = pts;
     ts.endHour = new Date(partialTimeSlots[pts].endHour._seconds * 1000);
     ts.startHour = new Date(partialTimeSlots[pts].startHour._seconds * 1000);
-    tasks.forEach((task: Task) =>{
-      if(task.name === partialTimeSlots[pts].task){
+    tasks.forEach((task: Task) => {
+      if (task.name === partialTimeSlots[pts].task) {
         ts.task = task;
       }
     });

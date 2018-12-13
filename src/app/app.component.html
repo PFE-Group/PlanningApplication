@@ -1,7 +1,5 @@
-<!--The content below is only a placeholder and can be replaced.-->
-
-<nav class="navbar navbar-dark navbarTop">
-  <span routerLink="/schedule" class="navbar-brand app-name">Scheduly</span>
+<nav *ngIf="router.url !== '/login'" class="navbar navbar-dark navbarTop">
+  <span routerLink="/schedule" class="navbar-brand app-name"><h3>Scheduly</h3></span>
   <app-user-information></app-user-information>
 </nav>
 <router-outlet></router-outlet>

@@ -1,6 +1,10 @@
 import {Component, OnInit, Input} from '@angular/core';
-import * as firebase from 'firebase';
-import Timestamp = firebase.firestore.Timestamp;
+import {Planning} from 'src/app/shared/models/planning';
+import {Subject} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {AppStateService} from '../../../../shared/services/app-state.service';
+import {WebApiService} from '../../../../shared/services/webapi';
+import {PlanningService} from '../../../../shared/services/planning';
 
 
 @Component({
@@ -10,23 +14,35 @@ import Timestamp = firebase.firestore.Timestamp;
 })
 
 export class CalendarInformationComponent implements OnInit {
-  picker: Timestamp;
-  picker2: Timestamp;
 
-  @Input() matDatepicker;
+  refresh: Subject<any> = new Subject();
+  planning: Planning;
 
-  @Input() for;
-
-  constructor() {
+  constructor(private appStateService: AppStateService, private webApiService: WebApiService, private planningService: PlanningService) {
   }
 
   ngOnInit() {
-    this.picker = new Timestamp(0, 0);
-    this.picker2 = new Timestamp(0, 0);
+    this.listenToCurrentPlanning();
   }
 
-  modifyName() {
+  updatePlanningEndDate(event) {
+    this.planning.endDate = event;
+    this.planningService.updatePlanning(this.planning);
+    this.listenToCurrentPlanning();
+  }
 
+  updatePlanningStartDate(event) {
+    this.planning.startDate = event;
+    this.planningService.updatePlanning(this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  private listenToCurrentPlanning() {
+    this.appStateService.getCurrentPlanning().pipe(
+      filter((planning: Planning) => !!planning)
+    ).subscribe((planning: Planning) => {
+      this.planning = planning;
+    });
   }
 
 }

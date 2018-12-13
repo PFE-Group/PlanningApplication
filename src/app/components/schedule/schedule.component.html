@@ -1,6 +1,6 @@
 <div class=" background">
 
-  <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="toggleSideBar()">
+  <button type="button" id="sidebarCollapse" class="btn btn-secondary" (click)="toggleSideBar()">
     <span>Toggle plannings</span>
   </button>
   <div class="wrapper">
@@ -16,11 +16,20 @@
     <!-- Page Content if Planning Selected -->
     <div class="content container" *ngIf="planningName != null">
       <div class="row bottom-part">
-        <div class="elem col-7 app-calendar overflowscroll">
-            <app-calendar></app-calendar>
+        <div class="elem col-6 app-calendar overFlowScroll">
+          <app-calendar></app-calendar>
         </div>
-        <div class="col overflowscroll">
-            <app-calendar-details></app-calendar-details>
+        <div class="col">
+          <div class="row">
+            <div class="col elem">
+              <app-calendar-information></app-calendar-information>
+            </div>
+          </div>
+          <div class="row">
+            <div class="elem col overFlowScroll">
+              <app-calendar-details></app-calendar-details>
+            </div>
+          </div>
         </div>
       </div>
     </div>

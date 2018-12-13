@@ -30,7 +30,7 @@ export class ScheduleComponent implements OnInit {
     this.userService.fetchCurrentUser();
     this.user = this.userService.getCurrentUser();
     this.listenToCurrentPlanning();
-    this.planningService.fetchPlannings(this.listenToCurrentUser());
+    this.planningService.fetchPlannings();
     this.plannings = this.planningService.getPlannings();
 
   }
@@ -48,15 +48,6 @@ export class ScheduleComponent implements OnInit {
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
       this.planningName = planning.name;
-    });
-  }
-
-  // @ts-ignore
-  private listenToCurrentUser(): string {
-    this.appStateService.getCurrentUser().pipe(
-      filter((user: User) => !!user)
-    ).subscribe((user: User) => {
-      return user;
     });
   }
 

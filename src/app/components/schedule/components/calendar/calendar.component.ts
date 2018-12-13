@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AppStateService} from '../../../../shared/services/app-state.service';
-import {convertTimeSlotsToCalendarEvent} from '../../../../shared/models/time-slot';
+import {convertTimeSlotsToCalendarEvent, TimeSlot} from '../../../../shared/models/time-slot';
 import {Planning} from '../../../../shared/models/planning';
 import {filter} from 'rxjs/internal/operators';
-import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import {PlanningService} from '../../../../shared/services/planning';
 
@@ -12,11 +12,17 @@ import {PlanningService} from '../../../../shared/services/planning';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
+
 export class CalendarComponent implements OnInit {
 
   date = new Date();
-  timeSlots = Array<CalendarEvent>();
+  calendarEvents = Array<CalendarEvent>();
+  timeSlots = Array<TimeSlot>();
+  planning: Planning;
   refresh = new Subject<void>();
+
+  view: CalendarView = CalendarView.Week;
+  CalendarView = CalendarView;
 
   constructor(private appStateService: AppStateService,
               private planningService: PlanningService) {
@@ -26,14 +32,38 @@ export class CalendarComponent implements OnInit {
     this.listenToCurrentPlanning();
   }
 
-  gotoLastWeek(): void {
-    const today = this.date;
-    this.date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  back(): void {
+    const currDate = this.date;
+    switch (this.view) {
+      case CalendarView.Day:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() - 1);
+        break;
+      case CalendarView.Month:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth() - 1, currDate.getDate());
+        break;
+      case CalendarView.Week:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() - 7);
+        break;
+      default:
+        break;
+    }
   }
 
-  goToNextWeek(): void {
-    const today = this.date;
-    this.date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+  forward(): void {
+    const currDate = this.date;
+    switch (this.view) {
+      case CalendarView.Day:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() + 1);
+        break;
+      case CalendarView.Month:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate());
+        break;
+      case CalendarView.Week:
+        this.date = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate() + 7);
+        break;
+      default:
+        break;
+    }
   }
 
   eventTimesChanged({
@@ -41,37 +71,29 @@ export class CalendarComponent implements OnInit {
                       newStart,
                       newEnd
                     }: CalendarEventTimesChangedEvent): void {
-    const index = this.timeSlots.indexOf(event);
+    const index = this.calendarEvents.indexOf(event);
     if (index >= 0) {
-      // this.planningService.savePlanningTimeSlot({})
-      //   .then((data: any) => {
-      //     this.timeSlots[index].start = newStart;
-      //     this.timeSlots[index].end = newEnd;
-      //     this.refreshCalendar();
-      //   }, (error: any) => {
-      //     console.error('error updating planning');
-      //
-      //   });
-      this.timeSlots[index].start = newStart;
-      this.timeSlots[index].end = newEnd;
+      this.timeSlots[index].startHour = newStart;
+      this.timeSlots[index].endHour = newEnd;
+      this.planningService.updateTimeSlot(this.timeSlots[index], this.planning);
       this.refreshCalendar();
-    } else {
-      console.warn('element not found');
+      this.listenToCurrentPlanning();
     }
   }
 
   private listenToCurrentPlanning() {
-    console.log('nicoooooo');
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      console.log('xxxxxxxxxxxxxxxx', planning);
-      this.timeSlots = convertTimeSlotsToCalendarEvent(planning.timeSlots);
-      console.log('dddddddddddddddd', this.timeSlots);
+      this.calendarEvents = convertTimeSlotsToCalendarEvent(planning.timeSlots);
+      this.timeSlots = planning.timeSlots;
+      this.planning = planning;
     });
   }
 
   private refreshCalendar(): void {
     this.refresh.next();
   }
+
+
 }

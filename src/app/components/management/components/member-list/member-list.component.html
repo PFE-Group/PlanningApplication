@@ -1,5 +1,5 @@
-<div  class="center ">
-  <div class="member-title ">Membres du planning</div>
+<div  class="center">
+  <div class="member-title tpmg">Membres du planning</div>
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
     <mat-button-toggle (click)='setCurrentState(UserRole.admin)' [class.active]="currentState === UserRole.admin">admin</mat-button-toggle>
     <mat-button-toggle (click)='setCurrentState(UserRole.membre)' [class.active]="currentState === UserRole.membre" >membre</mat-button-toggle>

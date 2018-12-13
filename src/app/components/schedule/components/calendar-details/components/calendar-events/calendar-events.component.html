@@ -1,5 +1,5 @@
 <h3 class="tableTitle">
-  {{ planning.name }} management
+  Management
 </h3>
 <div class="table-responsive">
   <table class="table table-hover">
@@ -15,67 +15,56 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let ts of timeSlots; let index = index">
+    <tr *ngFor="let ts of timeSlots">
       <td scope="row">
-        <select calss="form-control">
-          <option *ngFor="let t of tasks">
+        <select (change)="updateTimeSlotName($event,ts);" class="form-control">
+          <option *ngFor="let t of tasks"
+                  [value]="t.name"
+                  [selected]="ts.task.name === t.name">
             {{ t.name }}
           </option>
         </select>
       </td>
       <td>
         <input
+          (change)="updateTaskColor($event, ts.task);"
           type="color"
           [(ngModel)]="ts.task.color">
       </td>
       <td>
-
-        <!--<mat-form-field style="max-width: 150px;">-->
-        <!--<input matInput-->
-        <!--[matDatepicker]="picker"-->
-        <!--class="form-control"-->
-        <!--type="text"-->
-        <!--mwlFlatpickr-->
-        <!--[(ngModel)]="ts.startHour"-->
-        <!--placeholder="From"-->
-        <!--dateformat="Y-m-dTH:i">-->
-        <!--<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-        <!--<mat-datepicker #picker></mat-datepicker>-->
-        <!--</mat-form-field>-->
-
-        <input
-          class="form-control"
-          type="text"
-          mwlFlatpickr
-          [(ngModel)]="ts.startHour"
-          dateformat="Y-m-dTH:i"
-          placeholder="Not set">
+        <input style="font-size:10px;"
+               class="form-control"
+               type="text"
+               mwlFlatpickr
+               [(ngModel)]="ts.startHour"
+               (ngModelChange)="refresh.next(); updateTimeSlotStartHour($event, ts);"
+               [altInput]="true"
+               [convertModelValue]="true"
+               [enableTime]="true"
+               dateFormat="Y-m-dTH:i"
+               altFormat="F j, Y H:i"
+               placeholder="From"
+        >
       </td>
       <td>
-        <!--<mat-form-field style="max-width: 150px;">-->
-        <!--<input matInput [matDatepicker]="picker2"-->
-        <!--class="form-control"-->
-        <!--type="text"-->
-        <!--mwlFlatpickr-->
-        <!--[(ngModel)]="ts.endHour"-->
-        <!--placeholder="To"-->
-        <!--dateformat="Y-m-dTH:i">-->
-        <!--<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>-->
-        <!--<mat-datepicker #picker2></mat-datepicker>-->
-        <!--</mat-form-field>-->
-
-        <input
-          class="form-control"
-          type="text"
-          mwlFlatpickr
-          [(ngModel)]="ts.endHour"
-          dateformat="Y-m-dTH:i"
-          placeholder="Not set">
+        <input style="font-size:10px;"
+               class="form-control"
+               type="text"
+               mwlFlatpickr
+               [(ngModel)]="ts.endHour"
+               (ngModelChange)="refresh.next(); updateTimeSlotEndHour($event, ts);"
+               [altInput]="true"
+               [convertModelValue]="true"
+               [enableTime]="true"
+               dateFormat="Y-m-dTH:i"
+               altFormat="F j, Y H:i"
+               placeholder="To"
+        >
       </td>
       <td>
         <button
           class="btn btn-danger"
-          (click)="this.timeSlots.splice(index, 1);deleteTimeSlot(ts)">
+          (click)="deleteTimeSlot(ts)">
           Delete
         </button>
       </td>
@@ -84,7 +73,7 @@
       <td>
         <button
           class="btn btn-outline-dark"
-          (click)="addEvent()">
+          (click)="addTimeSlot()">
           +
         </button>
       </td>

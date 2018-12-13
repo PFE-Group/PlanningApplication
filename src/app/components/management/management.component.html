@@ -1,6 +1,6 @@
 <div class=" background">
 
-  <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="toggleSideBar()">
+  <button type="button" id="sidebarCollapse" class="btn btn-secondary" (click)="toggleSideBar()">
     <span>Toggle plannings</span>
   </button>
   <div class="wrapper">
@@ -21,11 +21,18 @@
           <mat-button-toggle (click)='showDiv(DivEnums.members)'>Membres</mat-button-toggle>
         </mat-button-toggle-group>
         <div class="row bottom-part">
-          <div [hidden]="currentDiv!==DivEnums.management && currentDiv!==DivEnums.all" class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-8"> <!-- MAIN-->
+          <div [hidden]="currentDiv!==DivEnums.management && currentDiv!==DivEnums.all"
+               class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-8"> <!-- MAIN-->
             <app-main></app-main>
           </div>
-          <div [hidden]="currentDiv!==DivEnums.members && currentDiv!==DivEnums.all" class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-4">
+          <div [hidden]="currentDiv!==DivEnums.members && currentDiv!==DivEnums.all"
+               class="col-12 col-sm-12  col-md-12 col-lg-12 col-xl-4">
             <app-member-list></app-member-list>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col center">
+            <button routerLink="/schedule" class="btn btn-secondary tpmg">Go back to calendar</button>
           </div>
         </div>
       </mat-card>

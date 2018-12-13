@@ -1,39 +1,33 @@
 import {Component, OnInit} from '@angular/core';
 import {Task} from 'src/app/shared/models/task';
-import {createTimeSlot, TimeSlot} from 'src/app/shared/models/time-slot';
+import {TimeSlot} from 'src/app/shared/models/time-slot';
 import {AppStateService} from '../../../../../../shared/services/app-state.service';
-import {createPlannings, Planning} from '../../../../../../shared/models/planning';
+import {Planning} from '../../../../../../shared/models/planning';
 import {filter} from 'rxjs/internal/operators';
-import {forEach} from '@angular/router/src/utils/collection';
 import {WebApiService} from '../../../../../../shared/services/webapi';
-import {HttpMethod} from '../../../../../../shared/models/webapi';
+import {Subject} from 'rxjs';
+import {PlanningService} from '../../../../../../shared/services/planning';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-calendar-events',
   templateUrl: './calendar-events.component.html',
   styleUrls: ['./calendar-events.component.css']
 })
+
 export class CalendarEventsComponent implements OnInit {
 
   tasks = Array<Task>();
   timeSlots = Array<TimeSlot>();
   planning: Planning;
+  refresh: Subject<any> = new Subject();
 
-  constructor(private appStateService: AppStateService, private webApiService: WebApiService) {
+  constructor(private router: Router, private appStateService: AppStateService,
+              private webApiService: WebApiService, private planningService: PlanningService) {
   }
 
   ngOnInit() {
     this.listenToCurrentPlanning();
-  }
-
-  addEvent() {
-    const today = new Date();
-    this.timeSlots.push(createTimeSlot({
-      start: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours()),
-      end: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours()),
-      task: this.tasks[0],
-      done: false
-    } as Partial<TimeSlot>));
   }
 
   private listenToCurrentPlanning() {
@@ -41,26 +35,47 @@ export class CalendarEventsComponent implements OnInit {
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
       this.planning = planning;
-      console.log(this.planning.name);
-      console.log(this.planning.id);
-      this.timeSlots = planning.timeSlots;
+      this.timeSlots = planning.timeSlots.sort((val1, val2) => {
+        return (new Date(val1.startHour).getTime() - new Date(val2.startHour).getTime());
+      });
       this.tasks = planning.tasks;
     });
   }
 
-  deleteTimeSlot(timeSlot: TimeSlot){
-    this.webApiService.getResponse(`/api/plannings/${this.planning.id}/timeslot/${timeSlot.id}`, HttpMethod.DELETE)
-      .then(
-      (data: any[]) => {
-        // parse data
-        console.log('plannings info ', data);
-        // @ts-ignore
-        // const planning = createPlanning(data);
-        // console.log('plannings parsed ', planning);
-      }, (error: any) => {
-        console.error('error get plannings', error);
-      }
-    );
+  addTimeSlot() {
+    this.planningService.addTimeSlot(this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  deleteTimeSlot(timeSlot: TimeSlot) {
+    this.planningService.deleteTimeSlot(timeSlot, this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  updateTimeSlotName(event, timeSlot: TimeSlot) {
+    const newVal = event.target.value;
+    timeSlot.task.name = newVal;
+    this.planningService.updateTimeSlot(timeSlot, this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  updateTaskColor(event, task: Task) {
+    const newVal = event.target.value;
+    task.color = newVal;
+    this.planningService.updateTask(task, this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  updateTimeSlotStartHour(event, timeSlot: TimeSlot) {
+    timeSlot.startHour = event;
+    this.planningService.updateTimeSlot(timeSlot, this.planning);
+    this.listenToCurrentPlanning();
+  }
+
+  updateTimeSlotEndHour(event, timeSlot: TimeSlot) {
+    timeSlot.endHour = event;
+    this.planningService.updateTimeSlot(timeSlot, this.planning);
+    this.listenToCurrentPlanning();
   }
 
 }

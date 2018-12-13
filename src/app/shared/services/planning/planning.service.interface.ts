@@ -9,6 +9,5 @@ export interface IPlanningService {
 
   deletePlanning(planning: Planning): void;
 
-  savePlanningTimeSlot(data: any): Promise<any>;
 
 }

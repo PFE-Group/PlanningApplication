@@ -1,32 +1,35 @@
 <div class="container">
+  <div class="row center"><h2 class="col">{{planning.name}}</h2></div>
   <div class="row">
-    <div class="col-3">
-      <div class="row">
-        <div class="col">
-          <input class="form-control" type="text" placeholder=" put the planning name here " [class.disabled]="">
-        </div>
-        <div class="col">
-          <img (click)="modifyName()" src="http://cdn.onlinewebfonts.com/svg/img_263621.png" width="20" height="20">
-        </div>
-      </div>
+    <div class="col">
+      <label>From : </label>
+      <input style="font-size:10px;"
+             class="form-control"
+             type="text"
+             mwlFlatpickr
+             [(ngModel)]="planning.startDate"
+             (ngModelChange)="refresh.next(); updatePlanningStartDate($event);"
+             [altInput]="true"
+             [convertModelValue]="true"
+             dateFormat="Y-m-d"
+             altFormat="F j, Y"
+             placeholder="From"
+      >
     </div>
     <div class="col">
-      <div class="row">
-        <div class="col">
-          <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="De" >
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-        <div class="col">
-          <mat-form-field>
-            <input matInput [matDatepicker]="picker2" placeholder="à" >
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
+      <label>To : </label>
+      <input style="font-size:10px;"
+             class="form-control"
+             type="text"
+             mwlFlatpickr
+             [(ngModel)]="planning.endDate"
+             (ngModelChange)="refresh.next(); updatePlanningEndDate($event);"
+             [altInput]="true"
+             [convertModelValue]="true"
+             dateFormat="Y-m-d"
+             altFormat="F j, Y"
+             placeholder="To"
+      >
     </div>
   </div>
 </div>

@@ -5,6 +5,8 @@ import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../shared/shared.module';
 import {MatDatepickerModule, MatNativeDateModule, MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material';
 import {MatDialogModule} from '@angular/material';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {ScheduleComponent} from '.';
 import {CalendarComponent} from './components/calendar';
@@ -21,6 +23,8 @@ import {PlanningService} from '../../shared/services/planning';
 import {CalendarListComponent} from './components/calendar-list';
 import {PlanningNameDialogComponent} from './components/calendar-list/components/planning-name-dialog';
 import {UserService} from '../../shared/services/user';
+import {FlatpickrModule} from 'angularx-flatpickr';
+import {CommonModule} from '@angular/common';
 
 
 const COMPONENTS = [
@@ -41,12 +45,16 @@ const COMPONENTS = [
 
 const MODULES = [
   BrowserModule,
+  CommonModule,
   SharedModule,
   MatDatepickerModule,
   MatNativeDateModule,
   BrowserAnimationsModule,
   FormsModule,
   MatDialogModule,
+  NgbModule,
+  NgbModalModule,
+  FlatpickrModule.forRoot(),
   CalendarModule.forRoot({
     provide: DateAdapter,
     useFactory: adapterFactory
