@@ -39,6 +39,7 @@ export class UserService {
     this.userSubject = undefined;
     this.usersSubjects = undefined;
     this.router.navigate(['login']);
+    localStorage.removeItem("token");
     console.log('Logging out');
   }
 

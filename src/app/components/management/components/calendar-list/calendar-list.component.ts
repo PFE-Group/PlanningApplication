@@ -5,6 +5,7 @@ import {AppStateService} from '../../../../shared/services/app-state.service';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {PlanningNameDialogComponent} from './components/planning-name-dialog/planning-name-dialog.component';
+import {PlanningService} from '../../../../shared/services/planning';
 
 @Component({
   selector: 'app-calendar-list',
@@ -14,19 +15,18 @@ import {PlanningNameDialogComponent} from './components/planning-name-dialog/pla
 
 export class CalendarListComponent implements OnInit {
 
-  planningNameDialogRef: MatDialogRef<PlanningNameDialogComponent>;
-
   @Input() plannings: Observable<Array<Planning>>;
-  @Output() deletePlanningEmitter = new EventEmitter<Planning>();
 
-  constructor(private appStateService: AppStateService, private router: Router, private dialog: MatDialog) {
+  constructor(private appStateService: AppStateService, private router: Router,
+              private dialog: MatDialog, private planningService: PlanningService) {
   }
 
   ngOnInit() {
   }
 
   deletePlanning(planning: Planning) {
-    this.deletePlanningEmitter.emit(planning);
+    this.planningService.deletePlanning(planning);
+    this.plannings = this.planningService.getPlannings();
   }
 
   setCurrentPlanning(planning: Planning) {
@@ -34,7 +34,11 @@ export class CalendarListComponent implements OnInit {
   }
 
   openAddPlanningDialog() {
-    this.planningNameDialogRef = this.dialog.open(PlanningNameDialogComponent);
+    const planningNameDialogRef = this.dialog.open(PlanningNameDialogComponent);
+    planningNameDialogRef.afterClosed().subscribe(() => {
+      this.planningService.fetchPlannings();
+      this.plannings = this.planningService.getPlannings();
+    });
   }
 
   updatePlanning(planning: Planning) {

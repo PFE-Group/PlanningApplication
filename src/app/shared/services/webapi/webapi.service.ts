@@ -1,24 +1,23 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {take} from 'rxjs/operators';
-import {IWebApiService} from './webapi.service.interface';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { take } from 'rxjs/operators';
+import { IWebApiService } from './webapi.service.interface';
+import { AuthService } from 'src/app/services/auth.services';
+
 import {Observable} from 'rxjs';
 import {HttpMethod} from '../../models/webapi/http-method.enum';
-import {AuthService} from '../../../services/auth.services';
 
 @Injectable()
 export class WebApiService implements IWebApiService {
-
-  jwt = this.authService.retrieveToken() === null ? '' : this.authService.retrieveToken();
-
+  jwt = this.authService.retrieveToken() === null ? "" : this.authService.retrieveToken()
   headers = {
-    'Accept': 'application/json',
-    'Content-type': 'application/json',
-    'Authorization': this.jwt
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    "Authorization" : this.jwt
+
   };
 
-  constructor(private http: HttpClient, private authService: AuthService) {
-  }
+  constructor(private http: HttpClient,private authService: AuthService) { }
 
   getResponse(url: string, method: HttpMethod, payload?: any, timeout: number = 10000): Promise<any> {
     return new Promise((resolve, reject) => {

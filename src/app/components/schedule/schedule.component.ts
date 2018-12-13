@@ -23,7 +23,7 @@ export class ScheduleComponent implements OnInit {
   planningName: string;
   displaySideBar = false;
 
-  constructor(private planningService: PlanningService, private userService: UserService, private appStateService: AppStateService) {
+  constructor(private planningService: PlanningService, private userService: UserService, public appStateService: AppStateService) {
   }
 
   ngOnInit() {
@@ -32,7 +32,6 @@ export class ScheduleComponent implements OnInit {
     this.listenToCurrentPlanning();
     this.planningService.fetchPlannings();
     this.plannings = this.planningService.getPlannings();
-
   }
 
   deletePlanning(planning: Planning) {

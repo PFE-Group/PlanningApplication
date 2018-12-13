@@ -16,7 +16,7 @@ export class UserInformationComponent implements OnInit {
   logOutLogo = 'http://cdn.onlinewebfonts.com/svg/img_235476.png';
   user: User;
 
-  constructor(private userService: UserService, private appStateService: AppStateService) {
+  constructor(private userService: UserService, public appStateService: AppStateService) {
   }
 
   ngOnInit() {
