@@ -48,7 +48,6 @@ export class LoginComponent implements OnInit {
         this.route.navigate(['schedule'])
       },
         (err) => {
-          console.log("Error login : ", err)
           this.good = false;
           this.messageToShow = err.error.message
         })
