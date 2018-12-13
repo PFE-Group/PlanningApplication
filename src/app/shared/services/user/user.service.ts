@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {WebApiService} from '../webapi';
-import {HttpMethod} from '../../models/webapi';
-import {AppStateService} from '../app-state.service';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {createUser, User} from '../../models/user';
-import {Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { WebApiService } from '../webapi';
+import { HttpMethod } from '../../models/webapi';
+import { AppStateService } from '../app-state.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { createUser, User } from '../../models/user';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserService {
@@ -20,14 +20,11 @@ export class UserService {
     this.webApiService.getResponse(`/api/users/current`, HttpMethod.GET)
       .then(
         (data: any[]) => {
-          console.log('current user : ', data);
           // @ts-ignore
           const user = createUser(data);
-          console.log('user parsed : ', user);
           this.userSubject.next(user);
         },
         (error: any) => {
-          console.error('error get current user', error);
         });
   }
 
@@ -40,7 +37,6 @@ export class UserService {
     this.usersSubjects = undefined;
     this.router.navigate(['login']);
     localStorage.removeItem("token");
-    console.log('Logging out');
   }
 
 }

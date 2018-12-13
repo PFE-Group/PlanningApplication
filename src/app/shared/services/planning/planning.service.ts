@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {WebApiService} from '../webapi';
-import {IPlanningService} from './planning.service.interface';
-import {HttpMethod} from '../../models/webapi';
-import {AppStateService} from '../app-state.service';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {createPlanning, createPlannings, Planning} from '../../models/planning';
-import {TimeSlot} from '../../models/time-slot';
-import {Task} from '../../models/task';
+import { Injectable } from '@angular/core';
+import { WebApiService } from '../webapi';
+import { IPlanningService } from './planning.service.interface';
+import { HttpMethod } from '../../models/webapi';
+import { AppStateService } from '../app-state.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { createPlanning, createPlannings, Planning } from '../../models/planning';
+import { TimeSlot } from '../../models/time-slot';
+import { Task } from '../../models/task';
 
 @Injectable()
 export class PlanningService implements IPlanningService {
@@ -21,13 +21,10 @@ export class PlanningService implements IPlanningService {
       .then(
         (data: any[]) => {
           // parse data
-          console.log('plannings info ', data);
           // @ts-ignore
           const plannings = createPlannings(data);
-          console.log('plannings parsed ', plannings);
           this.planningsSubject.next(plannings);
         }, (error: any) => {
-          console.error('error get plannings', error);
         }
       );
   }
@@ -45,10 +42,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/${planning.id}/task/${task.name}`, HttpMethod.PATCH, payload)
       .then(
         (data: any) => {
-          console.log('task updated ', data);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error updating task', error);
         }
       );
   }
@@ -68,10 +63,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/planning`, HttpMethod.POST, payload)
       .then(
         (data: any) => {
-          console.log('planning created ', data);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error creating planning', error);
         }
       );
   }
@@ -91,10 +84,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/${planning.id}`, HttpMethod.PATCH, payload)
       .then(
         (data: any) => {
-          console.log('planning updated ', data);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error updating planning', error);
         }
       );
   }
@@ -124,10 +115,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/${planning.id}/timeslot/${timeSlot.id}`, HttpMethod.PATCH, payload)
       .then(
         (data: any) => {
-          console.log('planning timeslot updated ', timeSlot.id);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error updating planning timeslot', error);
         }
       );
   }
@@ -136,10 +125,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/${planning.id}/timeslot/${timeSlot.id}`, HttpMethod.DELETE)
       .then(
         (data: any[]) => {
-          console.log('planning timeslot deleted ', timeSlot.id);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error deleting planning timeslot', error);
         }
       );
   }
@@ -160,10 +147,8 @@ export class PlanningService implements IPlanningService {
     this.webApiService.getResponse(`/api/plannings/${planning.id}/timeslot`, HttpMethod.POST, payload)
       .then(
         (data: any) => {
-          console.log('planning timeslot created ', data);
           this.appStateService.setCurrentPlanning(createPlanning(data));
         }, (error: any) => {
-          console.error('error creating planning timeslot', error);
         }
       );
   }

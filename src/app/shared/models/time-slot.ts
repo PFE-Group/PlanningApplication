@@ -27,7 +27,6 @@ export const createTimeSlots = (partialTimeSlots: any[], tasks: Array<Task>): Ar
     ts.done = partialTimeSlots[pts].done;
     timeSlots.push(createTimeSlot(ts));
   }
-  console.log('timeslots created');
   return timeSlots;
 };
 

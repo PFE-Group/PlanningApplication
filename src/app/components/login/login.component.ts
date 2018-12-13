@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
           this.route.navigate(['schedule']);
         },
         (err) => {
-          console.log('Error login : ', err);
           this.good = false;
           this.messageToShow = err.error.message;
         });
@@ -74,7 +73,6 @@ export class LoginComponent implements OnInit {
           this.messageToShow = 'Success !';
         },
         (err) => {
-          console.log('ERROR REGIS : ', err);
           this.good = false;
           this.messageToShow = '';
           for (var i in err.error.invalidFields) {

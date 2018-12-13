@@ -29,14 +29,12 @@ export class InviteUserComponent implements OnInit {
   constructor(private webApiService: WebApiService,private memberService: MemberListService,private appStateService: AppStateService) { }
 
   ngOnInit() {
-    console.log("testttttttt");
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
     this.webApiService.getResponse('/api/users', HttpMethod.GET, { }).then((res)=>{
       this.users=res
-      console.log(res);
     })
      this.listenToCurrentPlanning()
   }
@@ -62,7 +60,6 @@ export class InviteUserComponent implements OnInit {
           this.memberService.getMembersOnServer(res['users'][this.loginUser]);
           this.messageOK.emit();
       }).catch((res)=>{
-        console.log("error inviteUser"+ res)
         this.messageError.emit();
       })
   }

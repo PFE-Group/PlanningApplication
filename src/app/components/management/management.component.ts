@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {User, createUser} from 'src/app/shared/models/user';
-import {Planning} from 'src/app/shared/models/planning';
-import {filter} from 'rxjs/operators';
-import {AppStateService} from '../../shared/services/app-state.service';
-import {Observable} from 'rxjs';
-import {PlanningService} from '../../shared/services/planning';
-import {DivEnums} from './models/div.enums';
-import {UserService} from '../../shared/services/user';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { User, createUser } from 'src/app/shared/models/user';
+import { Planning } from 'src/app/shared/models/planning';
+import { filter } from 'rxjs/operators';
+import { AppStateService } from '../../shared/services/app-state.service';
+import { Observable } from 'rxjs';
+import { PlanningService } from '../../shared/services/planning';
+import { DivEnums } from './models/div.enums';
+import { UserService } from '../../shared/services/user';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -46,7 +46,7 @@ export class ManagementComponent implements OnInit {
   }
 
   constructor(private appStateService: AppStateService, private userService: UserService,
-              private planningService: PlanningService) {
+    private planningService: PlanningService) {
 
   }
 
@@ -57,7 +57,6 @@ export class ManagementComponent implements OnInit {
     this.listenToCurrentPlanning();
     this.planningService.fetchPlannings();
     this.plannings = this.planningService.getPlannings();
-    console.log(this.plannings);
   }
 
   private listenToCurrentPlanning() {

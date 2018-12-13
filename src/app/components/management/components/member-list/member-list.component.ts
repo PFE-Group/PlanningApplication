@@ -24,10 +24,10 @@ export class MemberListComponent implements OnInit {
   memberListInvite: Array<Member>
   UserRole = UserRole
   currentState: UserRole
-  currentPlanning : string
+  currentPlanning: string
 
-  good : boolean = true;
-  messageError:string;
+  good: boolean = true;
+  messageError: string;
 
   constructor(private webApiService: WebApiService, private appStateService: AppStateService, private memberService: MemberListService) { }
   change(res: any) {
@@ -66,19 +66,18 @@ export class MemberListComponent implements OnInit {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-     this.clearList()
+      this.clearList()
       this.currentPlanning = planning.id
       this.getAllUsersPlanning(planning.id);
     })
   }
-  clearList(){
+  clearList() {
     this.memberList.length = 0;
     this.memberListAdmin.length = 0;
     this.memberListInvite.length = 0;
     this.memberListMember.length = 0;
   }
   getAllUsersPlanning(idPlanning) {
-    console.log("okok");
     this.webApiService.getResponse('/api/plannings/users/' + idPlanning, HttpMethod.GET, {}).then((res) => {
       // res.sort((el1,el2)=> (el1.login).localeCompare(el2.login));
       for (var i in res) {
@@ -102,17 +101,17 @@ export class MemberListComponent implements OnInit {
     })
   }
 
-  deleteUser(user){
-    this.webApiService.getResponse('/api/plannings/'+this.currentPlanning+"/member/"+user.user.id, HttpMethod.DELETE, {})
-          .then( (res) => {
-            this.good = true;
-            this.clearList()
-            this.getAllUsersPlanning(this.currentPlanning) ;          
-          })
-          .catch( (err) => {
-            this.good = false;
-            this.messageError = err.error.message;
-          })
+  deleteUser(user) {
+    this.webApiService.getResponse('/api/plannings/' + this.currentPlanning + "/member/" + user.user.id, HttpMethod.DELETE, {})
+      .then((res) => {
+        this.good = true;
+        this.clearList()
+        this.getAllUsersPlanning(this.currentPlanning);
+      })
+      .catch((err) => {
+        this.good = false;
+        this.messageError = err.error.message;
+      })
   }
 
 }

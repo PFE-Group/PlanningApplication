@@ -1,6 +1,6 @@
-import {Component, OnInit,EventEmitter, Output} from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { filter } from 'rxjs/internal/operators';
-import {Planning} from '../../../../../shared/models/planning';
+import { Planning } from '../../../../../shared/models/planning';
 import { AppStateService } from '../../../../../shared/services/app-state.service';
 import { WebApiService } from 'src/app/shared/services/webapi';
 import { HttpMethod } from 'src/app/shared/models/webapi';
@@ -11,16 +11,16 @@ import { HttpMethod } from 'src/app/shared/models/webapi';
   styleUrls: ['./new-tasks.component.css']
 })
 export class NewTasksComponent implements OnInit {
-  taskName:string
+  taskName: string
   hourExpected: number
   color: string
-  planningCurrent : Planning
+  planningCurrent: Planning
 
   @Output() messageError = new EventEmitter<any>();
   @Output() messageOK = new EventEmitter<any>();
-  constructor(private appStateService: AppStateService,private webApiService: WebApiService) {
+  constructor(private appStateService: AppStateService, private webApiService: WebApiService) {
   }
-  
+
   ngOnInit() {
     this.listenToCurrentPlanning();
   }
@@ -28,21 +28,18 @@ export class NewTasksComponent implements OnInit {
     this.appStateService.getCurrentPlanning().pipe(
       filter((planning: Planning) => !!planning)
     ).subscribe((planning: Planning) => {
-      this.planningCurrent=planning
+      this.planningCurrent = planning
     })
   }
-  createTask(){
-    console.log(this.taskName+":"+this.hourExpected+":"+this.color+":"+this.planningCurrent
-    .name)
-    this.webApiService.getResponse('/api/plannings/'+this.planningCurrent.id+'/task',HttpMethod.PUT,{
-      name:this.taskName,
-      color:this.color,
-      hoursExpected:this.hourExpected
-    }).then((res)=>{
-      console.log(res);
+  createTask() {
+
+    this.webApiService.getResponse('/api/plannings/' + this.planningCurrent.id + '/task', HttpMethod.PUT, {
+      name: this.taskName,
+      color: this.color,
+      hoursExpected: this.hourExpected
+    }).then((res) => {
       this.messageOK.emit();
-    }).catch((res)=>{
-      console.log(res)
+    }).catch((res) => {
       this.messageError.emit();
     })
   }
