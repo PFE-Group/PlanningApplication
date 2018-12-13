@@ -80,6 +80,7 @@ export class MemberListComponent implements OnInit {
   getAllUsersPlanning(idPlanning) {
     console.log("okok");
     this.webApiService.getResponse('/api/plannings/users/' + idPlanning, HttpMethod.GET, {}).then((res) => {
+      // res.sort((el1,el2)=> (el1.login).localeCompare(el2.login));
       for (var i in res) {
         var member = createMember({
           user: createUser({

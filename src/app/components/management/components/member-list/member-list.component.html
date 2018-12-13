@@ -1,10 +1,10 @@
 <div class="center ">
-  <div class="member-title ">Planning members</div>
+  <div class="member-title ">Membres du planning</div>
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
     <mat-button-toggle (click)='setCurrentState(UserRole.admin)' [class.active]="currentState === UserRole.admin">Admin</mat-button-toggle>
-    <mat-button-toggle (click)='setCurrentState(UserRole.membre)' [class.active]="currentState === UserRole.membre">Members</mat-button-toggle>
-    <mat-button-toggle (click)='setCurrentState(UserRole.invite)' [class.active]="currentState === UserRole.invite">Guests</mat-button-toggle>
-    <mat-button-toggle (click)='setCurrentState(UserRole.all)' [class.active]="currentState === UserRole.all">All</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.membre)' [class.active]="currentState === UserRole.membre">Membre</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.invite)' [class.active]="currentState === UserRole.invite">Invité</mat-button-toggle>
+    <mat-button-toggle (click)='setCurrentState(UserRole.all)' [class.active]="currentState === UserRole.all">Tous</mat-button-toggle>
   </mat-button-toggle-group>
   <div class="alert alert-danger" *ngIf="!good"> {{messageError}}</div>
   <ul id="forms" class="list-group">
