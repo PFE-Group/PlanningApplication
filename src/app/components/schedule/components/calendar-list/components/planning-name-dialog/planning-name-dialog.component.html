@@ -1,0 +1,21 @@
+<form #addPlanning="ngForm" (ngSubmit)="onSubmit(addPlanning)" novalidate>
+  <mat-form-field>
+    <input ngModel name="name" matInput placeholder="Name"><!-- nom du planning-->
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <!-- date de début du planning-->
+    <input ngModel name="startDate" matInput [matDatepicker]="picker1" placeholder="Start date">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <!-- date de fin du planning-->
+    <input ngModel name="endDate" matInput [matDatepicker]="picker2" placeholder="End date">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <input mat-stroked-button color="primary" type = "submit" value = "Create">
+</form>

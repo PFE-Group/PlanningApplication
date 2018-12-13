@@ -7,27 +7,46 @@
   vertical-align: top;
 }
 
-.navbar{
-  background-color: rgba(0, 0, 0, 0.20);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  height:8vh;
+
+#sidebarCollapse{
+  position:absolute;
+  padding:8px;
+  margin:-46px 10px;
 }
 
 .app-calendar {
   padding: 5px;
-  overflow: auto;
 }
 
 .bottom-part {
   height: 92vh;
 }
 
-.calendar-container {
-  height: 64vh;
+.wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  min-height: 92vh;
+}
+
+.sidebar-elem{
+  min-height: 90.5vh;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}
+
+.overFlowScroll{
   overflow: auto;
 }
 
-.calendar-detail-container {
-  height: 25vh;
+.waiting{
+  margin-top:50px;
+  text-align: center;
+  color: white;
 }

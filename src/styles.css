@@ -1,28 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '../node_modules/flatpickr/dist/flatpickr.min.css';
 
-.background{
-    background:#6c757d;
-}
-.elem{
-    margin:5px;
-    background:#dfe3e6;
-    padding:10px;
+.elem {
+  margin: 5px;
+  background: rgba(255,255,255,0.6);
+  padding: 10px;
 }
 
-.center{
-    text-align: center;
+.center {
+  text-align: center;
 }
 
-.left{
-    text-align: left;
+.left {
+  text-align: left;
 }
 
-.right{
-    text-align: right;
+.right {
+  text-align: right;
 }
 
-body{
-    background-image: url("assets/back.jpg")
+.cal-event-title {
+  color: black;
+}
+
+
+.btn:focus {
+  outline: none !important;
+}
+
+body {
+  background-image: linear-gradient(to left bottom, #d3c7b4, #cfaca2, #bf93a1, #9983a8, #587aa4);
 }

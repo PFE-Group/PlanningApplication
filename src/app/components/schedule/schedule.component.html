@@ -1,22 +1,49 @@
 <div class=" background">
-  <nav class="navbar navbar-dark">
-    <span class="navbar-brand app-name">Scheduly</span>
-    <app-user-information [user]="user"></app-user-information>
-  </nav>
-  <div class="container">
-      <div class="row bottom-part">
-      <div class="elem col-2">
-        <app-calendar-list [plannings]="plannings"></app-calendar-list>
+
+  <button type="button" id="sidebarCollapse" class="btn btn-secondary" (click)="toggleSideBar()">
+    <span>Toggle plannings</span>
+  </button>
+  <div class="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar" [class.active]="displaySideBar">
+      <div class="elem sidebar-elem">
+        <app-calendar-list
+          [plannings]="plannings"
+          (deletePlanningEmitter)="deletePlanning($event)"></app-calendar-list>
       </div>
-      <div class="elem col app-calendar">
-        <div class="calendar-container">
+    </nav>
+    <!-- Page Content if Planning Selected -->
+    <div class="content container" *ngIf="planningName != null">
+      <div class="row bottom-part">
+        <div class="elem col-6 app-calendar overFlowScroll">
           <app-calendar></app-calendar>
         </div>
-        <div class="calendar-detail-container">
-          <app-calendar-details></app-calendar-details>
+        <div class="col">
+          <div class="row">
+            <div class="col elem">
+              <app-calendar-information></app-calendar-information>
+            </div>
+          </div>
+          <div class="row">
+            <div class="elem col overFlowScroll">
+              <app-calendar-details></app-calendar-details>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Content if Planning Not Selected -->
+    <div class="content container" *ngIf="planningName == null">
+      <div class="row bottom-part">
+        <div class="col">
+          <p class="waiting">Choose one of your calendar to see the details</p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
 

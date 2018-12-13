@@ -1,8 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { User, createUser } from '../../shared/models/user';
-import { Planning, createPlanning } from '../../shared/models/planning';
-import { PlanningEvent } from 'src/app/shared/models/planning-event';
-import { TimeSlot } from 'src/app/shared/models/time-slot';
+import {Component, OnInit, Input} from '@angular/core';
+import {User} from '../../shared/models/user';
+import {Planning} from '../../shared/models/planning';
+import {Observable} from 'rxjs/index';
+
+import {PlanningService} from '../../shared/services/planning';
+import {AppStateService} from '../../shared/services/app-state.service';
+import {filter} from 'rxjs/operators';
+import {UserService} from '../../shared/services/user';
 
 @Component({
   selector: 'app-schedule',
@@ -12,49 +16,38 @@ import { TimeSlot } from 'src/app/shared/models/time-slot';
 
 export class ScheduleComponent implements OnInit {
 
-  user: User;
-  plannings = Array<Planning>();
-  planningSelected: Planning;
-
+  user: Observable<User>;
+  plannings: Observable<Array<Planning>>;
   @Input() hasBackdrop: string;
   @Input() mode: string;
+  planningName: string;
+  displaySideBar = false;
 
-
-  constructor() { }
+  constructor(private planningService: PlanningService, private userService: UserService, public appStateService: AppStateService) {
+  }
 
   ngOnInit() {
-    this.user = createUser({
-      firstName: 'Thomas',
-      lastName: 'Ronsmans',
-      login: 'T.R',
-      profilePicture: 'http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
-    }as Partial<User>);
-    this.plannings.push(createPlanning({
-      name: 'Blocus',
-      startDate: new Date('2018-12-06T09:00:00'),
-      endDate: new Date('2018-12-06T15:00:00'),
-      members: Array<User>(),
-      events: Array<PlanningEvent>(),
-      timeSlots: Array<TimeSlot>()
-    }as Partial<Planning>));
-    this.plannings.push(createPlanning({
-      name: 'PFE',
-      startDate: new Date('2018-12-01T09:00:00'),
-      endDate: new Date('2018-12-14T23:00:00'),
-      members: Array<User>(),
-      events: Array<PlanningEvent>(),
-      timeSlots: Array<TimeSlot>()
-    }as Partial<Planning>));
-    this.plannings.push(createPlanning({
-      name: 'Projet Unity',
-      startDate: new Date('2018-11-01T09:00:00'),
-      endDate: new Date('2018-12-21T23:59:00'),
-      members: Array<User>(),
-      events: Array<PlanningEvent>(),
-      timeSlots: Array<TimeSlot>()
-    }as Partial<Planning>));
-    console.log(this.user);
-    console.log(this.plannings);
+    this.userService.fetchCurrentUser();
+    this.user = this.userService.getCurrentUser();
+    this.listenToCurrentPlanning();
+    this.planningService.fetchPlannings();
+    this.plannings = this.planningService.getPlannings();
+  }
+
+  deletePlanning(planning: Planning) {
+    this.planningService.deletePlanning(planning);
+  }
+
+  toggleSideBar() {
+    this.displaySideBar = !this.displaySideBar;
+  }
+
+  private listenToCurrentPlanning() {
+    this.appStateService.getCurrentPlanning().pipe(
+      filter((planning: Planning) => !!planning)
+    ).subscribe((planning: Planning) => {
+      this.planningName = planning.name;
+    });
   }
 
 }

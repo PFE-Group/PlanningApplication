@@ -1,3 +1,84 @@
-<p>
-  calendar-events works!
-</p>
+<h3 class="tableTitle">
+  Management
+</h3>
+<div class="table-responsive">
+  <table class="table table-hover">
+
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Color</th>
+      <th scope="col">Starts at</th>
+      <th scope="col">Ends at</th>
+      <th scope="col">Remove</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let ts of timeSlots">
+      <td scope="row">
+        <select (change)="updateTimeSlotName($event,ts);" class="form-control">
+          <option *ngFor="let t of tasks"
+                  [value]="t.name"
+                  [selected]="ts.task.name === t.name">
+            {{ t.name }}
+          </option>
+        </select>
+      </td>
+      <td>
+        <input
+          (change)="updateTaskColor($event, ts.task);"
+          type="color"
+          [(ngModel)]="ts.task.color">
+      </td>
+      <td>
+        <input style="font-size:10px;"
+               class="form-control"
+               type="text"
+               mwlFlatpickr
+               [(ngModel)]="ts.startHour"
+               (ngModelChange)="refresh.next(); updateTimeSlotStartHour($event, ts);"
+               [altInput]="true"
+               [convertModelValue]="true"
+               [enableTime]="true"
+               dateFormat="Y-m-dTH:i"
+               altFormat="F j, Y H:i"
+               placeholder="From"
+        >
+      </td>
+      <td>
+        <input style="font-size:10px;"
+               class="form-control"
+               type="text"
+               mwlFlatpickr
+               [(ngModel)]="ts.endHour"
+               (ngModelChange)="refresh.next(); updateTimeSlotEndHour($event, ts);"
+               [altInput]="true"
+               [convertModelValue]="true"
+               [enableTime]="true"
+               dateFormat="Y-m-dTH:i"
+               altFormat="F j, Y H:i"
+               placeholder="To"
+        >
+      </td>
+      <td>
+        <button
+          class="btn btn-danger"
+          (click)="deleteTimeSlot(ts)">
+          Delete
+        </button>
+      </td>
+    </tr>
+    <tr class="notARow">
+      <td>
+        <button
+          class="btn btn-outline-dark"
+          (click)="addTimeSlot()">
+          +
+        </button>
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+</div>

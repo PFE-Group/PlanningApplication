@@ -1,0 +1,36 @@
+<mat-accordion class="example-headers-align">
+  <div class="row">
+    <div [hidden]="!showError" class="alert alert-danger col-12 " role="alert">
+      Forbidden action
+    </div>
+  </div>
+  <div class="row">
+    <div [hidden]="!showOk" class="alert alert-success col-12 " role="alert">
+      Action success
+    </div>
+  </div>
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Invite a user
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-invite-user (messageError)="messageError()" (messageOK)="messageOK()"></app-invite-user>
+    <mat-action-row>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Add task
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-new-tasks (messageError)="messageError()" (messageOK)="messageOK()"></app-new-tasks>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+
+

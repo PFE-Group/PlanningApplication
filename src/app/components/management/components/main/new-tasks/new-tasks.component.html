@@ -1,0 +1,16 @@
+<div class="content container" *ngIf="planningCurrent == null">
+  <div>
+    <p>Choose a planning</p>
+  </div>
+</div>
+<div class="content container" *ngIf="planningCurrent != null">
+  <mat-form-field>
+    <input matInput name="nameTask" [(ngModel)]="taskName" placeholder="Task name"><!-- nom de la tâche-->
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="hoursExpected" [(ngModel)]="hourExpected" type="number" min="1" placeholder="hours expected">
+  </mat-form-field>
+  <input type="color" [(ngModel)]="color" name="hi" />
+  <button mat-stroked-button (click)="createTask()" color="primary">Create</button>
+
+</div>

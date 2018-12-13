@@ -8,13 +8,13 @@ input {
 
 .login-form-1{
     padding: 4%;
-    background:#ba8247;
+  background-image: linear-gradient(to left bottom, #d3c7b4, #cfaca2, #bf93a1, #9983a8, #587aa4);
     box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
 }
 
 .login-form-2{
     padding: 4%;
-    background: #203f41;
+  background-image: linear-gradient(to right top, #d3c7b4, #cfaca2, #bf93a1, #9983a8, #587aa4);
     box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -30,25 +30,21 @@ input {
     padding: 5%;
 }
 
-@font-face{
-    font-family: moonflower;
-    src: url("../../../assets/MoonFlower.ttf")
-}
-.page-title{
-    text-align: center;
-    font-family: moonflower;
-    font-size: 100px;
-    font-weight: bold;
+h1{
+  margin-top: 120px;
+  margin-bottom: 40px;
+  color:white;
+  text-align: center;
 }
 
 @media only screen and (max-width: 768px) {
-    .page-title{
-        text-align: center;
-        font-family: moonflower;
-        font-size: 50px;
-        font-weight: bold;
-    }
 
+    h1{
+      margin-top: 30px;
+      margin-bottom: 10px;
+      color:white;
+      text-align: center;
+    }
     .login-logo{
         position: relative;
         margin-left: 30%;
@@ -60,4 +56,34 @@ input {
         border-radius: 4.5rem;
         padding: 5%;
     }
+}
+
+input, input:focus, input:active{
+  background: transparent;
+  color:white;
+  border: 0px solid white;
+  border-bottom-width: 1px;
+  border-radius: 0;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white !important;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: white !important;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: white !important;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: white !important;
+}
+
+.container{
+  vertical-align: bottom;
+}
+
+.login-page{
+  width: 100vh;
+  height:100vh;
 }

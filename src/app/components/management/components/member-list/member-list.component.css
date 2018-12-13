@@ -1,0 +1,17 @@
+
+ .lielem{
+    text-align: left;
+    font-size: 14px;
+ }
+
+ .selectorAligned{
+    display:inline-block !important; 
+ }
+ .member-title {
+   font-size: 20px;
+   font-weight: bold;
+ }
+ #listMembers{
+    margin-left:10%;
+    margin-top:3em;
+ }

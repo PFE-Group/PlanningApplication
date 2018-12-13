@@ -1,0 +1,13 @@
+
+.navbarTop{
+  background-color: rgba(0, 0, 0, 0.20);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height:8vh;
+}
+body{
+  background: #aa0000;
+}
+.app-name{
+  margin-left: 50%;
+}

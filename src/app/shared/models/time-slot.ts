@@ -1,21 +1,82 @@
-import { PlanningEvent, fullPlanningEvent } from './planning-event';
+import {Task, fullTask} from './task';
+import {CalendarEvent} from 'angular-calendar';
+import Timestamp = firebase.firestore.Timestamp;
+import * as firebase from 'firebase';
 
 export interface TimeSlot {
-    start : Date;
-    end : Date;
-    event : PlanningEvent;
-    done : boolean;
+  id: string;
+  endHour: Date;
+  startHour: Date;
+  task: Task;
+  done: boolean;
 }
 
-export const createTimeSlot = (partialTimeSlot: Partial<TimeSlot>):TimeSlot =>{
-    return Object.assign({}, fullTimeSlot(), partialTimeSlot);
-}
-  
-export const fullTimeSlot = ():TimeSlot =>{
-    return{
-        start:new Date(),
-        end: new Date(),
-        event: fullPlanningEvent(),
-        done: false
-    } as TimeSlot
-}
+export const createTimeSlots = (partialTimeSlots: any[], tasks: Array<Task>): Array<TimeSlot> => {
+  const timeSlots = Array<TimeSlot>();
+
+  for (const pts in partialTimeSlots) {
+    const ts = fullTimeSlot();
+    ts.id = pts;
+    ts.endHour = new Date(partialTimeSlots[pts].endHour._seconds * 1000);
+    ts.startHour = new Date(partialTimeSlots[pts].startHour._seconds * 1000);
+    tasks.forEach((task: Task) => {
+      if (task.name === partialTimeSlots[pts].task) {
+        ts.task = task;
+      }
+    });
+    ts.done = partialTimeSlots[pts].done;
+    timeSlots.push(createTimeSlot(ts));
+  }
+  console.log('timeslots created');
+  return timeSlots;
+};
+
+export const createTimeSlot = (partialTimeSlot: any): TimeSlot => {
+  return Object.assign(
+    {},
+    fullTimeSlot(),
+    partialTimeSlot,
+    {start: partialTimeSlot.startHour},
+    {end: partialTimeSlot.endHour},
+    {done: partialTimeSlot.done},
+    {timeSlotId: partialTimeSlot});
+};
+
+export const fullTimeSlot = (): TimeSlot => {
+  return {
+    id: '',
+    startHour: new Date(),
+    endHour: new Date(),
+    task: fullTask(),
+    done: false
+  } as TimeSlot;
+};
+
+export const convertTimeSlotsToCalendarEvent = (timeslots: Array<TimeSlot>): Array<CalendarEvent> => {
+  const calendarEvents = Array<CalendarEvent>();
+  timeslots.forEach((timeslot: TimeSlot) => calendarEvents.push(convertTimeSlotToCalendarEvent(timeslot)));
+  return calendarEvents;
+};
+
+export const convertTimeSlotToCalendarEvent = (timeslot: TimeSlot): CalendarEvent => {
+  return Object.assign(
+    {},
+    timeslot,
+    {color: {primary: timeslot.task.color, secondary: timeslot.task.color}},
+    {title: timeslot.task.name},
+    {resizable: {beforeStart: true, afterEnd: true}},
+    {draggable: true},
+    {start: timeslot.startHour},
+    {end: timeslot.endHour},
+    {
+      actions: [
+        {
+          label: '<i class="fa fa-fw fa-times"></i>'
+        },
+        {
+          label: '<i class="fa fa-fw fa-pencil"></i>'
+        }
+      ]
+    }
+  ) as CalendarEvent;
+};
